@@ -25,7 +25,7 @@
 	});
 
 	async function selectMod(modId) {
-		fullSpeciesList = await loadMod(modId);
+		fullSpeciesList = (await loadMod(modId)).species;
 		if (!selectedSpecies) {
 			selectedSpecies = fullSpeciesList[0].blueprintPath;
 		}

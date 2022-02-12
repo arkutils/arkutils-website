@@ -1,6 +1,4 @@
-import { dev } from "$app/env";
-
-const OBELISK = dev ? '/data' : 'https://raw.githubusercontent.com/arkutils/Obelisk/master/data';
+const OBELISK = 'https://raw.githubusercontent.com/arkutils/Obelisk/master/data';
 
 export type ModInfo = {
     id: string;
@@ -10,15 +8,32 @@ export type ModInfo = {
     order: string;
 };
 
+export type ColorDef = [
+    name: string,
+    rgba: [number, number, number, number],
+];
+
 export type Species = {
     name: string;
     blueprintPath: string;
     variants: string[];
 };
 
+export type ModData = {
+    version: string,
+    format: string,
+
+    species: Species[];
+    speciesLookup: { [bp: string]: Species };
+
+    colorDefinitions: ColorDef[],
+    dyeDefinitions: ColorDef[],
+};
+
+
 let modOrder: ModInfo[] = [];
 let modMetadata: { [mod_id: string]: ModInfo } = {};
-const modLoadCache: { [mod_id: string]: Species[] } = {};
+const modLoadCache: { [mod_id: string]: ModData } = {};
 
 
 /** Ensure the mod list is available */
@@ -75,6 +90,7 @@ function parseManifest(data) {
     });
 }
 
+
 /** Normalise mod info and add order information */
 function convertModData(fileInfo, filename: string): ModInfo {
     const mod: ModInfo = fileInfo.mod || {
@@ -99,23 +115,21 @@ function convertModData(fileInfo, filename: string): ModInfo {
     return mod;
 }
 
-/** Parse a mod data info into a simple (sorted) list of species */
-function parseMod(data): Species[] {
-    const species: Species[] = data.species.map((entry) => ({
-        name: entry.name,
-        variants: entry.variants,
-        blueprintPath: entry.blueprintPath
-    }));
+/** Parse a mod data */
+function parseMod(data): ModData {
+    // Sort species by name and number of variants
+    data.species.sort((a, b) => a.name.localeCompare(b.name) || compareVariants(a, b));
 
-    species.sort((a, b) => {
-        if (a.name < b.name) {
-            return -1;
-        } else if (a.name > b.name) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
+    // Create a dict for fast species blueprint lookup
+    data.speciesLookup = {};
+    data.species.forEach(species => data.speciesLookup[species.blueprintPath] = species);
 
-    return species;
+    return data;
+}
+
+
+function compareVariants(a: Species, b: Species): number {
+    const aLen = a.variants ? a.variants.length : 0;
+    const bLen = b.variants ? b.variants.length : 0;
+    return aLen - bLen;
 }

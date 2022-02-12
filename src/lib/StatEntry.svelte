@@ -49,18 +49,18 @@
 			<span class="text-sm font-medium">All Wild</span>
 			<button on:click={() => setAllWild(0)}>0</button>
 			<button on:click={() => setAllWild(1)}>1</button>
-			<button on:click={() => setAllWild(10)}>10</button>
-			<button on:click={() => setAllWild(40)}>40</button>
+			<button on:click={() => setAllWild(35)}>35</button>
 			<button on:click={() => setAllWild(100)}>100</button>
+			<button on:click={() => setAllWild(254)}>254</button>
 			<button on:click={() => setAllWild(255)}>255</button>
 		</div>
 		<div class="flex flex-col items-center">
 			<span class="text-sm font-medium">All Tamed</span>
 			<button on:click={() => setAllTamed(0)}>0</button>
 			<button on:click={() => setAllTamed(1)}>1</button>
-			<button on:click={() => setAllTamed(10)}>10</button>
-			<button on:click={() => setAllTamed(40)}>40</button>
+			<button on:click={() => setAllTamed(35)}>35</button>
 			<button on:click={() => setAllTamed(100)}>100</button>
+			<button on:click={() => setAllTamed(254)}>254</button>
 			<button on:click={() => setAllTamed(255)}>255</button>
 		</div>
 	</div>

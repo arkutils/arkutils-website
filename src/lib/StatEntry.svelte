@@ -26,7 +26,7 @@
 		<ul class="flex flex-col w-16 gap-y-1">
 			{#each STAT_NAMES as _, i}
 				<input
-					type="number"
+					type="number" min={0} max={255} step={1}
 					bind:value={wild[i]}
 					class="bg-gray-700 text-gray-100 text-center"
 				/>
@@ -35,7 +35,7 @@
 		<ul class="flex flex-col w-16 gap-y-1">
 			{#each STAT_NAMES as _, i}
 				<input
-					type="number"
+					type="number" min={0} max={255}
 					bind:value={tamed[i]}
 					class="bg-gray-700 text-gray-100 text-center"
 				/>

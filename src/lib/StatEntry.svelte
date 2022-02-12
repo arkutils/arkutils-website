@@ -71,7 +71,15 @@
 		@apply text-sm text-gray-100 px-2 py-[1px];
 		@apply w-12;
 		@apply border border-t-0 border-gray-500;
+        @apply transition-colors;
 	}
+    button:hover {
+        @apply bg-gray-700;
+    }
+
+    button:active {
+        @apply bg-gray-500;
+    }
 
 	button:first-of-type {
 		@apply border-t rounded-t;

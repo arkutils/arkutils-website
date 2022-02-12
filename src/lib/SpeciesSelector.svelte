@@ -1,31 +1,29 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { loadMod } from '$lib/obelisk';
+	import type { Species } from '$lib/obelisk';
 
-	import { ensureManifestLoaded, getModList, loadMod } from '$lib/obelisk';
-	import type { Species, ModInfo } from '$lib/obelisk';
+    import ModSelector from './ModSelector.svelte';
 
 	export let selectedSpecies: string = '';
 	export let filterUseless: boolean = true;
 
-	let selectedModId: string = '';
-
-	let modList: ModInfo[] = [];
+	let selectedModId: string = null;
 	let fullSpeciesList: Species[] = [];
 	let showSpeciesList: Species[] = [];
-    let loadedManifest = false;
 
-	$: if (loadedManifest) selectMod(selectedModId);
+	$: if (selectedModId !== null) selectMod(selectedModId);
 	$: showSpeciesList = filterUseless ? filterSpecies(fullSpeciesList) : fullSpeciesList;
 
-	onMount(async () => {
-		await ensureManifestLoaded();
-		modList = getModList();
-		selectedModId = modList[0].id;
-        loadedManifest = true;
-	});
-
 	async function selectMod(modId) {
-		fullSpeciesList = (await loadMod(modId)).species;
+        const modData = await loadMod(modId);
+		fullSpeciesList = modData.species;
+
+        // Check we have a valid species for this mod
+        if (!modData.speciesLookup[selectedSpecies]) {
+            selectedSpecies = null;
+        }
+
+        // If no species selected, pick the first in the list
 		if (!selectedSpecies) {
 			selectedSpecies = fullSpeciesList[0].blueprintPath;
 		}
@@ -57,17 +55,7 @@
 	}
 </script>
 
-<select bind:value={selectedModId} class="bg-gray-800 p-2" disabled={!loadedManifest}>
-	{#each modList as mod}
-		<option value={mod.id}>
-			{mod.title}
-			{#if !isNaN(parseInt(mod.id))}({mod.id}){/if}
-		</option>
-	{/each}
-	{#if !loadedManifest}
-		<option selected value="">...loading...</option>
-	{/if}
-</select>
+<ModSelector bind:selectedModId />
 
 <select bind:value={selectedSpecies} class="bg-gray-800 p-2">
 	{#each showSpeciesList as species}

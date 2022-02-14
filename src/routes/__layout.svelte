@@ -6,6 +6,6 @@
 	if (browser) import('virtual:windi-devtools');
 </script>
 
-<main class="p-4 bg-gray-900 text-gray-100 h-screen">
+<main class="p-4 min-h-screen max-w-4xl mx-auto">
     <slot/>
 </main>

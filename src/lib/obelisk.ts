@@ -108,7 +108,8 @@ function convertModData(fileInfo, filename: string): ModInfo {
         if (isNaN(intId)) {
             mod.order = mod.title;
         } else {
-            mod.order = `zzzzz${intId}`;
+            // Extend with zeros to 12 digits
+            mod.order = `zzzzz${intId.toString().padStart(12, '0')}`;
         }
     }
 

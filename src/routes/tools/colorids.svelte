@@ -31,14 +31,6 @@
 	let coreColors: Record<string, true> = {};
 	let filterParts: Array<string | number> = null;
 
-	// $: console.log('loaded', loaded);
-	// $: console.log('loadedModId', JSON.stringify(loadedModId));
-	// $: console.log('selectedModId', JSON.stringify(selectedModId));
-	// $: console.log('hideCore', hideCore);
-	// $: console.log('filter', filter);
-	// $: console.log('coreColors', JSON.stringify(coreColors));
-	// $: console.log('displayedColor', JSON.stringify(displayedColor));
-
 	$: if (loaded && selectedModId !== null) selectMod(selectedModId);
 	$: filterChanged(filter);
 	$: if (loaded) applyFilter(hideCore, loadedModId, filterParts);

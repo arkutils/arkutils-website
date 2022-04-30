@@ -2,27 +2,28 @@
 	import ClipboardCopier from '$lib/ClipboardCopier.svelte';
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
 	import StatEntry from '$lib/StatEntry.svelte';
+	import ColorRegions from '$lib/ColorRegions.svelte';
 
 	let selectedSpecies: string = '';
 	let wild = [0, 0, 0, 0, 0, 0, 0];
 	let tamed = [0, 0, 0, 0, 0, 0, 0];
+	let colors = [0, 0, 0, 0, 0, 0];
+	let wildColors = true;
+	let imprint = 0.0;
 	let cmd = '';
 
-	$: generateCommand(selectedSpecies, wild, tamed);
-
-	function generateCommand(bp: string, wild: number[], tamed: number[]) {
-		if (!bp) {
-			cmd = null;
-			return;
-		}
-
+	$: if (selectedSpecies) {
 		const sumWild = wild.reduce((a, b) => a + b, 1); // starts at 1
 		const sumTamed = tamed.reduce((a, b) => a + b, 0);
 
-		cmd = `cheat SpawnExactDino "Blueprint'${bp}'" ""`;
+		cmd = `cheat SpawnExactDino "Blueprint'${selectedSpecies}'" ""`;
 		cmd += ` 0 ${sumWild} ${sumTamed}`;
 		cmd += ` "${wild.join(',')},0" "${tamed.join(',')},0"`;
-		cmd += ` "Generated" 0 0 "" "" "" 0 0 "" 0 0 0 20 20`;
+		cmd += ` "Generated" 0 0 "" "" "" 0 ${imprint}`;
+		cmd += ` "${wildColors ? '' : colors.join(',')}"`;
+		cmd += ` 0 0 0 20 20`;
+	} else {
+		cmd = null;
 	}
 </script>
 
@@ -33,11 +34,36 @@
 		<SpeciesSelector bind:selectedSpecies />
 	</section>
 
-	<!-- Stat entry -->
-	<section class="flex flex-col gap-4">
-		<h2>Set stat levels</h2>
-		<StatEntry bind:wild bind:tamed />
-	</section>
+	<div class="flex flex-wrap gap-x-16 gap-y-8 justify-center">
+		<!-- Stat entry -->
+		<section class="flex flex-col gap-4">
+			<h2>Set stat levels</h2>
+			<StatEntry bind:wild bind:tamed />
+		</section>
+
+		<!-- Color entry -->
+		<section class="flex flex-col gap-2">
+			<h2>Colors</h2>
+			<ColorRegions bind:colors bind:wildColors />
+		</section>
+
+		<!-- Other stuff -->
+		<section class="flex flex-col gap-2">
+			<h2>Settings</h2>
+			<label class="flex gap-2 items-baseline">
+				Imprint
+				<input
+					type="number"
+					min="0"
+					max="1"
+					step="0.01"
+					bind:value={imprint}
+					class="w-18 bg-gray-700 text-gray-100 text-center"
+				/>
+				<span class="text-sm text-green-200">(0.00 → 1.00)</span>
+			</label>
+		</section>
+	</div>
 
 	<!-- Command output -->
 	<section class="flex flex-col gap-4">
@@ -48,15 +74,11 @@
 					class="flex flex-row items-center font-mono break-words break-all bg-gray-800 text-yellow-200 text-xs rounded-sm p-2"
 					role="textbox"
 					title="Click to copy"
-					><span>{cmd}</span><span class="block pl-2 text-base">📋</span></span
 				>
+					<span>{cmd}</span>
+					<span class="block pl-2 text-base">📋</span>
+				</span>
 			</ClipboardCopier>
 		{/if}
 	</section>
 </main>
-
-<style lang="postcss">
-	h2 {
-		@apply text-green-600 font-bold capitalize text-lg;
-	}
-</style>

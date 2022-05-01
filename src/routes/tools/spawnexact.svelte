@@ -67,18 +67,24 @@
 
 	<!-- Command output -->
 	<section class="flex flex-col gap-4">
-		{#if cmd}
-			<h2>Generated command</h2>
-			<ClipboardCopier content={cmd}>
-				<span
-					class="flex flex-row items-center font-mono break-words break-all bg-gray-800 text-yellow-200 text-xs rounded-sm p-2"
-					role="textbox"
-					title="Click to copy"
-				>
-					<span>{cmd}</span>
-					<span class="block pl-2 text-base">📋</span>
-				</span>
-			</ClipboardCopier>
-		{/if}
+		<div class="flex flex-col gap-4">
+			{#if cmd}
+				<h2>Generated command</h2>
+				<ClipboardCopier content={cmd}>
+					<span
+						class="flex flex-row items-center font-mono break-words break-all bg-gray-800 text-yellow-200 text-xs rounded-sm p-2"
+						role="textbox"
+						title="Click to copy"
+					>
+						<span>{cmd}</span>
+						<span class="block pl-2 text-base">📋</span>
+					</span>
+				</ClipboardCopier>
+			{/if}
+		</div>
+		<div class="flex justify-center rounded bg-yellow-200 text-dark-800 p-2 px-4">
+			<em class="font-bold mr-2">Warning:</em> Creatures spawned with this method are broken
+			until cryo'd.<br />Maybe even twice. You have been warned!
+		</div>
 	</section>
 </main>

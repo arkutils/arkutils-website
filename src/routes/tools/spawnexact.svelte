@@ -10,6 +10,8 @@
 	let colors = [0, 0, 0, 0, 0, 0];
 	let wildColors = true;
 	let imprint = 0.0;
+	let imprintName = '';
+	let imprintID: number = null;
 	let cmd = '';
 
 	$: if (selectedSpecies) {
@@ -19,7 +21,8 @@
 		cmd = `cheat SpawnExactDino "Blueprint'${selectedSpecies}'" ""`;
 		cmd += ` 0 ${sumWild} ${sumTamed}`;
 		cmd += ` "${wild.join(',')},0" "${tamed.join(',')},0"`;
-		cmd += ` "Generated" 0 0 "" "" "" 0 ${imprint}`;
+		cmd += ` "Generated" 0 0 "" ""`;
+		cmd += ` ${imprintName ? JSON.stringify(imprintName) : '""'} ${imprintID || 0} ${imprint}`;
 		cmd += ` "${wildColors ? '' : colors.join(',')}"`;
 		cmd += ` 0 0 0 20 20`;
 	} else {
@@ -50,8 +53,9 @@
 		<!-- Other stuff -->
 		<section class="flex flex-col gap-2">
 			<h2>Settings</h2>
-			<label class="flex gap-2 items-baseline">
+			<label class="flex gap-2 items-baseline justify-between">
 				Imprint
+				<span class="text-sm text-green-200">(0.00 → 1.00)</span>
 				<input
 					type="number"
 					min="0"
@@ -60,8 +64,34 @@
 					bind:value={imprint}
 					class="w-18 bg-gray-700 text-gray-100 text-center"
 				/>
-				<span class="text-sm text-green-200">(0.00 → 1.00)</span>
 			</label>
+			<label
+				class="flex gap-2 items-baseline justify-between"
+				title="Character name for rider imprint bonus"
+			>
+				Imprinter name
+				<input
+					type="text"
+					bind:value={imprintName}
+					class="w-22 bg-gray-700 text-gray-100 text-center"
+				/>
+			</label>
+			<label
+				class="flex gap-2 items-baseline justify-between"
+				title="Ark ID for rider imprint bonus"
+			>
+				Imprinter ID
+				<input
+					type="number"
+					placeholder=""
+					bind:value={imprintID}
+					class="w-28 bg-gray-700 text-gray-100 text-center"
+				/>
+			</label>
+			<span
+				class="text-sm text-green-200 italic self-end"
+				title="Not the same as your Steam ID!">(showmyadminmanager for Ark ID)</span
+			>
 		</section>
 	</div>
 

@@ -1,3 +1,5 @@
+import { ReentranceLock } from './utils/asynclock';
+
 const OBELISK = 'https://raw.githubusercontent.com/arkutils/Obelisk/master/data';
 
 export type ModInfo = {
@@ -8,76 +10,83 @@ export type ModInfo = {
     order: string;
 };
 
-export type ColorDef = [
-    name: string,
-    rgba: [number, number, number, number],
-];
+export type ColorDef = [name: string, rgba: [number, number, number, number]];
+
+export type SpeciesStatMults = [number, number, number, number, number] | null;
 
 export type Species = {
     name: string;
     blueprintPath: string;
     variants: string[];
+    fullStatsRaw: SpeciesStatMults[];
+    TamedBaseHealthMultiplier: number;
+    statImprintMult: number[];
+    displayedStats: number;
 };
 
 export type ModData = {
-    version: string,
-    format: string,
+    version: string;
+    format: string;
 
     species: Species[];
     speciesLookup: { [bp: string]: Species };
 
-    colorDefinitions: ColorDef[],
-    dyeDefinitions: ColorDef[],
+    colorDefinitions: ColorDef[];
+    dyeDefinitions: ColorDef[];
 };
-
 
 let modOrder: ModInfo[] = [];
 let modMetadata: { [mod_id: string]: ModInfo } = {};
 const modLoadCache: { [mod_id: string]: ModData } = {};
 
+const manifestReentranceLock = new ReentranceLock();
+const loadModReentranceLock = new ReentranceLock();
 
 /** Ensure the mod list is available */
 export async function ensureManifestLoaded() {
-    if (Object.keys(modMetadata).length !== 0) {
-        return;
-    }
+    await manifestReentranceLock.execute(async () => {
+        // Immediately return if we've completed
+        if (Object.keys(modMetadata).length !== 0) {
+            return;
+        }
 
-    const req = await fetch(`${OBELISK}/asb/_manifest.json`);
-    const data = await req.json();
-    parseManifest(data);
+        // Ensure we don't get re-entered
+        const req = await fetch(`${OBELISK}/asb/_manifest.json`);
+        const data = await req.json();
+        parseManifest(data);
+    });
 }
-
 
 /** Get the entire mod list */
 export function getModList(): ModInfo[] {
     return modOrder;
 }
 
-
 /** Ask for a mod to be loaded */
 export async function loadMod(modId: string) {
-    await ensureManifestLoaded();
+    return await loadModReentranceLock.execute(async () => {
+        await ensureManifestLoaded();
 
-    const mod = modMetadata[modId];
-    const filename = mod.filename;
+        const mod = modMetadata[modId];
+        const filename = mod.filename;
 
-    if (modId in modLoadCache) {
-        return modLoadCache[modId];
-    }
+        if (modId in modLoadCache) {
+            return modLoadCache[modId];
+        }
 
-    const req = await fetch(`${OBELISK}/asb/${filename}`);
-    const data = await req.json();
-    const modData = parseMod(data);
-    modLoadCache[modId] = modData;
+        const req = await fetch(`${OBELISK}/asb/${filename}`);
+        const data = await req.json();
+        const modData = parseMod(data);
+        modLoadCache[modId] = modData;
 
-    return modData;
+        return modData;
+    });
 }
-
 
 /** Fetch obelisk's manifest, parse it, sort it, and store it in `modList` */
 function parseManifest(data) {
     const files = Object.entries(data.files);
-    const mods = files.map(entry => convertModData(entry[1], entry[0]));
+    const mods = files.map((entry) => convertModData(entry[1], entry[0]));
 
     // Apply our custom ordering, bringing core mods to the top
     mods.sort((a, b) => a.order.localeCompare(b.order));
@@ -90,13 +99,12 @@ function parseManifest(data) {
     });
 }
 
-
 /** Normalise mod info and add order information */
 function convertModData(fileInfo, filename: string): ModInfo {
     const mod: ModInfo = fileInfo.mod || {
         id: '',
         tag: '',
-        title: 'Core',
+        title: 'Core (Vanilla)',
         filename: filename,
         order: '0'
     };
@@ -123,11 +131,10 @@ function parseMod(data): ModData {
 
     // Create a dict for fast species blueprint lookup
     data.speciesLookup = {};
-    data.species.forEach(species => data.speciesLookup[species.blueprintPath] = species);
+    data.species.forEach((species) => (data.speciesLookup[species.blueprintPath] = species));
 
     return data;
 }
-
 
 function compareVariants(a: Species, b: Species): number {
     const aLen = a.variants ? a.variants.length : 0;

@@ -25,5 +25,8 @@
     },
     "[jsonc]": {
         "editor.formatOnSave": true
-    }
+    },
+    "cSpell.words": [
+        "Mults"
+    ]
 }

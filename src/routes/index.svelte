@@ -16,3 +16,9 @@
 		<li><a href="/tools/colorids">Color IDs</a></li>
 	</ul>
 </section>
+
+<style lang="postcss">
+	a {
+		@apply text-gray-100;
+	}
+</style>

@@ -1,22 +1,22 @@
 import adapter from '@sveltejs/adapter-auto';
 import preprocess from 'svelte-preprocess';
-import WindiCSS from 'vite-plugin-windicss'
+import WindiCSS from 'vite-plugin-windicss';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: preprocess(),
+    // Consult https://github.com/sveltejs/svelte-preprocess
+    // for more information about preprocessors
+    preprocess: preprocess(),
 
-	kit: {
-		adapter: adapter(),
+    kit: {
+        adapter: adapter(),
 
-		vite: {
-			plugins: [
-				WindiCSS(),
-			],
-		},
-	}
+        vite: {
+            plugins: [
+                WindiCSS(),
+            ],
+        },
+    }
 };
 
 export default config;

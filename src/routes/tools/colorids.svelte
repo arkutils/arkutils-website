@@ -11,6 +11,7 @@
 
 	import type { ColorDef } from '$lib/obelisk';
 	import { loadMod } from '$lib/obelisk';
+	import { localstore } from '$lib/localstore';
 
 	const BASE_COLORID = 1;
 	const BASE_DYEID = 201;
@@ -30,6 +31,9 @@
 
 	let coreColors: Record<string, true> = {};
 	let filterParts: Array<string | number> = null;
+
+	const modStore = localstore('arkutils-last-mod', { default: '', dontWatchTabs: true });
+	$: selectedModId = $modStore;
 
 	$: if (loaded && selectedModId !== null) selectMod(selectedModId);
 	$: filterChanged(filter);

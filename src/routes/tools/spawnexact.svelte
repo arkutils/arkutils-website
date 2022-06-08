@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { selectedSpecies, selectedModId } from '$lib/stores';
+
 	import ClipboardCopier from '$lib/ClipboardCopier.svelte';
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
 	import StatEntry from '$lib/StatEntry.svelte';
 	import ColorRegions from '$lib/ColorRegions.svelte';
 
-	let selectedSpecies: string = '';
 	let wild = [0, 0, 0, 0, 0, 0, 0];
 	let tamed = [0, 0, 0, 0, 0, 0, 0];
 	let colors = [0, 0, 0, 0, 0, 0];
@@ -14,11 +15,11 @@
 	let imprintID: number = null;
 	let cmd = '';
 
-	$: if (selectedSpecies) {
+	$: if ($selectedSpecies) {
 		const sumWild = wild.reduce((a, b) => a + b, 1); // starts at 1
 		const sumTamed = tamed.reduce((a, b) => a + b, 0);
 
-		cmd = `cheat SpawnExactDino "Blueprint'${selectedSpecies}'" ""`;
+		cmd = `cheat SpawnExactDino "Blueprint'${$selectedSpecies}'" ""`;
 		cmd += ` 0 ${sumWild} ${sumTamed}`;
 		cmd += ` "${wild.join(',')},0" "${tamed.join(',')},0"`;
 		cmd += ` "Generated" 0 0 "" ""`;
@@ -34,7 +35,10 @@
 	<!-- Species selection -->
 	<section class="flex flex-col gap-4">
 		<h2>Select species</h2>
-		<SpeciesSelector bind:selectedSpecies />
+		<SpeciesSelector
+			bind:selectedSpecies={$selectedSpecies}
+			bind:selectedModId={$selectedModId}
+		/>
 	</section>
 
 	<div class="flex flex-wrap gap-x-16 gap-y-8 justify-center">

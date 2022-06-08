@@ -2,18 +2,18 @@
 	import { onMount } from 'svelte';
 
 	import { ensureManifestLoaded, getModList } from '$lib/obelisk';
-    import type { ModInfo } from '$lib/obelisk';
+	import type { ModInfo } from '$lib/obelisk';
 
 	export let selectedModId: string = '';
 
 	let modList: ModInfo[] = [];
-    let loadedManifest = false;
+	let loadedManifest = false;
 
 	onMount(async () => {
 		await ensureManifestLoaded();
 		modList = getModList();
 		selectedModId = modList[0].id;
-        loadedManifest = true;
+		loadedManifest = true;
 	});
 </script>
 

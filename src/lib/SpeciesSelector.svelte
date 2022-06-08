@@ -1,36 +1,46 @@
 <script lang="ts">
-	import { loadMod } from '$lib/obelisk';
-	import type { Species } from '$lib/obelisk';
+	import { onMount } from 'svelte';
 
-    import ModSelector from './ModSelector.svelte';
+	import { localstore } from '$lib/localstore';
+	import { loadMod, type Species } from '$lib/obelisk';
 
+	import ModSelector from './ModSelector.svelte';
+
+	export let selectedModId: string = null;
 	export let selectedSpecies: string = '';
-	export let filterUseless: boolean = true;
 
-	let selectedModId: string = null;
+	let filterUseless = localstore('arkutils-filter-species', {
+		default: true,
+		dontWatchTabs: true
+	});
 	let fullSpeciesList: Species[] = [];
 	let showSpeciesList: Species[] = [];
+	let loaded = false;
 
-	$: if (selectedModId !== null) selectMod(selectedModId);
-	$: showSpeciesList = filterUseless ? filterSpecies(fullSpeciesList) : fullSpeciesList;
+	onMount(() => {
+		loaded = true;
+	});
+
+	$: if (loaded && selectedModId !== null) selectMod(selectedModId);
+	$: showSpeciesList = $filterUseless ? filterSpecies(fullSpeciesList) : fullSpeciesList;
 
 	async function selectMod(modId) {
-        const modData = await loadMod(modId);
+		const modData = await loadMod(modId);
 		fullSpeciesList = modData.species;
 
-        // Check we have a valid species for this mod
-        if (!modData.speciesLookup[selectedSpecies]) {
-            selectedSpecies = null;
-        }
+		// Check we have a valid species for this mod
+		if (!modData.speciesLookup[selectedSpecies]) {
+			selectedSpecies = null;
+		}
 
-        // If no species selected, pick the first in the list
+		// If no species selected, pick the first in the list
 		if (!selectedSpecies) {
 			selectedSpecies = fullSpeciesList[0].blueprintPath;
 		}
 	}
 
 	function filterSpecies(species: Species[]): Species[] {
-        if (!species.length) return [];
+		if (!species.length) return [];
 
 		species = species.filter((entry) => {
 			const variants = entry.variants;
@@ -38,16 +48,18 @@
 			if (variants.includes('Mission')) return false;
 			if (variants.includes('Minion')) return false;
 			if (variants.includes('Corrupted')) return false;
+			if (variants.includes('Summoned')) return false;
+			if (variants.includes('Unused')) return false;
 			if (variants.includes('Boss')) return false;
 			return true;
 		});
 
-        // If we got rid of the selected species, reset it
-        if (!species.find((entry) => entry.blueprintPath === selectedSpecies)) {
-            selectedSpecies = '';
-        }
+		// If we got rid of the selected species, reset it
+		if (!species.find((entry) => entry.blueprintPath === selectedSpecies)) {
+			selectedSpecies = '';
+		}
 
-        return species;
+		return species;
 	}
 
 	function fmtVariants(species: Species) {
@@ -66,7 +78,7 @@
 	{/if}
 </select>
 
-<label>
-	<input type="checkbox" bind:checked={filterUseless} class="bg-gray-800 p-2" />
+<label title="Hide bosses, mission spawns, etc">
+	<input type="checkbox" bind:checked={$filterUseless} class="bg-gray-800 p-2" />
 	Hide useless species
 </label>

@@ -22,6 +22,7 @@ export type Species = {
     TamedBaseHealthMultiplier: number;
     statImprintMult: number[];
     displayedStats: number;
+    breeding?: { eggTempMin?: number; eggTempMax?: number };
 };
 
 export type ModData = {
@@ -140,4 +141,20 @@ function compareVariants(a: Species, b: Species): number {
     const aLen = a.variants ? a.variants.length : 0;
     const bLen = b.variants ? b.variants.length : 0;
     return aLen - bLen;
+}
+
+export function isSpeciesUseful(species: Species): boolean {
+    const variants = species.variants;
+    if (!variants) return true;
+    if (variants.includes('Mission')) return false;
+    if (variants.includes('Minion')) return false;
+    if (variants.includes('Corrupted')) return false;
+    if (variants.includes('Summoned')) return false;
+    if (variants.includes('Unused')) return false;
+    if (variants.includes('Boss')) return false;
+    if (variants.includes('Base')) return false;
+    if (variants.includes('Mega')) return false;
+    if (variants.includes('Ghost')) return false;
+    if (variants.includes('Skeletal')) return false;
+    return true;
 }

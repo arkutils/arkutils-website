@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 
 	import { localstore } from '$lib/localstore';
-	import { loadMod, type Species } from '$lib/obelisk';
+	import { isSpeciesUseful, loadMod, type Species } from '$lib/obelisk';
 
 	import ModSelector from './ModSelector.svelte';
 
@@ -42,17 +42,7 @@
 	function filterSpecies(species: Species[]): Species[] {
 		if (!species.length) return [];
 
-		species = species.filter((entry) => {
-			const variants = entry.variants;
-			if (!variants) return true;
-			if (variants.includes('Mission')) return false;
-			if (variants.includes('Minion')) return false;
-			if (variants.includes('Corrupted')) return false;
-			if (variants.includes('Summoned')) return false;
-			if (variants.includes('Unused')) return false;
-			if (variants.includes('Boss')) return false;
-			return true;
-		});
+		species = species.filter(isSpeciesUseful);
 
 		// If we got rid of the selected species, reset it
 		if (!species.find((entry) => entry.blueprintPath === selectedSpecies)) {

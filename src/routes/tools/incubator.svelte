@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	import { loadMod, type ModData, type Species } from '$lib/obelisk';
+	import { isSpeciesUseful, loadMod, type ModData, type Species } from '$lib/obelisk';
 	import { selectedModId, selectedSpecies } from '$lib/stores';
 
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
@@ -69,11 +69,13 @@
 	let modData: ModData = null;
 	let loadedModId: string = null;
 	let speciesData: Species;
+	let eggTemp: number = null;
+	let similarEggs: string[] = [];
 
 	let wildLevels: number[] = Array(12).fill(0);
 
 	$: if (loaded) selectMod($selectedModId);
-	$: if (loaded) speciesData = modData.speciesLookup[$selectedSpecies];
+	$: if (loaded) selectSpecies($selectedSpecies);
 
 	onMount(async () => {
 		// Load core
@@ -86,6 +88,56 @@
 		if (modId === loadedModId) return;
 		modData = await loadMod(modId);
 		loadedModId = modId;
+	}
+
+	async function selectSpecies(speciesId) {
+		speciesData = modData.speciesLookup[speciesId];
+
+		// Look for egg temps
+		if (speciesData.breeding) {
+			eggTemp = calculateOptimalTemp(
+				speciesData.breeding.eggTempMin,
+				speciesData.breeding.eggTempMax
+			);
+			similarEggs = findSimilarEggs(eggTemp, $selectedSpecies);
+		} else {
+			eggTemp = null;
+			similarEggs = null;
+		}
+	}
+
+	function calculateOptimalTemp(minTemp, maxTemp) {
+		if (typeof minTemp !== 'number' || typeof maxTemp !== 'number') return null;
+		const tempRange = maxTemp - minTemp;
+		const optimalTemp = Math.round(minTemp + tempRange / 2);
+		return optimalTemp;
+	}
+
+	function findSimilarEggs(temp: number, thisSpecies: string) {
+		if (temp === null) return [];
+
+		const matches: string[] = [];
+		for (const species of modData.species) {
+			// Don't include ourself
+			if (species.blueprintPath === thisSpecies) continue;
+
+			// Skip unbreedable
+			if (!species.breeding) continue;
+
+			// Skip minions, bosses, currupt, etc
+			if (!isSpeciesUseful(species)) continue;
+
+			const thisTemp = calculateOptimalTemp(
+				species.breeding.eggTempMin,
+				species.breeding.eggTempMax
+			);
+
+			if (thisTemp === temp) {
+				matches.push(species.name);
+			}
+		}
+
+		return matches;
 	}
 
 	function calcStat(stat: number, wildLevels: number, speciesData: Species): number | null {
@@ -185,7 +237,7 @@
 	}
 </script>
 
-<main class="flex flex-col gap-12">
+<main class="flex flex-col gap-8">
 	<!-- Info -->
 	<header class="flex flex-wrap justify-center gap-x-4 ">
 		<div class="overflow-visible flex justify-center">
@@ -245,6 +297,29 @@
 			</div>
 		{/each}
 	</section>
+
+	<!-- Egg info -->
+	{#if eggTemp}
+		<section class="bg-[#161F32] p-4 rounded-lg shadow-lg">
+			<div>
+				Optimal Temp:
+				<span class="font-bold text-lg text-green-300 ml-2">
+					{typeof eggTemp === 'number' ? eggTemp : '-'}°C
+				</span>
+			</div>
+			{#if similarEggs && similarEggs.length}
+				<div class="mt-2">Best incubated together with:</div>
+				<div class="font-bold text-green-300">
+					{similarEggs.join(', ')}
+				</div>
+			{:else}
+				<div class="mt-2">
+					Best incubated together with:
+					<span class="font-bold text-green-300">nothing</span>
+				</div>
+			{/if}
+		</section>
+	{/if}
 
 	<!-- Troubleshooting -->
 	<section class="bg-[#161F32] p-4 flex flex-wrap gap-4 justify-center rounded-lg shadow-lg">

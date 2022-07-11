@@ -19,6 +19,6 @@
 
 <style lang="postcss">
 	a {
-		@apply text-gray-100;
+		@apply text-base-content;
 	}
 </style>

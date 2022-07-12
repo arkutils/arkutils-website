@@ -38,6 +38,17 @@
 />
 
 <main class="flex flex-col gap-8">
+	<h1><code>/spawnexactdino</code> Generator</h1>
+	<p>
+		This generator helps you create admin spawncodes for creatures in ARK: Survival Evolved. You
+		can decide over the stat and color distribution.
+	</p>
+	<p>
+		The generator also supports many modded creatures and lets you set an imprinter and imprint
+		amount. Please be aware that creatures need to be cryo'd once or twice until they show the
+		right stats and colors.
+	</p>
+
 	<!-- Species selection -->
 	<section class="flex flex-col gap-4">
 		<h2 class="text-primary">Select species</h2>

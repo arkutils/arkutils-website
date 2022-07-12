@@ -31,4 +31,5 @@
 	<meta property="og:image" content={previewImage} />
 
 	<meta name="twitter:image" content={previewTwitterImage} />
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>

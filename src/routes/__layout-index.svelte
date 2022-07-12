@@ -1,11 +1,7 @@
 <script>
-	import 'virtual:windi.css';
 	import '../app.postcss';
 
-	// if you want to enable windi devtools
-	import { browser } from '$app/env';
 	import GitHub from '$lib/imgs/GitHub.svelte';
-	if (browser) import('virtual:windi-devtools');
 </script>
 
 <main class="min-h-screen flex flex-col items-center">

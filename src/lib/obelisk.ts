@@ -85,7 +85,7 @@ export async function loadMod(modId: string) {
 }
 
 /** Fetch obelisk's manifest, parse it, sort it, and store it in `modList` */
-function parseManifest(data) {
+function parseManifest(data: any) {
     const files = Object.entries(data.files);
     const mods = files.map((entry) => convertModData(entry[1], entry[0]));
 
@@ -101,7 +101,7 @@ function parseManifest(data) {
 }
 
 /** Normalise mod info and add order information */
-function convertModData(fileInfo, filename: string): ModInfo {
+function convertModData(fileInfo: any, filename: string): ModInfo {
     const mod: ModInfo = fileInfo.mod || {
         id: '',
         tag: '',
@@ -126,13 +126,13 @@ function convertModData(fileInfo, filename: string): ModInfo {
 }
 
 /** Parse a mod data */
-function parseMod(data): ModData {
+function parseMod(data: any): ModData {
     // Sort species by name and number of variants
-    data.species.sort((a, b) => a.name.localeCompare(b.name) || compareVariants(a, b));
+    data.species.sort((a: any, b: any) => a.name.localeCompare(b.name) || compareVariants(a, b));
 
     // Create a dict for fast species blueprint lookup
     data.speciesLookup = {};
-    data.species.forEach((species) => (data.speciesLookup[species.blueprintPath] = species));
+    data.species.forEach((species: any) => (data.speciesLookup[species.blueprintPath] = species));
 
     return data;
 }
@@ -146,13 +146,13 @@ function compareVariants(a: Species, b: Species): number {
 export function isSpeciesUseful(species: Species): boolean {
     const variants = species.variants;
     if (!variants) return true;
+    if (variants.includes('Cave')) return false;
     if (variants.includes('Mission')) return false;
     if (variants.includes('Minion')) return false;
     if (variants.includes('Corrupted')) return false;
     if (variants.includes('Summoned')) return false;
     if (variants.includes('Unused')) return false;
     if (variants.includes('Boss')) return false;
-    if (variants.includes('Base')) return false;
     if (variants.includes('Mega')) return false;
     if (variants.includes('Ghost')) return false;
     if (variants.includes('Skeletal')) return false;

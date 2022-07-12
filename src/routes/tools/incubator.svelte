@@ -5,14 +5,14 @@
 	import { selectedModId, selectedSpecies } from '$lib/stores';
 
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
-	import Health from '$lib/imgs/Health.svelte';
-	import Stamina from '$lib/imgs/Stamina.svelte';
-	import Oxygen from '$lib/imgs/Oxygen.svelte';
-	import Food from '$lib/imgs/Food.svelte';
-	import Weight from '$lib/imgs/Weight.svelte';
-	import Damage from '$lib/imgs/Damage.svelte';
-	import Speed from '$lib/imgs/Speed.svelte';
-	import Torpor from '$lib/imgs/Torpor.svelte';
+	import Health from '$lib/imgs/stats/Health.svelte';
+	import Stamina from '$lib/imgs/stats/Stamina.svelte';
+	import Oxygen from '$lib/imgs/stats/Oxygen.svelte';
+	import Food from '$lib/imgs/stats/Food.svelte';
+	import Weight from '$lib/imgs/stats/Weight.svelte';
+	import Damage from '$lib/imgs/stats/Damage.svelte';
+	import Speed from '$lib/imgs/stats/Speed.svelte';
+	import Torpor from '$lib/imgs/stats/Torpor.svelte';
 
 	const STAT_NAMES = [
 		'Health',

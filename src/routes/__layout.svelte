@@ -16,8 +16,13 @@
 			</a>
 		</span>
 		<span>
-			Arkutils is not affiliated with Studio Wildcard
-			<img src="/imgs/wildcard.png" class="w-6 h-6 inline" />
+			ArkUtils is not affiliated with <a
+				href="https://www.studiowildcard.com/"
+				target="_blank"
+			>
+				Studio Wildcard
+				<img src="/imgs/wildcard.png" class="w-6 h-6 inline" alt="Studio Wildcard's logo" />
+			</a>
 		</span>
 	</footer>
 </main>

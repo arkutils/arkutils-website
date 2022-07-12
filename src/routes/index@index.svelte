@@ -4,6 +4,7 @@
 	import DinoHatching from '$lib/imgs/toolicons/DinoHatching.svelte';
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
+	import Metadata from '$lib/Metadata.svelte';
 
 	import { slide } from 'svelte/transition';
 
@@ -20,6 +21,8 @@
 		show[name] = !show[name];
 	}
 </script>
+
+<Metadata title={null} description={null} />
 
 <header class="w-full flex justify-center">
 	<div class="bg-base-200 rounded-b-full text-[200px] text-secondary p-8 pt-2">

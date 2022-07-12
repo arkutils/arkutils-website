@@ -13,6 +13,7 @@
 	import Damage from '$lib/imgs/stats/Damage.svelte';
 	import Speed from '$lib/imgs/stats/Speed.svelte';
 	import Torpor from '$lib/imgs/stats/Torpor.svelte';
+	import Metadata from '$lib/Metadata.svelte';
 
 	const STAT_NAMES = [
 		'Health',
@@ -237,6 +238,11 @@
 		return stat === 8 || stat === 9;
 	}
 </script>
+
+<Metadata
+	title="Incubator Calculator"
+	description="The Incubator Calculator lets you calculate the raw stats from level points in the ARK Incubator but it also lets you calculate the level points when you only have raw stats without the need of a modded spyglass."
+/>
 
 <main class="flex flex-col gap-8">
 	<!-- Info -->

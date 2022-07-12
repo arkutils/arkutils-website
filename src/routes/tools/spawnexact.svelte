@@ -5,6 +5,7 @@
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
 	import StatEntry from '$lib/StatEntry.svelte';
 	import ColorRegions from '$lib/ColorRegions.svelte';
+	import Metadata from '$lib/Metadata.svelte';
 
 	let wild = [0, 0, 0, 0, 0, 0, 0];
 	let tamed = [0, 0, 0, 0, 0, 0, 0];
@@ -30,6 +31,11 @@
 		cmd = null;
 	}
 </script>
+
+<Metadata
+	title="Spawn Exact Dino Generator"
+	description="This generator for the spawnexactdino admin command can help you spawn creatures with every level, color and stat distribution that you want. It also supports many modded dinos."
+/>
 
 <main class="flex flex-col gap-8">
 	<!-- Species selection -->

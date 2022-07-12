@@ -2,16 +2,17 @@
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 
-	import type { ColorInfo } from '$lib/ColorChart.svelte';
-	import ColorChart from '$lib/ColorChart.svelte';
-	import ModSelector from '$lib/ModSelector.svelte';
-	import ColorDetail from '$lib/ColorDetail.svelte';
-
 	import { srgbFilm, srgbPow22, asHex } from '$lib/colors';
 
 	import type { ColorDef } from '$lib/obelisk';
 	import { loadMod } from '$lib/obelisk';
 	import { localstore } from '$lib/localstore';
+
+	import type { ColorInfo } from '$lib/ColorChart.svelte';
+	import ColorChart from '$lib/ColorChart.svelte';
+	import ModSelector from '$lib/ModSelector.svelte';
+	import ColorDetail from '$lib/ColorDetail.svelte';
+	import Metadata from '$lib/Metadata.svelte';
 
 	const BASE_COLORID = 1;
 	const BASE_DYEID = 201;
@@ -137,6 +138,11 @@
 		return true;
 	}
 </script>
+
+<Metadata
+	title="Dino Color IDs"
+	description="This infopage shows you all the color IDs that are available on dinosaurs in ARK: Survival Evolved. Some are only available through mutating or special events. The Dino Color ID infopage also supports many modded colors."
+/>
 
 <h1 class="mb-4">ARK Color IDs</h1>
 

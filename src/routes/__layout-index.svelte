@@ -9,7 +9,7 @@
 
 	<footer class="flex flex-wrap p-2 mt-12 justify-between max-w-2xl gap-x-8 text-base-content/70">
 		<span>
-			This site is <a href="https://github.com/arkutils/arkutils-website">
+			This site is <a href="https://github.com/arkutils/arkutils-website" target="_blank">
 				open source on GitHub
 				<span class="-mt-1 relative -top-0.5 text-20px text-base-content ml-1px">
 					<GitHub />

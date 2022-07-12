@@ -26,7 +26,7 @@
 
 {#if color}
 	<div
-		class="z-50 bg-gray-700 rounded-lg shadow-lg min-w-80 min-h-100 p-6 flex flex-col items-center gap-6"
+		class="z-50 bg-base-300 rounded-lg shadow-lg min-w-80 min-h-100 p-6 flex flex-col items-center gap-6"
 	>
 		<!-- Title area -->
 		<div class="flex text-lg font-bold gap-2 items-center self-stretch">
@@ -69,7 +69,7 @@
 		<!-- Format choice -->
 		<label class="self-end flex items-baseline gap-3">
 			<span>Display format:</span>
-			<select class="bg-dark-50 p-1 rounded" bind:value={$displayFormat}>
+			<select class="select bg-base-200" bind:value={$displayFormat}>
 				<option value="hex">Hex #rrggbb</option>
 				<option value="rgb1">RGB (0.0-1.0)</option>
 				<option value="rgb256">RGB (0-256)</option>

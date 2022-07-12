@@ -45,7 +45,7 @@
 	];
 
 	// Display order, mirroring in-game
-	const statDisplayOrder = [0, 1, 3, 4, 7, 8, 9];
+	const statDisplayOrder = [0, 1, 7, 8, 3, 4, 9];
 
 	const serverMults = [
 		// [IwM, IdM, TaM, TmM]
@@ -221,7 +221,7 @@
 
 	/** Pick the stats to display for a species */
 	function selectStats(speciesData: Species): number[] {
-		if (!speciesData) return [0, 1, 7, 8, 3, 4, 9];
+		if (!speciesData) return statDisplayOrder;
 
 		// Pick stats in display order if present in the displayedStats bitmask
 		const stats = [];

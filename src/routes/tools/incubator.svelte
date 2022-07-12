@@ -147,7 +147,8 @@
 		if (!speciesData.fullStatsRaw[stat]) return null;
 
 		// Species values
-		const [B, Iw, Id, Ta, Tm] = speciesData.fullStatsRaw[stat];
+		// @ts-ignore - TS fails to see that this is a number[]
+		const [B, Iw, Id, Ta, Tm]: number[] = speciesData.fullStatsRaw[stat];
 		const TBHM = speciesData.TamedBaseHealthMultiplier;
 		const IBm = speciesData.statImprintMult
 			? speciesData.statImprintMult[stat]

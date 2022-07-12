@@ -133,7 +133,7 @@
 				species.breeding.eggTempMax
 			);
 
-			if (thisTemp === temp) {
+			if (thisTemp === temp && !matches.includes(species.name)) {
 				matches.push(species.name);
 			}
 		}

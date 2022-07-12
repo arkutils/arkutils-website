@@ -4,7 +4,7 @@
 	import { ensureManifestLoaded, getModList } from '$lib/obelisk';
 	import type { ModInfo } from '$lib/obelisk';
 
-	export let selectedModId: string = '';
+	export let selectedModId: string | null = '';
 
 	let modList: ModInfo[] = [];
 	let loadedManifest = false;

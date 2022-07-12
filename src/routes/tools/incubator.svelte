@@ -66,10 +66,10 @@
 	const defaultImprintMults = [0.2, 0.0, 0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2, 0.2, 0.0, 0.0];
 
 	let loaded = false;
-	let modData: ModData = null;
-	let loadedModId: string = null;
+	let modData: ModData | null = null;
+	let loadedModId: string | null = null;
 	let speciesData: Species;
-	let eggTemp: number = null;
+	let eggTemp: number | null = null;
 	let similarEggs: string[] = [];
 
 	let wildLevels: number[] = Array(12).fill(0);
@@ -84,13 +84,14 @@
 		loaded = true;
 	});
 
-	async function selectMod(modId) {
+	async function selectMod(modId: string) {
 		if (modId === loadedModId) return;
 		modData = await loadMod(modId);
 		loadedModId = modId;
 	}
 
-	async function selectSpecies(speciesId) {
+	async function selectSpecies(speciesId: string) {
+		if (!modData) return;
 		speciesData = modData.speciesLookup[speciesId];
 
 		// Look for egg temps
@@ -102,19 +103,19 @@
 			similarEggs = findSimilarEggs(eggTemp, $selectedSpecies);
 		} else {
 			eggTemp = null;
-			similarEggs = null;
+			similarEggs = [];
 		}
 	}
 
-	function calculateOptimalTemp(minTemp, maxTemp) {
+	function calculateOptimalTemp(minTemp: number | undefined, maxTemp: number | undefined) {
 		if (typeof minTemp !== 'number' || typeof maxTemp !== 'number') return null;
 		const tempRange = maxTemp - minTemp;
 		const optimalTemp = Math.round(minTemp + tempRange / 2);
 		return optimalTemp;
 	}
 
-	function findSimilarEggs(temp: number, thisSpecies: string) {
-		if (temp === null) return [];
+	function findSimilarEggs(temp: number | null, thisSpecies: string) {
+		if (temp === null || modData === null) return [];
 
 		const matches: string[] = [];
 		for (const species of modData.species) {

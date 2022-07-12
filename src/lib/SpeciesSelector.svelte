@@ -6,8 +6,8 @@
 
 	import ModSelector from './ModSelector.svelte';
 
-	export let selectedModId: string = null;
-	export let selectedSpecies: string = '';
+	export let selectedModId: string | null = null;
+	export let selectedSpecies: string | null = '';
 
 	let filterUseless = localstore('arkutils-filter-species', {
 		default: true,
@@ -24,12 +24,12 @@
 	$: if (loaded && selectedModId !== null) selectMod(selectedModId);
 	$: showSpeciesList = $filterUseless ? filterSpecies(fullSpeciesList) : fullSpeciesList;
 
-	async function selectMod(modId) {
+	async function selectMod(modId: string) {
 		const modData = await loadMod(modId);
 		fullSpeciesList = modData.species;
 
 		// Check we have a valid species for this mod
-		if (!modData.speciesLookup[selectedSpecies]) {
+		if (selectedSpecies !== null && !modData.speciesLookup[selectedSpecies]) {
 			selectedSpecies = null;
 		}
 

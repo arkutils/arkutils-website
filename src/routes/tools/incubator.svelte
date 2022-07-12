@@ -311,7 +311,12 @@
 			{#if similarEggs && similarEggs.length}
 				<div class="mt-2">Best incubated together with:</div>
 				<div class="font-bold text-secondary">
-					{similarEggs.join(', ')}
+					{#each similarEggs as eggSpecies, i}
+						{#if i !== 0}
+							<span>, </span>
+						{/if}
+						<span class="whitespace-nowrap species-name">{eggSpecies}</span>
+					{/each}
 				</div>
 			{:else}
 				<div class="mt-2">

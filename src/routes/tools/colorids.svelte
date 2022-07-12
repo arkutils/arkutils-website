@@ -16,12 +16,12 @@
 	const BASE_COLORID = 1;
 	const BASE_DYEID = 201;
 
-	let displayedColor: ColorInfo = null;
-	let selectedModId: string = null;
-	let loadedModId: string = null;
+	let displayedColor: ColorInfo | null = null;
+	let selectedModId: string | null = null;
+	let loadedModId: string | null = null;
 	let hideCore: boolean = true;
 	let filter: string = '';
-	let debounceTimer;
+	let debounceTimer: any; /* any because types vary across platforms */
 
 	let modColors: ColorInfo[];
 	let modDyes: ColorInfo[];
@@ -30,7 +30,7 @@
 	let loaded: boolean = false;
 
 	let coreColors: Record<string, true> = {};
-	let filterParts: Array<string | number> = null;
+	let filterParts: Array<string | number> | null = null;
 
 	const modStore = localstore('arkutils-last-mod', { default: '', dontWatchTabs: true });
 	$: selectedModId = $modStore;
@@ -52,7 +52,7 @@
 		loaded = true;
 	});
 
-	async function selectMod(modId) {
+	async function selectMod(modId: string) {
 		console.log(`selectMod(${JSON.stringify(modId)})`);
 		if (modId === loadedModId) return;
 		const modData = await loadMod(modId);
@@ -83,8 +83,8 @@
 
 	function applyFilter(
 		_hideCore: boolean,
-		_selectedModId: string,
-		_filterParts: (string | number)[]
+		_selectedModId: string | null,
+		_filterParts: (string | number)[] | null
 	) {
 		// ...arguments are ignored, used to trigger Svelte to re-run this function
 		console.log(`applyFilter(${hideCore}, ${JSON.stringify(selectedModId)})`);
@@ -138,29 +138,51 @@
 	}
 </script>
 
-<h2 class="mb-4">Ark Color IDs</h2>
+<h1 class="mb-4">ARK Color IDs</h1>
+
+<!-- Info text -->
+<p class="mb-2">
+	This page lists all color IDs in ARK: Survival Evolved, plus a list of supported mods.
+</p>
+<p class="mb-4">
+	The normal colours can be picked for wild creatures, while mutations and special events can pick
+	from both normal and dye colours.
+</p>
 
 <!-- Input section -->
 <section class="flex flex-col gap-2 sm:flex-row justify-evenly">
 	<div class="flex flex-col gap-2 flex-1">
-		<h3>Choose mod</h3>
+		<h3>Choose Mod</h3>
 		<ModSelector bind:selectedModId />
-		<label class:text-gray-500={!selectedModId} class="select-none">
-			<input type="checkbox" bind:checked={hideCore} disabled={!selectedModId} />
+		<label
+			class:text-gray-500={!selectedModId}
+			class="select-none flex flex-row items-center gap-2"
+		>
+			<input
+				type="checkbox"
+				class="checkbox"
+				bind:checked={hideCore}
+				disabled={!selectedModId}
+			/>
 			Hide duplicates from core
 		</label>
 	</div>
 
 	<label class="flex flex-col gap-2 flex-1">
 		<h3>Filter (by ID or name)</h3>
-		<input type="text" class="bg-gray-800 p-2 px-3" bind:value={filter} />
+		<input
+			type="text"
+			class="bg-base-200 input p-2 px-3"
+			bind:value={filter}
+			placeholder="example: black or 79"
+		/>
 	</label>
 </section>
 
 <!-- Colour lists -->
-<h3 class="mt-4 mb-1">Normal colors ({filteredColors.length})</h3>
+<h3 class="mt-4 mb-1">Normal Colors (found {filteredColors.length})</h3>
 <ColorChart colors={filteredColors} on:selected={(e) => (displayedColor = e.detail)} />
-<h3 class="mt-4 mb-1">Dye colors ({filteredDyes.length})</h3>
+<h3 class="mt-4 mb-1">Dye Colors (found {filteredDyes.length})</h3>
 <ColorChart colors={filteredDyes} on:selected={(e) => (displayedColor = e.detail)} />
 
 <!-- Colour info dialog-->

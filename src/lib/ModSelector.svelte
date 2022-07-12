@@ -17,7 +17,7 @@
 	});
 </script>
 
-<select bind:value={selectedModId} class="bg-gray-800 p-2" disabled={!loadedManifest}>
+<select bind:value={selectedModId} class="select bg-base-200" disabled={!loadedManifest}>
 	{#each modList as mod}
 		<option value={mod.id}>
 			{mod.title}

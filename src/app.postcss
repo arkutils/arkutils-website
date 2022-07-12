@@ -1,3 +1,8 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 a {
 	@apply text-primary;
 }
@@ -10,15 +15,15 @@ h1 {
 }
 
 h2 {
-	@apply text-primary font-bold capitalize text-xl;
+	@apply text-primary font-bold text-xl;
 }
 
 h3 {
-	@apply text-primary font-bold capitalize text-base;
+	@apply text-primary font-bold text-base;
 }
 
 :focus {
-	@apply outline-solid-primary/50;
+	@apply outline-primary/50;
 }
 
 code {

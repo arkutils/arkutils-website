@@ -113,22 +113,22 @@
 	}
 
 	.tool {
-		@apply bg-base-200 p-4 rounded-xl w-full pr-6 shadow-lg h-112px z-10;
+		@apply bg-base-200 p-4 rounded-xl w-full pr-6 shadow-lg h-[112px] z-10;
 		@apply flex flex-row gap-4 items-center justify-between;
 		@apply text-right text-xl;
 		@apply relative;
 	}
 
 	.tool > figure {
-		@apply text-6rem -m-2;
-		@apply relative h-1em w-1em;
+		@apply text-[6rem] -m-2;
+		@apply relative h-[1em] w-[1em];
 	}
 	.tool > figure > :global(*) {
 		@apply absolute top-0 left-0;
 	}
 	.tool > .help {
-		@apply absolute -bottom-0.5em right-0 z-20;
-		@apply border-base-content border-1 rounded-full w-1.5em h-1.5em;
+		@apply absolute -bottom-[0.5em] right-0 z-20;
+		@apply border-base-content border rounded-full w-[1.5em] h-[1.5em];
 		@apply bg-base-300 hover:bg-primary hover:focus:bg-base-300 shadow-lg text-primary-content;
 		@apply cursor-help;
 	}

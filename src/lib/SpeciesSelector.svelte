@@ -59,7 +59,7 @@
 
 <ModSelector bind:selectedModId />
 
-<select bind:value={selectedSpecies} class="bg-gray-800 p-2">
+<select bind:value={selectedSpecies} class="select bg-base-200">
 	{#each showSpeciesList as species}
 		<option value={species.blueprintPath}>{species.name}{fmtVariants(species)}</option>
 	{/each}
@@ -68,7 +68,7 @@
 	{/if}
 </select>
 
-<label title="Hide bosses, mission spawns, etc">
-	<input type="checkbox" bind:checked={$filterUseless} class="bg-gray-800 p-2" />
+<label title="Hide bosses, mission spawns, etc" class="flex items-center gap-2">
+	<input type="checkbox" bind:checked={$filterUseless} class="bg-base-200 checkbox" />
 	Hide useless species
 </label>

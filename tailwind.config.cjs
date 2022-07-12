@@ -1,7 +1,11 @@
-import { transform, defineConfig } from 'windicss/helpers';
+const config = {
+    content: ['./src/**/*.{html,js,svelte,ts}'],
 
-export default defineConfig({
-    plugins: [transform('daisyui')],
+    theme: {
+        extend: {}
+    },
+
+    plugins: [require("daisyui")],
 
     daisyui: {
         themes: [
@@ -34,4 +38,6 @@ export default defineConfig({
             }
         ]
     }
-});
+};
+
+module.exports = config;

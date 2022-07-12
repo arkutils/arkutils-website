@@ -12,6 +12,6 @@
 		max="255"
 		{disabled}
 		bind:value={color}
-		class="bg-gray-700 text-gray-100 text-center w-16 disabled:opacity-40"
+		class="input input-xs bg-base-200 text-base-content text-center w-16 disabled:opacity-40"
 	/>
 </label>

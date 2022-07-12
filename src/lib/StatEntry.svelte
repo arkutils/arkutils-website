@@ -31,7 +31,7 @@
 					max={255}
 					step={1}
 					bind:value={wild[i]}
-					class="bg-gray-700 text-gray-100 text-center"
+					class="input input-xs bg-base-200 text-base-content text-center"
 				/>
 			{/each}
 		</ul>
@@ -42,7 +42,7 @@
 					min={0}
 					max={255}
 					bind:value={tamed[i]}
-					class="bg-gray-700 text-gray-100 text-center"
+					class="input input-xs bg-base-200 text-base-content text-center"
 				/>
 			{/each}
 		</ul>

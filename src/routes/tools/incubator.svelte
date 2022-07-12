@@ -244,16 +244,16 @@
 		<div class="overflow-visible flex justify-center">
 			<img
 				src="/imgs/incubator.png"
-				class="w-30 h-30 md:w-45 md:h-45 mr-4"
+				class="w-[120px] h-[120px] md:w-[180px] md:h-[160px] mr-4"
 				alt="An incubator"
 			/>
-			<h1 class="text-white text-right text-4xl md:text-6xl">
+			<h1 class="text-base-content text-right text-4xl md:text-6xl">
 				Incubator<br />Calculator
 			</h1>
 		</div>
-		<div class="bg-[#1E2B47] p-4 rounded-lg shadow-lg">
-			<h2 class="text-white mb-2 text-2xl md:text-3xl">How does it work?</h2>
-			<ul class="text-white">
+		<div class="bg-base-300 p-4 rounded-lg shadow-lg">
+			<h2 class="text-base-content mb-2 text-2xl md:text-3xl">How does it work?</h2>
+			<ul class="text-base-content">
 				<li>- Choose the animal</li>
 				<li>- Enter the level, the incubator shows</li>
 				<li>- See the stat below</li>
@@ -282,12 +282,12 @@
 				<div class="flex flex-col items-center justify-center gap-1 mt-1 w-28">
 					<input
 						type="number"
-						class="bg-gray-800 px-2 py-1 w-16"
+						class="input input-sm bg-base-200 w-16"
 						min="0"
 						max="255"
 						bind:value={wildLevels[i]}
 					/>
-					<span class="text-xl font-bold text-green-500">
+					<span class="text-xl font-bold text-primary">
 						{#if speciesData}
 							{statValue(i, wildLevels[i], speciesData)}
 						{:else}
@@ -301,31 +301,31 @@
 
 	<!-- Egg info -->
 	{#if eggTemp}
-		<section class="bg-[#161F32] p-4 rounded-lg shadow-lg">
+		<section class="bg-base-200 p-4 rounded-lg shadow-lg">
 			<div>
 				Optimal Temp:
-				<span class="font-bold text-lg text-green-300 ml-2">
+				<span class="font-bold text-lg text-secondary ml-2">
 					{typeof eggTemp === 'number' ? eggTemp : '-'}°C
 				</span>
 			</div>
 			{#if similarEggs && similarEggs.length}
 				<div class="mt-2">Best incubated together with:</div>
-				<div class="font-bold text-green-300">
+				<div class="font-bold text-secondary">
 					{similarEggs.join(', ')}
 				</div>
 			{:else}
 				<div class="mt-2">
 					Best incubated together with:
-					<span class="font-bold text-green-300">nothing</span>
+					<span class="font-bold text-secondary">nothing</span>
 				</div>
 			{/if}
 		</section>
 	{/if}
 
 	<!-- Troubleshooting -->
-	<section class="bg-[#161F32] p-4 flex flex-wrap gap-4 justify-center rounded-lg shadow-lg">
+	<section class="bg-base-200 p-4 flex flex-wrap gap-4 justify-center rounded-lg shadow-lg">
 		<div>
-			<h2 class="text-white font-thin text-2xl mb-2">It didn't work?</h2>
+			<h2 class=" font-thin text-2xl mb-2">It didn't work?</h2>
 			<ul>
 				<li>- You have different server stats than vanilla</li>
 				<li>- You chose the wrong creature</li>
@@ -338,7 +338,7 @@
 			</div>
 		</div>
 		<div class="flex justify-center items-center">
-			<a href="http://cadon.github.io/ARKStatsExtractor/" alt="Ark Smart Breeding tool">
+			<a href="https://cadon.github.io/ARKStatsExtractor/" alt="Ark Smart Breeding tool">
 				<img src="/imgs/asb.png" alt="Ark breeding logo" class="w-24 h-24" />
 			</a>
 		</div>

@@ -19,11 +19,13 @@
 	<!-- Normal number entry -->
 	<div class="flex flex-row gap-x-4">
 		<ul class="flex flex-col gap-y-1">
+			<span>&nbsp;</span>
 			{#each STAT_NAMES as statName}
 				<li>{statName}</li>
 			{/each}
 		</ul>
 		<ul class="flex flex-col w-16 gap-y-1">
+			<span class="self-center text-sm text-secondary">Wild</span>
 			{#each STAT_NAMES as _, i}
 				<input
 					type="number"
@@ -36,6 +38,7 @@
 			{/each}
 		</ul>
 		<ul class="flex flex-col w-16 gap-y-1">
+			<span class="self-center text-sm text-secondary">Tamed</span>
 			{#each STAT_NAMES as _, i}
 				<input
 					type="number"
@@ -51,7 +54,7 @@
 	<!-- Shortcuts -->
 	<div class="grid grid-cols-2 content-center justify-center gap-x-2">
 		<div class="flex flex-col items-center">
-			<span class="text-sm font-medium">All Wild</span>
+			<span class="text-sm font-medium whitespace-nowrap">All Wild</span>
 			<button on:click={() => setAllWild(0)}>0</button>
 			<button on:click={() => setAllWild(1)}>1</button>
 			<button on:click={() => setAllWild(35)}>35</button>
@@ -60,7 +63,7 @@
 			<button on:click={() => setAllWild(255)}>255</button>
 		</div>
 		<div class="flex flex-col items-center">
-			<span class="text-sm font-medium">All Tamed</span>
+			<span class="text-sm font-medium whitespace-nowrap">All Tamed</span>
 			<button on:click={() => setAllTamed(0)}>0</button>
 			<button on:click={() => setAllTamed(1)}>1</button>
 			<button on:click={() => setAllTamed(35)}>35</button>

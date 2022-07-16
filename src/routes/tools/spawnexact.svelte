@@ -38,20 +38,22 @@
 />
 
 <main class="flex flex-col gap-8">
-	<h1><code>/spawnexactdino</code> Generator</h1>
-	<p>
-		This generator helps you create admin spawncodes for creatures in ARK: Survival Evolved. You
-		can decide over the stat and color distribution.
-	</p>
-	<p>
-		The generator also supports many modded creatures and lets you set an imprinter and imprint
-		amount. Please be aware that creatures need to be cryo'd once or twice until they show the
-		right stats and colors.
-	</p>
+	<header class="flex flex-col gap-2">
+		<h1 class="mb-2"><code>/spawnexactdino</code> Generator</h1>
+		<p>
+			This generator helps you create admin spawncodes for creatures in ARK: Survival Evolved.
+			You can decide over the stat and color distribution.
+		</p>
+		<p>
+			The generator also supports many modded creatures and lets you set an imprinter and
+			imprint amount. Please be aware that creatures need to be cryo'd once or twice until
+			they show the right stats and colors.
+		</p>
+	</header>
 
 	<!-- Species selection -->
 	<section class="flex flex-col gap-4">
-		<h2 class="text-primary">Select species</h2>
+		<h2 class="text-primary">Select Species</h2>
 		<SpeciesSelector
 			bind:selectedSpecies={$selectedSpecies}
 			bind:selectedModId={$selectedModId}
@@ -61,7 +63,7 @@
 	<div class="flex flex-wrap gap-x-16 gap-y-8 justify-center">
 		<!-- Stat entry -->
 		<section class="flex flex-col gap-4">
-			<h2 class="text-primary">Set stat levels</h2>
+			<h2 class="text-primary -mb-2">Set Stat Levels</h2>
 			<StatEntry bind:wild bind:tamed />
 		</section>
 
@@ -101,7 +103,7 @@
 				class="flex gap-2 items-baseline justify-between"
 				title="Ark ID for rider imprint bonus"
 			>
-				Imprinter ID
+				Imprinter's Ark ID
 				<input
 					type="number"
 					placeholder=""

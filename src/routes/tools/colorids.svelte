@@ -4,8 +4,7 @@
 
 	import { srgbFilm, srgbPow22, asHex } from '$lib/colors';
 
-	import type { ColorDef } from '$lib/obelisk';
-	import { loadMod } from '$lib/obelisk';
+	import { getModDataStore, type ColorDef } from '$lib/obelisk/asb';
 	import { localstore } from '$lib/localstore';
 
 	import type { ColorInfo } from '$lib/ColorChart.svelte';
@@ -13,12 +12,13 @@
 	import ModSelector from '$lib/ModSelector.svelte';
 	import ColorDetail from '$lib/ColorDetail.svelte';
 	import Metadata from '$lib/Metadata.svelte';
+	import { loadAll } from '@square/svelte-store';
 
 	const BASE_COLORID = 1;
 	const BASE_DYEID = 201;
 
 	let displayedColor: ColorInfo | null = null;
-	let selectedModId: string | null = null;
+	// let selectedModId: string | null = null;
 	let loadedModId: string | null = null;
 	let hideCore: boolean = true;
 	let filter: string = '';
@@ -42,7 +42,7 @@
 
 	onMount(async () => {
 		// Load core
-		const modData = await loadMod('');
+		const [modData] = await loadAll([getModDataStore('')]);
 		modColors = parseColors(modData.colorDefinitions || [], 1);
 		modDyes = parseColors(modData.dyeDefinitions || [], 201);
 		selectedModId = '';
@@ -56,7 +56,7 @@
 	async function selectMod(modId: string) {
 		console.log(`selectMod(${JSON.stringify(modId)})`);
 		if (modId === loadedModId) return;
-		const modData = await loadMod(modId);
+		const [modData] = await loadAll([getModDataStore(modId)]);
 		console.log(modData);
 		modColors = parseColors(modData.colorDefinitions || [], BASE_COLORID);
 		modDyes = parseColors(modData.dyeDefinitions || [], BASE_DYEID);

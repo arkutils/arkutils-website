@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	import { isSpeciesUseful, loadMod, type ModData, type Species } from '$lib/obelisk';
+	import {
+		isSpeciesUseful,
+		getModDataStore,
+		type Species,
+		type IndexedModData
+	} from '$lib/obelisk/asb';
 	import { selectedModId, selectedSpecies } from '$lib/stores';
 
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
@@ -14,6 +19,7 @@
 	import Speed from '$lib/imgs/stats/Speed.svelte';
 	import Torpor from '$lib/imgs/stats/Torpor.svelte';
 	import Metadata from '$lib/Metadata.svelte';
+	import { loadAll } from '@square/svelte-store';
 
 	const STAT_NAMES = [
 		'Health',
@@ -67,7 +73,7 @@
 	const defaultImprintMults = [0.2, 0.0, 0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2, 0.2, 0.0, 0.0];
 
 	let loaded = false;
-	let modData: ModData | null = null;
+	let modData: IndexedModData | null = null;
 	let loadedModId: string | null = null;
 	let speciesData: Species;
 	let eggTemp: number | null = null;
@@ -80,14 +86,14 @@
 
 	onMount(async () => {
 		// Load core
-		modData = await loadMod('');
+		[modData] = await loadAll([getModDataStore('')]);
 		$selectedModId = loadedModId = '';
 		loaded = true;
 	});
 
 	async function selectMod(modId: string) {
 		if (modId === loadedModId) return;
-		modData = await loadMod(modId);
+		[modData] = await loadAll([getModDataStore(modId)]);
 		loadedModId = modId;
 	}
 

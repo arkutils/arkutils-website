@@ -2,9 +2,15 @@
 	import { onMount } from 'svelte';
 
 	import { localstore } from '$lib/localstore';
-	import { isSpeciesUseful, loadMod, type Species } from '$lib/obelisk';
+	import {
+		isSpeciesUseful,
+		getModDataStore,
+		type Species,
+		type IndexedModData
+	} from '$lib/obelisk/asb';
 
 	import ModSelector from './ModSelector.svelte';
+	import { loadAll } from '@square/svelte-store';
 
 	export let selectedModId: string | null = null;
 	export let selectedSpecies: string | null = '';
@@ -13,43 +19,23 @@
 		default: true,
 		dontWatchTabs: true
 	});
-	let fullSpeciesList: Species[] = [];
-	let showSpeciesList: Species[] = [];
-	let loaded = false;
 
-	onMount(() => {
-		loaded = true;
-	});
+	// Store containing the current mod data (loadable/async)
+	$: modData = selectedModId === null ? null : getModDataStore(selectedModId);
 
-	$: if (loaded && selectedModId !== null) selectMod(selectedModId);
-	$: showSpeciesList = $filterUseless ? filterSpecies(fullSpeciesList) : fullSpeciesList;
+	// Update species selection on mod change
+	$: if ($modData && selectedModId !== null) modChanged($modData);
 
-	async function selectMod(modId: string) {
-		const modData = await loadMod(modId);
-		fullSpeciesList = modData.species;
-
+	function modChanged($modData: IndexedModData) {
 		// Check we have a valid species for this mod
-		if (selectedSpecies !== null && !modData.speciesLookup[selectedSpecies]) {
+		if (selectedSpecies !== null && !$modData.speciesLookup[selectedSpecies]) {
 			selectedSpecies = null;
 		}
 
 		// If no species selected, pick the first in the list
 		if (!selectedSpecies) {
-			selectedSpecies = fullSpeciesList[0].blueprintPath;
+			selectedSpecies = $modData.species[0].blueprintPath;
 		}
-	}
-
-	function filterSpecies(species: Species[]): Species[] {
-		if (!species.length) return [];
-
-		species = species.filter(isSpeciesUseful);
-
-		// If we got rid of the selected species, reset it
-		if (!species.find((entry) => entry.blueprintPath === selectedSpecies)) {
-			selectedSpecies = '';
-		}
-
-		return species;
 	}
 
 	function fmtVariants(species: Species) {
@@ -60,11 +46,20 @@
 <ModSelector bind:selectedModId />
 
 <select bind:value={selectedSpecies} class="select bg-base-200">
-	{#each showSpeciesList as species}
-		<option value={species.blueprintPath}>{species.name}{fmtVariants(species)}</option>
-	{/each}
-	{#if showSpeciesList.length === 0}
-		<option selected>...loading...</option>
+	{#if modData}
+		{#await loadAll([modData])}
+			<option selected disabled value={null}>...loading...</option>
+		{:then}
+			{#if $modData}
+				{#each $modData.species as species}
+					{#if !$filterUseless || isSpeciesUseful(species)}
+						<option value={species.blueprintPath}>
+							{species.name}{fmtVariants(species)}
+						</option>
+					{/if}
+				{/each}
+			{/if}
+		{/await}
 	{/if}
 </select>
 

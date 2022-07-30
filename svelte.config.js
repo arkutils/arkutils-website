@@ -12,7 +12,11 @@ const config = {
     ],
 
     kit: {
-        adapter: adapter()
+        adapter: adapter(),
+        prerender: {
+            default: true,
+            crawl: true,
+        }
     }
 };
 

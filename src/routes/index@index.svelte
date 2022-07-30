@@ -51,8 +51,7 @@
 				</a>
 				{#if show.spawnexact}
 					<div transition:slide class="info">
-						Let's you spawn a dinosaur with the <b>exact stats</b> and <b>colors</b> you
-						need.
+						Lets you spawn a dinosaur with the <b>exact stats</b> and <b>colors</b> you need.
 					</div>
 				{/if}
 			</div>
@@ -68,8 +67,8 @@
 				</a>
 				{#if show.incubator}
 					<div transition:slide class="info">
-						Let's you calculate the <b>raw stats</b> when providing level points and the
-						other way around.
+						Lets you calculate the <b>raw stats</b> when providing level points and the other
+						way around.
 					</div>
 				{/if}
 			</div>

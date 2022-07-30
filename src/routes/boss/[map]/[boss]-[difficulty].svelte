@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
-	import { boss_data, difficulties } from '$lib/boss/data';
+	import { boss_data } from '$lib/boss/data';
+	import { isSingleDifficulty } from '$lib/boss/utils';
 
 	import type { Load } from './__types/[boss]-[difficulty]';
 
@@ -12,7 +13,7 @@
 		try {
 			const data = boss_data[map].bosses[boss];
 
-			if (typeof data.species === 'string') {
+			if (isSingleDifficulty(data)) {
 				// This boss doesn't have difficulties
 				return {
 					status: 308,
@@ -26,8 +27,7 @@
 					props: {
 						map,
 						boss,
-						difficulty,
-						data
+						difficulty
 					}
 				};
 			}
@@ -42,35 +42,22 @@
 </script>
 
 <script lang="ts">
-	import type { ABGBoss, SingleBoss } from '$lib/boss/types';
+	import Boss from '$lib/boss/Boss.svelte';
+
+	import type { Difficulty } from '$lib/boss/types';
 
 	export let map: string;
 	export let boss: string;
-	export let difficulty: string;
-	export let data: SingleBoss | ABGBoss;
+	export let difficulty: Difficulty;
 </script>
 
-<h1>{difficulties[difficulty].display} {data.display} ({boss_data[map].display})</h1>
-
-<div>
-	Difficulty selector
-	<nav>
-		<a href="/boss/{map}/{boss}-gamma">Gamma</a>
-		<a href="/boss/{map}/{boss}-beta">Beta</a>
-		<a href="/boss/{map}/{boss}-alpha">Alpha</a>
-	</nav>
+<div class="text-sm breadcrumbs mb-2">
+	<ul>
+		<li><a href="/">Home</a></li>
+		<li><a href="/boss">Bosses</a></li>
+		<li><a href="/boss/{map}">{boss_data[map].display}</a></li>
+		<li>{boss_data[map].bosses[boss].display}</li>
+	</ul>
 </div>
 
-<h3 class="mt-8">Content plan:</h3>
-<ul>
-	<li>Header</li>
-	<li>[map] [boss] info:</li>
-	<ul>
-		<li>Icon, name, location</li>
-		<li>Health, damage reduction</li>
-		<li>Summoning</li>
-		<li>Drops</li>
-		<li>Engrams</li>
-		<li>Other bosses on this map</li>
-	</ul>
-</ul>
+<Boss {map} {boss} {difficulty} />

@@ -48,9 +48,9 @@ function indexSpeciesFile(file: ModData) {
     return { speciesLookup };
 }
 
-const asbFilePath: PathForFileFn = function (modid: string, modtag: string) {
+const asbFilePath: PathForFileFn = function (modid: string, modtag: string, leafname: string) {
     if (!modid) {
-        return `${BASEURL}/values.json`;
+        return `${BASEURL}/${leafname}`;
     } else {
         return `${BASEURL}/${modid}-${modtag}.json`;
     }
@@ -74,8 +74,9 @@ function getAsbSpeciesStoreForMod(modid: string): Loadable<IndexedModData> {
 
     const store = asyncDerived(asbManifestStore, async ($manifest): Promise<IndexedModData> => {
         const mod = $manifest.byModId[modid];
-        const filename = modid ? `${modid}-${mod.tag}.json` : 'values.json';
-        const request = await fetch(`${$manifest.baseurl}/${filename}`);
+
+        const url = asbFilePath(modid, mod.tag, 'values.json');
+        const request = await fetch(url);
         const rawData = await request.json() as ModData;
 
         // Sort by name, and put less variants first

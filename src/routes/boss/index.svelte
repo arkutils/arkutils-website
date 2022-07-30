@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { boss_data } from '$lib/boss/data';
 </script>
 

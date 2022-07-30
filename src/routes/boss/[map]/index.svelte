@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
 	import { boss_data } from '$lib/boss/data';
+	import { urlForBoss } from '$lib/boss/utils';
 	import type { BossMap } from '$lib/boss/types';
 
 	import type { Load } from './__types/index';
@@ -40,9 +41,9 @@
 <h1>{data.display}</h1>
 
 <ul>
-	{#each Object.entries(data.bosses) as [key, boss]}
+	{#each Object.entries(data.bosses) as [bossId, boss]}
 		<li>
-			<a href="/boss/{map}/{key}">{boss.display}</a>
+			<a href={urlForBoss(map, bossId, boss)}>{boss.display}</a>
 		</li>
 	{/each}
 </ul>

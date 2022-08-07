@@ -40,6 +40,9 @@
     "vite": "^3"
   },
   "type": "module",
+  "engines": {
+    "node": ">=16.9.0"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

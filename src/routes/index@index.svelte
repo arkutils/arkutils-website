@@ -4,11 +4,12 @@
 	import DinoHatching from '$lib/imgs/toolicons/DinoHatching.svelte';
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
+	import SpinoSword from '$lib/imgs/toolicons/SpinoSword.svelte';
 	import Metadata from '$lib/Metadata.svelte';
 
 	import { slide } from 'svelte/transition';
 
-	const buttons = ['spawnexact', 'incubator', 'colorid'];
+	const buttons = ['spawnexact', 'incubator', 'colorid', 'bossopedia'];
 
 	let show: { [key: string]: boolean } = {};
 
@@ -45,9 +46,7 @@
 						<Brontosaur />
 					</figure>
 					<span><code>/spawnexactdino</code><br /><b>Generator</b></span>
-					<button class="help" on:click|preventDefault={() => toggle('spawnexact')}>
-						?
-					</button>
+					<button class="help" on:click|preventDefault={() => toggle('spawnexact')}> ? </button>
 				</a>
 				{#if show.spawnexact}
 					<div transition:slide class="info">
@@ -61,14 +60,12 @@
 						<DinoHatching />
 					</figure>
 					<span>Incubator<br /><b>Calculator</b></span>
-					<button class="help" on:click|preventDefault={() => toggle('incubator')}>
-						?
-					</button>
+					<button class="help" on:click|preventDefault={() => toggle('incubator')}> ? </button>
 				</a>
 				{#if show.incubator}
 					<div transition:slide class="info">
-						Lets you calculate the <b>raw stats</b> when providing level points and the other
-						way around.
+						Lets you calculate the <b>raw stats</b> when providing level points and the other way
+						around.
 					</div>
 				{/if}
 			</div>
@@ -85,13 +82,29 @@
 						<Pteranodon />
 					</figure>
 					<span>Dinosaur<br /><b>Color IDs</b></span>
-					<button class="help" on:click|preventDefault={() => toggle('colorid')}>
-						?
-					</button>
+					<button class="help" on:click|preventDefault={() => toggle('colorid')}> ? </button>
 				</a>
 				{#if show.colorid}
 					<div transition:slide class="info">
 						Shows you <b>all available color IDs</b> for dinosaurs.
+					</div>
+				{/if}
+			</div>
+			<div>
+				<a class="tool" href="/boss">
+					<figure>
+						<SpinoSword />
+					</figure>
+					<b>
+						<span class="text-secondary">Boss</span><span class="text-primary">opedia</span>
+						<br />
+						Guide
+					</b>
+					<button class="help" on:click|preventDefault={() => toggle('bossopedia')}> ? </button>
+				</a>
+				{#if show.bossopedia}
+					<div transition:slide class="info">
+						Shows you <b>everything you need to know</b> about bosses.
 					</div>
 				{/if}
 			</div>
@@ -110,7 +123,6 @@
 	}
 
 	.infos {
-		/* @apply flex flex-wrap justify-center gap-4; */
 		@apply grid grid-cols-[300px] sm:grid-cols-[300px,300px] lg:grid-cols-[300px,300px,300px] grid-flow-row gap-4;
 	}
 

@@ -1,5 +1,5 @@
 import { boss_data } from "./data";
-import type { ABGBoss, BossDifficulty, Difficulty, SingleBoss } from "./types";
+import type { ABGBoss, BossBase, BossDifficulty, Difficulty, SingleBoss } from "./types";
 
 
 export function urlForBoss(mapId: string, bossId: string, boss: SingleBoss | ABGBoss): string {
@@ -36,4 +36,20 @@ export function difficultyForBoss(data: SingleBoss | ABGBoss, difficulty: Diffic
 
 export function isSingleDifficulty(data: SingleBoss | ABGBoss): data is SingleBoss {
     return 'bp' in data.species;
+}
+
+
+export function getIconForDifficulty(difficulty: Difficulty | null, data: BossBase): string {
+    if (difficulty === null) return data.icon;
+    return data[`${difficulty}IconOverride`] ?? data.icon;
+}
+
+export function* bossDifficulties(boss: SingleBoss | ABGBoss): Generator<[Difficulty | undefined, BossDifficulty]> {
+    if (isSingleDifficulty(boss)) {
+        yield [undefined, boss.species];
+    } else {
+        yield ['gamma', boss.species.gamma];
+        yield ['beta', boss.species.beta];
+        yield ['alpha', boss.species.alpha];
+    }
 }

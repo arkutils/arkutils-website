@@ -46,7 +46,7 @@
 </script>
 
 <div class="text-sm breadcrumbs mb-2">
-	<ul>
+	<ul class="text-sm ml-4">
 		<li><a href="/">Home</a></li>
 		<li><a href="/boss">Bosses</a></li>
 		<li><a href="/boss/{map}">{boss_data[map].display}</a></li>

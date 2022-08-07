@@ -1,4 +1,3 @@
-
 import { asyncDerived, type Loadable } from "@square/svelte-store";
 import { manifestStore, modListStore, type PathForFileFn } from "../core";
 import { OBELISK } from "../types";
@@ -21,7 +20,7 @@ export const wikiFilePath: PathForFileFn = function (modid: string, modtag: stri
     if (!modid) {
         return `${BASEURL}/${filename}`;
     } else {
-        return `${BASEURL}/${modid}-${modtag}/${filename}.json`;
+        return `${BASEURL}/${modid}-${modtag}/${filename}`;
     }
 }
 

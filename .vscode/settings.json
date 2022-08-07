@@ -2,23 +2,24 @@
     "files.exclude": {
         ".svelte-kit": true
     },
-    "[svelte]": {
-        "editor.formatOnSave": true
-    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[typescript]": {
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+        }
     },
     "[javascript]": {
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+        }
     },
-    "[postcss]": {
-        "editor.formatOnSave": true
-    },
-    "[css]": {
-        "editor.formatOnSave": true
-    },
-    "[html]": {
-        "editor.formatOnSave": true
+    "[svelte]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+        }
     },
     "[json]": {
         "editor.formatOnSave": true
@@ -27,6 +28,22 @@
         "editor.formatOnSave": true
     },
     "cSpell.words": [
-        "Mults"
+        "arkutils",
+        "Beyla",
+        "Cryopod",
+        "Dinos",
+        "dont",
+        "Fenris",
+        "Fenrisúlfr",
+        "Fjordur",
+        "Hati",
+        "Lysrix",
+        "Megapithicus",
+        "modid",
+        "Mults",
+        "Skoll",
+        "Steinbjorn",
+        "Unsubscriber",
+        "Valguero"
     ]
 }

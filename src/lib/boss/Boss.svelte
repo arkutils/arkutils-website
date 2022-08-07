@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { derived, loadAll } from '@square/svelte-store';
+	import { asyncDerived, derived, loadAll } from '@square/svelte-store';
 
-	import { flattenLoot, gatherDrops, getWikiDropsStore } from '$lib/obelisk/wiki/drops';
-	import { getWikiItemsStore, type Item } from '$lib/obelisk/wiki/items';
-	import { getWikiSpeciesStore } from '$lib/obelisk/wiki/species';
 	import { getModDataStore } from '$lib/obelisk/asb';
+	import { modIdFromPath } from '$lib/obelisk/core';
+	import { flattenLoot, gatherDrops, getWikiDropsStore } from '$lib/obelisk/wiki/drops';
+	import { getItemByClass, getWikiItemsStore, type Item } from '$lib/obelisk/wiki/items';
+	import { getWikiSpeciesStore } from '$lib/obelisk/wiki/species';
 
-	import type { Difficulty } from './types';
 	import { boss_data, difficulties } from './data';
-	import { difficultyForBoss, dataForBoss } from './utils';
+	import DifficultySelector from './DifficultySelector.svelte';
+	import type { Difficulty } from './types';
+	import { dataForBoss, difficultyForBoss, getIconForDifficulty } from './utils';
 
 	export let map: string;
 	export let boss: string;
@@ -36,23 +38,41 @@
 		return $wikiSpecies?.speciesLookup[difficultyData.bp + '_C'];
 	});
 
+	// List of mods needed
+	$: requiredMods = ['', ...(data.extraModIds ?? [])];
+
+	// List of species and item stores we need
+	$: requiredSpeciesStores = requiredMods.map((modId) => getModDataStore(modId));
+	$: requiredModItemStores = requiredMods.map((modId) => getWikiItemsStore(modId));
+
 	/** HP is pulled out of the ASB stat data, if present */
-	$: hp = derived([asbData], ([$asbData]) => {
-		if (!$asbData) return undefined;
-		return Math.round($asbData.fullStatsRaw[0]?.[0] ?? 0);
+	$: hp = asyncDerived([...requiredSpeciesStores], async () => {
+		const modId = modIdFromPath(difficultyData.bp);
+		const [$modStore] = await loadAll([getModDataStore(modId)]);
+		const species = $modStore.speciesLookup[difficultyData.bp];
+		return Math.round(species?.fullStatsRaw[0]?.[0] ?? 0);
 	});
 
 	/** Engram classes come from the wiki species data, then we lookup item data for each */
-	$: engrams = derived([wikiSpeciesData, wikiItems], ([$wikiData, $wikiItems]) => {
-		if (!$wikiData || !$wikiItems) return undefined;
-		const engrams: string[] = $wikiData.death?.engrams ?? [];
-		const items = engrams.map((engram) => $wikiItems.clsLookup[engram]);
+	$: engrams = asyncDerived([...requiredSpeciesStores, ...requiredModItemStores], async () => {
+		const modId = modIdFromPath(difficultyData.bp);
+		const [$modStore] = await loadAll([getWikiSpeciesStore(modId)]);
+		const species = $modStore.speciesLookup[difficultyData.bp + '_C'];
+		const engrams: string[] = species.death?.engrams ?? [];
+		const items = engrams.map((engram) => getItemByClass(engram));
+
+		// Add any manually-added engrams
+		if (difficultyData.manualEngrams) {
+			difficultyData.manualEngrams.forEach((type) => {
+				items.push(getItemByClass(type));
+			});
+		}
 		return items;
 	});
 
 	/** Loot drops come from the wiki species data, then we lookup loot sets with item names */
 	$: drops = derived(
-		[wikiSpeciesData, wikiItems, wikiDrops],
+		[wikiSpeciesData, wikiItems, wikiDrops, ...requiredModItemStores],
 		([$wikiData, $wikiItems, $wikiDrops]) => {
 			if (!$wikiData || !$wikiItems || !$wikiDrops) return undefined;
 
@@ -72,89 +92,125 @@
 	);
 
 	/** Summoning items */
-	$: summon = derived([wikiItems], ([$wikiItems]) => {
-		if (!$wikiItems) return undefined;
+	$: summon = derived(
+		[getWikiItemsStore(modIdFromPath(difficultyData.summon)), ...requiredModItemStores],
+		([$modItems]) => {
+			if (!$modItems || !difficultyData.summon) return undefined;
 
-		// Crafting recipe contains the level/items needed
-		const summonItem = $wikiItems.bpLookup[difficultyData.summon];
-		const levelReq = summonItem.crafting.levelReq;
-		const items = summonItem.crafting.recipe.map(({ qty, type }) => ({
-			qty,
-			item: $wikiItems.clsLookup[type]
-		}));
-		return { levelReq, items };
-	});
+			// Crafting recipe contains the level/items needed
+			const summonItem = $modItems.bpLookup[difficultyData.summon];
+			const levelReq = summonItem?.crafting?.levelReq;
+			const items = summonItem?.crafting?.recipe?.map(({ qty, type }) => ({
+				qty,
+				item: getItemByClass(type),
+			}));
+			return { levelReq, items };
+		}
+	);
+
+	$: icon = getIconForDifficulty(difficulty, data);
 </script>
 
-<h1>
-	<img src="/imgs/bosses/{data.icon}" alt="{data.display} flag image" width="200" />
-	{#if difficulty !== null}{difficulties[difficulty].display}{/if}
-	{data.display} ({boss_data[map].display})
-</h1>
-
-{#if difficulty !== null}
-	<div>
-		Difficulty selector
-		<nav>
-			<a href="/boss/{map}/{boss}-gamma">Gamma</a>
-			<a href="/boss/{map}/{boss}-beta">Beta</a>
-			<a href="/boss/{map}/{boss}-alpha">Alpha</a>
-		</nav>
+<section class="grid topsection grid-cols-[200px,auto] gap-4">
+	<div class={difficulty}>
+		<img src="/imgs/bosses/{icon}" alt="{data.display} flag image" width="200" class="w-full" />
 	</div>
-{/if}
+	<div class="row-start-2">
+		{#if difficulty !== null}
+			<DifficultySelector {map} {boss} {difficulty} />
+		{/if}
+	</div>
+	<div class="flex flex-col gap-4">
+		<h1 class="flex flex-col">
+			<span
+				>{#if difficulty !== null}{difficulties[difficulty].display}{/if}</span
+			>
+			<span>{data.display}</span>
+			<span>({boss_data[map].display})</span>
+		</h1>
 
-<!-- Health data -->
-<p>
-	Health:
-	{#await loadAll([hp])} ... {:then} {$hp} {/await}
-</p>
+		<div class="flex flex-col gap-4">
+			<!-- Health data -->
+			<p>
+				Health:
+				{#await loadAll([hp])}
+					...
+				{:then}
+					{#if $hp !== undefined}
+						{new Intl.NumberFormat().format($hp)}
+					{:else}
+						...
+					{/if}
+				{/await}
+
+				<!-- TODO: insert damage reduction -->
+			</p>
+
+			{#if data.note}
+				<p>{data.note}</p>
+			{/if}
+		</div>
+	</div>
+</section>
+
+<!-- Summon -->
+<h2 class="ml-1 mt-4 mb-2 text-base-content">Summon</h2>
+<div class="bg-base-200 rounded-lg p-2 px-4 my-2">
+	{#if difficultyData.summonNote}
+		<p>{difficultyData.summonNote}</p>
+	{/if}
+	{#await loadAll([summon])}
+		...loading...
+	{:then}
+		{#if $summon}
+			<p><span class="text-secondary mr-1">Level needed:</span> <b>{$summon?.levelReq}</b></p>
+			<ul>
+				{#each $summon?.items || [] as req}
+					<li title={req.item?.description}>
+						{req.qty} x {req.item?.name}
+					</li>
+				{/each}
+			</ul>
+		{/if}
+	{/await}
+</div>
 
 <!-- Engrams -->
-<div>
-	Engrams:
+<h2 class="ml-1 mt-4 mb-2 text-base-content">Engrams</h2>
+<div class="bg-base-200 rounded-lg p-2 px-4 my-2">
 	{#await loadAll([engrams])}
 		...loading...
 	{:then}
-		<ul class="list-disc list-inside ml-4 pl-4">
-			{#each $engrams || [] as item}
-				<li title={item.description}>
-					{item.name}
-				</li>
-			{/each}
-		</ul>
+		{#if $engrams && $engrams.length}
+			<ul>
+				{#each $engrams || [] as item}
+					<li title={item.description}>
+						{item.name}
+					</li>
+				{/each}
+			</ul>
+		{:else}
+			<p class="text-base-content/70 italic">No engrams</p>
+		{/if}
 	{/await}
 </div>
 
 <!-- Drops -->
-<div>
-	Drops:
+<h2 class="ml-1 mt-4 mb-2 text-base-content">Drops</h2>
+<div class="bg-base-200 rounded-lg p-2 px-4 my-2">
 	{#await loadAll([drops])}
 		...loading...
 	{:then}
-		<ul class="list-disc list-inside ml-4 pl-4">
+		<ul>
 			{#each $drops || [] as { min, max, item }}
 				<li title={item.description}>
 					{#if min === max}{min}{:else}{min}-{max}{/if} x
 					{item.name}
 				</li>
 			{/each}
-		</ul>
-	{/await}
-</div>
-
-<!-- Summon -->
-<div>
-	Summon:
-	{#await loadAll([summon])}
-		...loading...
-	{:then}
-		<p>Level needed: {$summon?.levelReq}</p>
-		<ul class="list-disc list-inside ml-4 pl-4">
-			{#each $summon?.items || [] as req}
-				<li title={req.item.description}>
-					{req.qty} x {req.item.name}
-				</li>
-			{/each}
+			{#if difficultyData.dropsNote}
+				<li>{difficultyData.dropsNote}</li>
+			{/if}
 		</ul>
 	{/await}
 </div>
@@ -164,3 +220,15 @@
 	<li>Damage reduction, difficulty selector</li>
 	<li>Other bosses on this map</li>
 </ul>
+
+<style lang="postcss">
+	.gamma img {
+		filter: url(#tintGamma);
+	}
+	.beta img {
+		filter: url(#tintBeta);
+	}
+	.alpha img {
+		filter: url(#tintAlpha);
+	}
+</style>

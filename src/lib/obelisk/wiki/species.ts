@@ -1,3 +1,5 @@
+import { loadAll } from "@square/svelte-store";
+import { modIdFromPath } from "../core";
 import { processedWikiStore } from "./internal";
 
 
@@ -46,3 +48,8 @@ function indexSpeciesFile(file: SpeciesData) {
 /** Fetch a mod's species data from Obelisk (cached and pre-processed) */
 export const getWikiSpeciesStore = processedWikiStore<SpeciesData, IndexedSpeciesData>("species.json", indexSpeciesFile);
 
+export async function getSpecies(bp: string): Promise<Species | undefined> {
+    const modId = modIdFromPath(bp);
+    const [$speciesStore] = await loadAll([getWikiSpeciesStore(modId)]);
+    return $speciesStore.speciesLookup[bp];
+}

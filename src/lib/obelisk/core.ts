@@ -79,3 +79,22 @@ function sortableNameForMod(mod: ManifestMod) {
         return `zzzzz${intId.toString().padStart(12, '0')}`;
     }
 }
+
+const builtInMods = {
+    'Valguero': true,
+    'Ragnarok': true,
+}
+
+export function modIdFromPath(path: string | undefined) {
+    if (!path) return '';
+
+    // Pick mod name out if path starts /Game/Mods/<modid>/...
+    const match = path.match(/^\/Game\/Mods\/([^/]+)\/.*$/);
+    if (!match) return '';
+    const modId = match[1];
+
+    // Exclude Rag, Val, etc
+    if (modId in builtInMods) return '';
+
+    return modId;
+}

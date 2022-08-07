@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { writable } from '@square/svelte-store';
-	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 
 	import { boss_data, difficulties } from '$lib/boss/data';
@@ -33,10 +32,6 @@
 		{ initialValue: '', delay: 300 }
 	);
 
-	onMount(() => {
-		return setTimeout(() => ($rawSearchQuery = 'helmet'), 250);
-	});
-
 	// Ensure search window opens when a valid query is entered
 	// $: if (!searchOpen && $searchQuery) searchOpen = true;
 	// $: if (!searchOpen && searchFinished) searchOpen = true;
@@ -54,7 +49,7 @@
 		}
 
 		// Perform new search
-		searchOpen = true;
+		searchOpen = !!query;
 		searchFinished = false;
 		searchAbortToken = { triggered: false };
 		/* unawaited */ beginSearch(query, searchAbortToken);

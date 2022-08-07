@@ -9,6 +9,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             broodmother: {
                 display: 'Broodmother Lysrix',
+                note: 'The Broodmother regularly spawns little spiders around her that web the player and their tames. Megatheriums can get a damage buff from killing those minions which makes them a viable option for defeating Broodmother on all difficulties.',
                 searchTerms: 'spider',
                 species: {
                     gamma: {
@@ -26,8 +27,9 @@ export const boss_data: Record<string, BossMap> = {
                 },
                 icon: 'Spider.webp'
             },
-            megapithicus: {
-                display: 'Megapithicus',
+            megapithecus: {
+                display: 'Megapithecus',
+                note: 'The Megapithecus has several strong attacks. It also spawns Gigantopithecus and Mesopithecus as minions that attack the player and their tames.',
                 searchTerms: 'monkey gorilla',
                 species: {
                     gamma: {
@@ -47,6 +49,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             dragon: {
                 display: 'Dragon',
+                note: 'The Dragon does percentage based fire damage that ignores armour. It regularly spawns Dimorphodons that attack the player directly and Pteranodons as minions.',
                 species: {
                     gamma: {
                         bp: '/Game/PrimalEarth/Dinos/Dragon/Dragon_Character_BP_Boss_Easy.Dragon_Character_BP_Boss_Easy',
@@ -65,6 +68,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             overseer: {
                 display: 'Overseer',
+                note: 'This is a bossfight over many phases in which the Overseer turns into a VR version of one of the Island Bosses. Drones and Defence Units will attack as minions.',
                 species: {
                     gamma: {
                         bp: '/Game/EndGame/Dinos/Endboss/EndBoss_Character_Easy.EndBoss_Character_Easy',
@@ -91,7 +95,7 @@ export const boss_data: Record<string, BossMap> = {
             megapithecus: {
                 display: 'Megapithecus',
                 searchTerms: 'monkey',
-                note: 'Both Center bosses are spawned together.',
+                note: 'Both Center bosses are spawned together. The Megapithecus has several strong attacks.',
                 species: {
                     gamma: {
                         bp: '/Game/PrimalEarth/Dinos/Gorilla/Gorilla_Character_BP_TheCenter.Gorilla_Character_BP_TheCenter',
@@ -111,7 +115,7 @@ export const boss_data: Record<string, BossMap> = {
             broodmother: {
                 display: 'Broodmother Lysrix',
                 searchTerms: 'spider',
-                note: 'Both Center bosses are spawned together.',
+                note: 'Both Center bosses are spawned together. The Broodmother regularly spawns little spiders around her that web the player and their tames. ',
                 species: {
                     gamma: {
                         bp: '/Game/PrimalEarth/Dinos/Spider-Large/SpiderL_Character_BP_TheCenter.SpiderL_Character_BP_TheCenter',
@@ -137,6 +141,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             manticore: {
                 display: 'Manticore',
+                note: 'The Manticore is mainly in the air but will come down eventually. It has a poison attack that torpors players and their tames. Deathworms and Rock Elemental are in the arena as minions. ',
                 species: {
                     gamma: {
                         bp: '/Game/ScorchedEarth/Dinos/Manticore/Manticore_Character_BP_Easy.Manticore_Character_BP_Easy',
@@ -172,7 +177,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             icewormqueen: {
                 display: 'Iceworm Queen',
-                note: '',
+                note: 'The Iceworm Queen is within an ice cave. She is visually a big and stronger icy Deathworm. She only spawns when the player drops into the waterfall in front of her arena without riding a dinosaur.',
                 icon: 'IceWormQueen.webp',
                 species: {
                     bp: '/Game/Mods/Ragnarok/Custom_Assets/JacksonL/Iceworm/Iceworm_Queen_Character_BP.Iceworm_Queen_Character_BP',
@@ -181,6 +186,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             lavagolem: {
                 display: 'Lava Elemental',
+                note: 'The Lava Elemental will spawn once the player is close enough to the arena. It is a twice as big Rock Elemental.',
                 searchTerms: 'golem',
                 icon: 'LavaElemental.webp',
                 species: {
@@ -190,7 +196,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             dragon: {
                 display: 'Dragon',
-                note: 'Killing both bosses unlocks the Tek Light as well',
+                note: 'Killing both bosses unlocks the Tek Light as well. The Dragon does percentage based fire damage that ignores armour.',
                 species: {
                     gamma: {
                         manualEngrams: ['PrimalItemStructure_TekLight_C'],
@@ -212,7 +218,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             manticore: {
                 display: 'Manticore',
-                note: 'Killing both bosses unlocks the Tek Light as well',
+                note: 'Killing both bosses unlocks the Tek Light as well. The Manticore is mainly in the air but will come down eventually. It has a poison attack that torpors players and their tames.',
                 species: {
                     gamma: {
                         manualEngrams: ['PrimalItemStructure_TekLight_C'],
@@ -241,6 +247,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             rockwell: {
                 display: 'Rockwell',
+                note: 'Rockwell becomes vulnerable once all tentacles are destroyed. After a short while he will sink into the Element pool he sits in and regrow the tentacles. Reapers and Nameless spawn as minions.',
                 species: {
                     gamma: {
                         bp: '/Game/Aberration/Boss/Rockwell/Rockwell_Character_BP_Easy.Rockwell_Character_BP_Easy',
@@ -266,6 +273,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             deserttitan: {
                 display: 'Desert Titan',
+                note: 'In order to tame the Desert Titan, you have to destroy the corrupted nodes on his body. If you want to defeat him, you just have to kill him.',
                 species: {
                     bp: '/Game/Extinction/Dinos/DesertKaiju/DesertKaiju_Character_BP.DesertKaiju_Character_BP',
                     summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_DesertKaiju.PrimalItem_BossTribute_DesertKaiju_C'
@@ -274,6 +282,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             icetitan: {
                 display: 'Ice Titan',
+                note: 'In order to tame the Ice Titan, you have to destroy the corrupted nodes on his body. If you want to defeat him, you just have to kill him. ',
                 species: {
                     bp: '/Game/Extinction/Dinos/IceKaiju/IceKaiju_Character_BP.IceKaiju_Character_BP',
                     summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_IceKaiju.PrimalItem_BossTribute_IceKaiju_C'
@@ -282,6 +291,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             foresttitan: {
                 display: 'Forest Titan',
+                note: 'In order to tame the Forest Titan, you have to destroy the corrupted nodes on his body. If you want to defeat him, you just have to kill him. ',
                 species: {
                     bp: '/Game/Extinction/Dinos/ForestKaiju/ForestKaiju_Character_BP.ForestKaiju_Character_BP',
                     summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_ForestKaiju.PrimalItem_BossTribute_ForestKaiju_C'
@@ -290,6 +300,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             kingtitan: {
                 display: 'King Titan',
+                note: 'The King Titan has several strong attacks. It cannnot be dragged outside of the arena because it will be pushed back into the middle regaining all its lost health.',
                 searchTerms: 'mek',
                 species: {
                     gamma: {
@@ -327,6 +338,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             dragon: {
                 display: 'Dragon',
+                note: 'All three bosses spawn together on Valguero. The Dragon does percentage based fire damage that ignores armour.',
                 species: {
                     gamma: {
                         bp: '/Game/Mods/Valguero/Assets/CoreBlueprints/Boss/Dragon_Character_BP_Boss_Easy.Dragon_Character_BP_Boss_Easy',
@@ -345,6 +357,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             manticore: {
                 display: 'Manticore',
+                note: 'All three bosses spawn together on Valguero. The Manticore is mainly in the air but will come down eventually. It has a poison attack that torpors players and their tames.',
                 species: {
                     gamma: {
                         bp: '/Game/Mods/Valguero/Assets/CoreBlueprints/Boss/Manticore_Character_BP_Easy.Manticore_Character_BP_Easy',
@@ -363,6 +376,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             megapithecus: {
                 display: 'Megapithecus',
+                note: 'All three bosses spawn together on Valguero. The Megapithecus has several strong attacks. It also spawns Gigantopithecus and Mesopithecus as minions that attack the player and their tames.',
                 searchTerms: 'monkey',
                 species: {
                     gamma: {
@@ -382,6 +396,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             broodmother: {
                 display: 'Broodmother',
+                note: 'The Broodmother regularly spawns little spiders around her that web the player and their tames.',
                 searchTerms: 'spider',
                 species: {
 
@@ -396,12 +411,11 @@ export const boss_data: Record<string, BossMap> = {
         display: 'Genesis: Part 1',
         isLore: true,
         icon: 'genesis1.webp',
-        note: 'Big ass map',
         bosses: {
             moeder: {
                 display: 'Moeder',
                 searchTerms: 'fish',
-                note: 'Big ass fish',
+                note: 'Moeder is an underwater boss. She will spawn eels as minions and becomes vulnerable once all eels are killed.',
                 species: {
                     gamma: {
                         bp: '/Game/Genesis/Dinos/EelBoss/EelBoss_Character_BP_Easy.EelBoss_Character_BP_Easy',
@@ -421,7 +435,7 @@ export const boss_data: Record<string, BossMap> = {
             mastercontroller: {
                 display: 'Corrupted Master Controller',
                 searchTerms: 'vr',
-                note: '',
+                note: 'The Corrupted Master Controller is a complex boss fight with several stages. Players collect keys on the ground and hand them in to progress. The Master Controller will regularly send out laser beams that dismount the player. Seek shelter beforehand under one of the structures within the arena.',
                 species: {
                     gamma: {
                         bp: '/Game/Genesis/Dinos/VRMainBoss/VRMainBoss_Character_Easy.VRMainBoss_Character_Easy',
@@ -448,6 +462,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             crystalwyvernqueen: {
                 display: 'Crystal Wyvern Queen',
+                note: 'The Crystal Wyvern Queen fight will be in the air and on the ground with the final phase being in the air. She spawns Crystal Wyverns and their babies to attack the player and their tames.',
                 species: {
                     gamma: {
                         bp: '/Game/Mods/CrystalIsles/Assets/Dinos/CIBoss/CrystalWyvern_Character_BP_Boss_Easy.CrystalWyvern_Character_BP_Boss_Easy',
@@ -473,6 +488,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             rockwellprime: {
                 display: 'Rockwell Prime',
+                note: 'Rockwell Prime is a bossfight over several stages in which you fight tentacles, minions and Rockwell himself last.',
                 species: {
                     gamma: {
                         bp: '/Game/Genesis2/Missions/ModularMission/FinalBattleAlt/Difficulties/Gamma/RockwellNode_Character_BP_Boss_Gamma.RockwellNode_Character_BP_Boss_Gamma',
@@ -498,6 +514,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             dinopithecusking: {
                 display: 'Dinopithecus King',
+                note: 'The Dinopithecus King can unmount you in this boss fight. It will spawn Dinopithecus carried by Sinomacrops and Dinopithecus riding Amargasaurus as minions.',
                 searchTerms: 'monkey',
                 species: {
                     gamma: {
@@ -530,7 +547,7 @@ export const boss_data: Record<string, BossMap> = {
             {
                 name: "Island Bosses",
                 description: "Island bosses are the second tier.",
-                bosses: ['broodmother', 'megapithicus', 'dragon']
+                bosses: ['broodmother', 'megapithecus', 'dragon']
             },
             {
                 name: "Fenrisúlfr",
@@ -541,6 +558,7 @@ export const boss_data: Record<string, BossMap> = {
         bosses: {
             beyla: {
                 display: 'Beyla',
+                note: 'Beyla is a fairly easy boss that can be defeated by decent Megatheriums with good saddles and imprint.',
                 searchTerms: 'bee',
                 species: {
                     bp: '/Game/Fjordur/Dinos/Beyla/Beyla_Character_BP.Beyla_Character_BP',
@@ -550,6 +568,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             hati: {
                 display: 'Hati',
+                note: 'Hati and Sköll spawn together and can be defeated with any animal that does enough damage and can take some damage.',
                 searchTerms: 'wolf',
                 species: {
                     bp: '/Game/Fjordur/Dinos/HatiSkoll/Fenrir_Character_BP_MiniBoss_Hati.Fenrir_Character_BP_MiniBoss_Hati',
@@ -561,6 +580,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             skoll: {
                 display: 'Sköll',
+                note: 'Hati and Sköll spawn together and can be defeated with any animal that does enough damage and can take some damage.',
                 searchTerms: 'wolf',
                 species: {
                     bp: '/Game/Fjordur/Dinos/HatiSkoll/Fenrir_Character_BP_MiniBoss_Skoll.Fenrir_Character_BP_MiniBoss_Skoll',
@@ -572,6 +592,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             steinbjorn: {
                 display: 'Steinbjörn',
+                note: 'Steinbjörn has a strong armour that not many animals can bypass. The Giganotosaurus is the best choice as a tame for the fight.',
                 searchTerms: 'bear',
                 species: {
                     bp: '/Game/Fjordur/Dinos/Steinbjorn/Steinbjorn_Character_BP.Steinbjorn_Character_BP',
@@ -582,6 +603,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             broodmother: {
                 display: 'Broodmother Lysrix',
+                note: 'The Broodmother regularly spawns little spiders around her that web the player and their tames. Megatheriums can get a damage buff from killing those minions which makes them a viable option for defeating Broodmother on all difficulties. ',
                 searchTerms: 'spider',
                 species: {
                     gamma: {
@@ -599,8 +621,9 @@ export const boss_data: Record<string, BossMap> = {
                 },
                 icon: 'Spider.webp'
             },
-            megapithicus: {
-                display: 'Megapithicus',
+            megapithecus: {
+                display: 'Megapithecus',
+                note: 'All three bosses spawn together on Valguero. The Megapithecus has several strong attacks. It also spawns Gigantopithecus and Mesopithecus as minions that attack the player and their tames.',
                 searchTerms: 'monkey gorilla',
                 species: {
                     gamma: {
@@ -620,6 +643,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             dragon: {
                 display: 'Dragon',
+                note: 'The Dragon does percentage based fire damage that ignores armour. It regularly spawns Dimorphodons that attack the player directly and Pteranodons as minions.',
                 species: {
                     gamma: {
                         bp: '/Game/Fjordur/Dinos/IslandBosses/Dragon_Character_BP_Boss_Easy_FJ.Dragon_Character_BP_Boss_Easy_FJ',
@@ -638,6 +662,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             fenris: {
                 display: 'Fenrisúlfr',
+                note: 'Fenrisúlfr can dismount you, freeze you and deals great damage when close to it. Bring animals that block it off so it can not get too close to you.',
                 searchTerms: 'wolf',
                 species: {
                     gamma: {

@@ -61,34 +61,43 @@
 
 {#if data.sets}
 	{#each data.sets as set}
-		<section>
-			<h2 class="mt-8 text-2xl text-secondary">{set.name}</h2>
-			<section class="grid mx-8 gap-8 mt-8 grid-cols-1 sm:grid-cols-3">
-				{#each set.bosses as bossId}
-					<a
-						href={urlForBoss(map, bossId, data.bosses[bossId])}
-						class="bossbutton bg-base-200 rounded-lg p-4 flex flex-col items-center"
-					>
+		<h2 class="mt-8 text-2xl text-secondary">{set.name}</h2>
+		<section class="flex flex-wrap justify-center mx-4 gap-8 mt-8">
+			{#each set.bosses as bossId}
+				{@const boss = data.bosses[bossId]}
+				<a
+					href={urlForBoss(map, bossId, boss)}
+					class="bossbutton bg-base-200 rounded-lg p-4 pb-2 flex flex-col items-center justify-between w-48 shadow"
+				>
+					<div class="grid content-center h-full">
 						<img
-							class="h-[200px]"
-							src="/imgs/bosses/{data.bosses[bossId].icon}"
-							alt="Symbol for {data.bosses[bossId].display}"
+							class="object-cover max-h-60 max-w-40"
+							src="/imgs/bosses/{boss.icon}"
+							alt="Symbol for {boss.display}"
 						/>
-						<h3>{data.bosses[bossId].display}</h3>
-					</a>
-				{/each}
-			</section>
+					</div>
+					<h3 class="text-center pb-0 min-h-12 flex items-center justify-center">
+						{boss.display}
+					</h3>
+				</a>
+			{/each}
 		</section>
 	{/each}
 {:else}
-	<section class="grid mx-8 gap-8 mt-8 grid-cols-1 sm:grid-cols-3">
+	<section class="flex flex-wrap justify-center mx-4 gap-8 mt-8">
 		{#each Object.entries(data.bosses) as [bossId, boss]}
 			<a
 				href={urlForBoss(map, bossId, boss)}
-				class="bossbutton bg-base-200 rounded-lg p-4 flex flex-col items-center"
+				class="bossbutton bg-base-200 rounded-lg p-4 pb-2 flex flex-col items-center justify-between w-48 shadow"
 			>
-				<img class="h-[200px]" src="/imgs/bosses/{boss.icon}" alt="Symbol for {boss.display}" />
-				<h3>{boss.display}</h3>
+				<div class="grid content-center h-full">
+					<img
+						class="object-cover max-h-60 max-w-40"
+						src="/imgs/bosses/{boss.icon}"
+						alt="Symbol for {boss.display}"
+					/>
+				</div>
+				<h3 class="text-center pb-0 min-h-12 flex items-center">{boss.display}</h3>
 			</a>
 		{/each}
 	</section>

@@ -10,7 +10,7 @@
 	import { boss_data, difficulties } from './data';
 	import DifficultySelector from './DifficultySelector.svelte';
 	import type { Difficulty } from './types';
-	import { dataForBoss, difficultyForBoss, getIconForDifficulty } from './utils';
+	import { dataForBoss, difficultyForBoss, filterOutRichTextTags, getIconForDifficulty } from './utils';
 
 	export let map: string;
 	export let boss: string;
@@ -166,7 +166,7 @@
 			<p><span class="text-secondary mr-1">Level needed:</span> <b>{$summon?.levelReq}</b></p>
 			<ul>
 				{#each $summon?.items || [] as req}
-					<li title={req.item?.description}>
+					<li title={filterOutRichTextTags(req.item?.description)}>
 						{req.qty} x {req.item?.name}
 					</li>
 				{/each}
@@ -184,7 +184,7 @@
 		{#if $engrams && $engrams.length}
 			<ul>
 				{#each $engrams || [] as item}
-					<li title={item.description}>
+					<li title={filterOutRichTextTags(item.description)}>
 						{item.name}
 					</li>
 				{/each}
@@ -203,7 +203,7 @@
 	{:then}
 		<ul>
 			{#each $drops || [] as { min, max, item }}
-				<li title={item.description}>
+				<li title={filterOutRichTextTags(item.description)}>
 					{#if min === max}{min}{:else}{min}-{max}{/if} x
 					{item.name}
 				</li>

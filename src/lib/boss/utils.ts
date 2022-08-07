@@ -53,3 +53,7 @@ export function* bossDifficulties(boss: SingleBoss | ABGBoss): Generator<[Diffic
         yield ['alpha', boss.species.alpha];
     }
 }
+
+export function filterOutRichTextTags(text: string | undefined): string | undefined {
+    return text?.replace(/<[^>]*>/g, '');
+}

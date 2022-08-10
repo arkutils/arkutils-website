@@ -3,8 +3,8 @@
 
 	import { getModDataStore } from '$lib/obelisk/asb';
 	import { modIdFromPath } from '$lib/obelisk/core';
-	import { flattenLoot, gatherDrops, getWikiDropsStore } from '$lib/obelisk/wiki/drops';
-	import { getItemByClass, getWikiItemsStore, type Item } from '$lib/obelisk/wiki/items';
+	import { gatherLoot, getWikiDropsStore } from '$lib/obelisk/wiki/drops';
+	import { getItemByClass, getWikiItemsStore } from '$lib/obelisk/wiki/items';
 	import { getWikiSpeciesStore } from '$lib/obelisk/wiki/species';
 
 	import { boss_data, difficulties } from './data';

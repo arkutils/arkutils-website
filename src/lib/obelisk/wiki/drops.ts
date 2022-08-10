@@ -1,5 +1,7 @@
+import { factorial as f } from "$lib/utils/math";
 import { processedWikiStore, type WikiFileStore } from "./internal";
-import type { IndexedItemsData, Item, MinMaxPow } from "./items";
+import { getItemByClass, type Item, type MinMaxPow } from "./items";
+import type { Lootbag } from "./species";
 
 
 export type ItemWeightPair = [weight: number, cls: string];
@@ -9,6 +11,7 @@ export type LootSetEntry = {
     weight: number;
     qty: MinMaxPow;
     quality: MinMaxPow;
+    bpChance: number;
     items: ItemWeightPair[];
 };
 
@@ -17,11 +20,13 @@ export type LootSet = {
     name: string;
     weight: number;
     qtyScale: MinMaxPow;
+    canRepeatItems: boolean;
     entries: LootSetEntry[];
 };
 
 export type Drops = {
     bp: string;
+    noRepeatsInSets: boolean;
     qtyMult?: MinMaxPow;
     sets: LootSet[];
 };
@@ -59,59 +64,85 @@ export function indexDropsFile(file: DropsData): IndexesForDropsData {
 export const getWikiDropsStore = processedWikiStore<DropsData, IndexedDropsData>("drops.json", indexDropsFile);
 
 
-export function gatherDrops(drops: Drops, $wikiItems: IndexedItemsData): ItemsWithQty {
-    return {
-        qty: default_qty, // oddly enough we need to ignore drops.qtyMult
-        items: drops.sets.map((set) => _gatherSet(set, $wikiItems))
-    };
+export type ItemResult = {
+    item: Item;
+    min: number;
+    max: number;
+    bp: number;
+    chance: number;
 }
 
-function _gatherSet(set: LootSet, $wikiItems: IndexedItemsData): ItemsWithQty {
-    return {
-        qty: set.qtyScale ?? default_qty,
-        items: set.entries.map((entry) => _gatherEntry(entry, $wikiItems))
-    };
+export type DropResults = {
+    fixed: ItemResult[];
+    random: ItemResult[];
 }
 
-function _gatherEntry(entry: LootSetEntry, $wikiItems: IndexedItemsData): ItemsWithQty {
-    return {
-        qty: { min: entry.qty.min, max: entry.qty.max, pow: 1 },
-        items: entry.items.map((item) => _gatherItem(item, $wikiItems))
-    };
-}
-
-function _gatherItem(item: [number, string], $wikiItems: IndexedItemsData): ItemsWithQty {
-    return {
-        qty: { min: item[0], max: item[0], pow: 1 },
-        items: [$wikiItems.clsLookup[item[1]]]
-    };
-}
-
-function _combineQty(qty: MinMaxPow, qty2: MinMaxPow): MinMaxPow {
-    return {
-        min: qty.min * qty2.min,
-        max: qty.max * qty2.max,
-        pow: qty.pow * qty2.pow
-    };
-}
-
-/**
- * Premultiplies deeps hierarchies of loot+quantity multipliers.
- *
- * qty + items[] = {min, max, item}[]
- */
-export function flattenLoot(
-    loot: ItemsWithQty[] | Item[],
-    qty: MinMaxPow = { min: 1, max: 1, pow: 1 }
-): { min: number; max: number; item: Item }[] {
-    if (!loot) return [];
-
-    return loot.flatMap((item) => {
-        if (!item) return [];
-        if ('qty' in item) {
-            return flattenLoot(item.items, _combineQty(qty, item.qty));
-        } else {
-            return { min: qty.min, max: qty.max, item: item };
-        }
+export function gatherLoot(lootbags: Lootbag[], $wikiDrops: IndexedDropsData): DropResults {
+    const items = lootbags.flatMap(lootbag => {
+        const drops = $wikiDrops.bpLookup[lootbag.item + "_C"];
+        return _gatherDrops(drops, lootbag.chance ?? 1);
     });
+
+    return {
+        fixed: items.filter(result => result.chance >= 1),
+        random: items.filter(result => result.chance < 1),
+    }
+}
+
+function calculateChance(options: number, count: number, allowRepeats: boolean): number {
+    if (allowRepeats) {
+        // Chance of failure to the power of the number chances, inverted to back success
+        return 1 - Math.pow((options - 1) / options, count);
+    } else {
+        if (count > options) return 1;
+        const combinations = f(options) / (f(count) * f(options - count));
+        return Math.min(1, combinations / count);
+    }
+}
+
+function _gatherDrops(drops: Drops, outerChance: number): ItemResult[] {
+    const setLen = drops.sets.length;
+    if (setLen === 0) return [];
+
+    const { min, max } = drops.qtyMult ?? default_qty;
+    const avg = (min + max) / 2;
+    const chance = outerChance * calculateChance(setLen, avg, !drops.noRepeatsInSets);
+    const items = drops.sets.flatMap((set) => _gatherSet(set, chance));
+    return items;
+}
+
+function _gatherSet(set: LootSet, outerChance: number): ItemResult[] {
+    const setLen = set.entries.length;
+    if (setLen === 0) return [];
+
+    const { min, max } = set.qtyScale ?? default_qty;
+    const avg = (min + max) / 2;
+    const chance = outerChance * calculateChance(setLen, avg, set.canRepeatItems);
+    const items = set.entries.flatMap((entry) => _gatherEntry(entry, chance));
+    return items;
+}
+
+function _gatherEntry(entry: LootSetEntry, outerChance: number): ItemResult[] {
+    const setLen = entry.items.length;
+    if (setLen === 0) return [];
+
+    const { min, max } = entry.qty ?? default_qty;
+    const avg = (min + max) / 2;
+    const chance = outerChance * avg / entry.items.length;
+    const bpChance = entry.bpChance;
+
+    const items = entry.items.flatMap((item) => _gatherItem(item, chance, bpChance));
+    return items;
+}
+
+function _gatherItem(pair: [number, string], chance: number, bpChance: number): ItemResult[] {
+    const amt = pair[0] * chance;
+    const item = getItemByClass(pair[1]);
+    if (!item) return [];
+    return [{
+        item,
+        min: amt, max: amt,
+        chance: chance,
+        bp: bpChance,
+    }];
 }

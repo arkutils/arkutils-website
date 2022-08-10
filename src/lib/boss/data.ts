@@ -408,7 +408,7 @@ export const boss_data: Record<string, BossMap> = {
         }
     },
     genesis1: {
-        display: 'Genesis: Part 1',
+        display: 'Genesis: Part 1',
         isLore: true,
         icon: 'genesis1.webp',
         bosses: {
@@ -482,7 +482,7 @@ export const boss_data: Record<string, BossMap> = {
         }
     },
     genesis2: {
-        display: 'Genesis: Part 2',
+        display: 'Genesis: Part 2',
         isLore: true,
         icon: 'genesis2.webp',
         bosses: {

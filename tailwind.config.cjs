@@ -2,7 +2,11 @@ const config = {
     content: ['./src/**/*.{html,js,svelte,ts}'],
 
     theme: {
-        extend: {}
+        extend: {
+            screens: {
+                'xs': '420px',
+            }
+        }
     },
 
     plugins: [require("daisyui")],

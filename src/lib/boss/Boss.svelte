@@ -16,6 +16,10 @@
 	export let boss: string;
 	export let difficulty: Difficulty | null;
 
+	let showFullEngrams = false;
+	let showFullDrops = false;
+	const restrictListCount = 8;
+
 	// Looked-up boss data
 	$: data = dataForBoss(map, boss);
 	$: difficultyData = difficultyForBoss(data, difficulty);
@@ -80,14 +84,8 @@
 			const lootbagList = $wikiData.death?.lootBags ?? [];
 
 			// Grab the drop data for each lootbag
-			const loot = lootbagList.map((dropChance) => {
-				const drops = $wikiDrops.bpLookup[dropChance.item + '_C'];
-				return gatherDrops(drops, $wikiItems);
-			});
-
-			// Flatten and apply qty multipliers
-			const items: { min: number; max: number; item: Item }[] = flattenLoot(loot);
-			return items;
+			const loot = gatherLoot(lootbagList, $wikiDrops);
+			return loot;
 		}
 	);
 
@@ -109,13 +107,17 @@
 	);
 
 	$: icon = getIconForDifficulty(difficulty, data);
+
+	function restrictItems<T>(original: T[], full: boolean): T[] {
+		return full ? original : original.slice(0, restrictListCount);
+	}
 </script>
 
-<section class="grid topsection grid-cols-[200px,auto] gap-4">
-	<div class={difficulty}>
-		<img src="/imgs/bosses/{icon}" alt="{data.display} flag image" width="200" class="w-full" />
-	</div>
-	<div class="row-start-2">
+<section class="grid topsection grid-cols-[minmax(100px,200px),auto] gap-4">
+	<div class="flex flex-col gap-4">
+		<div class={difficulty}>
+			<img src="/imgs/bosses/{icon}" alt="{data.display} flag image" width="200" class="w-full" />
+		</div>
 		{#if difficulty !== null}
 			<DifficultySelector {map} {boss} {difficulty} />
 		{/if}
@@ -131,13 +133,13 @@
 
 		<div class="flex flex-col gap-4">
 			<!-- Health data -->
-			<p>
-				Health:
+			<p class="text-xl">
+				<span class="text-secondary">Health:</span>
 				{#await loadAll([hp])}
 					...
 				{:then}
 					{#if $hp !== undefined}
-						{new Intl.NumberFormat().format($hp)}
+						<b>{new Intl.NumberFormat().format($hp)}</b>
 					{:else}
 						...
 					{/if}
@@ -154,7 +156,7 @@
 </section>
 
 <!-- Summon -->
-<h2 class="ml-1 mt-4 mb-2 text-base-content">Summon</h2>
+<h2 class="ml-1 mt-4 mb-2 text-primary">Summon</h2>
 <div class="bg-base-200 rounded-lg p-2 px-4 my-2">
 	{#if difficultyData.summonNote}
 		<p>{difficultyData.summonNote}</p>
@@ -176,14 +178,14 @@
 </div>
 
 <!-- Engrams -->
-<h2 class="ml-1 mt-4 mb-2 text-base-content">Engrams</h2>
+<h2 class="ml-1 mt-4 mb-2 text-primary">Engrams</h2>
 <div class="bg-base-200 rounded-lg p-2 px-4 my-2">
 	{#await loadAll([engrams])}
 		...loading...
 	{:then}
 		{#if $engrams && $engrams.length}
 			<ul>
-				{#each $engrams || [] as item}
+				{#each restrictItems($engrams || [], showFullEngrams) as item}
 					<li title={filterOutRichTextTags(item.description)}>
 						{item.name}
 					</li>
@@ -193,33 +195,85 @@
 			<p class="text-base-content/70 italic">No engrams</p>
 		{/if}
 	{/await}
-</div>
-
-<!-- Drops -->
-<h2 class="ml-1 mt-4 mb-2 text-base-content">Drops</h2>
-<div class="bg-base-200 rounded-lg p-2 px-4 my-2">
-	{#await loadAll([drops])}
-		...loading...
-	{:then}
-		<ul>
-			{#each $drops || [] as { min, max, item }}
-				<li title={filterOutRichTextTags(item.description)}>
-					{#if min === max}{min}{:else}{min}-{max}{/if} x
-					{item.name}
-				</li>
-			{/each}
-			{#if difficultyData.dropsNote}
-				<li>{difficultyData.dropsNote}</li>
+	{#if ($engrams || []).length > restrictListCount}
+		<button
+			on:click={() => (showFullEngrams = !showFullEngrams)}
+			class="mt-4 -ml-2 btn btn-xs btn-ghost text-secondary"
+		>
+			Show
+			{#if showFullEngrams}
+				less
+			{:else}
+				{($engrams || []).length - restrictListCount} more Engram(s)
 			{/if}
-		</ul>
-	{/await}
+		</button>
+	{/if}
 </div>
 
-<h3 class="mt-8">Content plan:</h3>
-<ul class="text-sm ml-4">
-	<li>Damage reduction, difficulty selector</li>
-	<li>Other bosses on this map</li>
-</ul>
+<div class="mt-4 grid grid-rows-[auto,auto,auto] grid-cols-1 xs:grid-cols-2 xs:grid-flow-col gap-2">
+	<!-- Guaranteed Drops -->
+	<h2 class="ml-1 text-primary">Guaranteed Loot</h2>
+	<p class="ml-1 text-sm text-base-content/70">
+		This loot will always drop. <b>Flags and skins are not listed</b> because they are awarded directly to
+		each player involved.
+	</p>
+	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm">
+		{#await loadAll([drops])}
+			...loading...
+		{:then}
+			<ul>
+				{#each $drops?.fixed ?? [] as { min, max, item, bp }}
+					<li title={filterOutRichTextTags(item.description)}>
+						<span class="min-w-20 text-right">
+							{#if min === max}{min}{:else}{min}-{max}{/if} x
+						</span>
+						{item.name}
+						{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
+					</li>
+				{/each}
+				{#if difficultyData.dropsNote}
+					<li>{difficultyData.dropsNote}</li>
+				{/if}
+			</ul>
+		{/await}
+	</div>
+
+	<!-- Possible Drops -->
+	<h2 class="ml-1 text-primary">Possible Loot</h2>
+	<p class="ml-1 text-sm text-base-content/70">
+		This is the full loot table. You will only get a <b>small selection</b> and some may be blueprints.
+	</p>
+	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm">
+		{#await loadAll([drops])}
+			...loading...
+		{:then}
+			<ul>
+				{#each restrictItems($drops?.random ?? [], showFullDrops) as { min, max, item, bp }}
+					<li title={filterOutRichTextTags(item.description)}>
+						{item.name}
+						{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
+					</li>
+				{/each}
+				{#if difficultyData.dropsNote}
+					<li>{difficultyData.dropsNote}</li>
+				{/if}
+			</ul>
+		{/await}
+		{#if ($drops?.random ?? []).length > restrictListCount}
+			<button
+				on:click={() => (showFullDrops = !showFullDrops)}
+				class="mt-4 -ml-2 btn btn-xs btn-ghost text-secondary"
+			>
+				Show
+				{#if showFullDrops}
+					less
+				{:else}
+					{($drops?.random ?? []).length - restrictListCount} more item(s)
+				{/if}
+			</button>
+		{/if}
+	</div>
+</div>
 
 <style lang="postcss">
 	.gamma img {

@@ -5,7 +5,10 @@
 	import Metadata from '$lib/Metadata.svelte';
 </script>
 
-<Metadata title="Bossopedia" description="" nopreview />
+<Metadata
+	title="Bossopedia"
+	description="The Bossopedia by ArkUtils gives you the perfect overview over what you need to know about summoning and defeating the bosses in ARK Survival Evolved. Summoning items, unlocked Engrams, Boss life and boss loot can easily be viewed. "
+/>
 
 <!-- Site navigation breadcrumbs -->
 <div class="text-sm breadcrumbs mb-2">
@@ -97,12 +100,5 @@
 	}
 	.filter-dim.lore {
 		filter: brightness(0.8);
-	}
-
-	.breadcrumbs > ul > li img {
-		@apply mr-2;
-	}
-	.breadcrumbs > ul > li:before {
-		@apply text-secondary;
 	}
 </style>

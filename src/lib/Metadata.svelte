@@ -6,8 +6,9 @@
 	export let title: string[] | string | null;
 	export let description: string | null;
 	export let nopreview = false;
+	export let preview: string | undefined = undefined;
 
-	const location = $page.url.pathname.replace(/^\/+/, '');
+	const location = (preview ?? $page.url.pathname).replace(/^\/+/, '');
 	const baseUrl = new URL($page.url);
 	baseUrl.pathname = base;
 

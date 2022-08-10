@@ -18,32 +18,40 @@
 				return {
 					props: {
 						map,
-						boss
-					}
+						boss,
+					},
 				};
 			}
 
 			// This boss has difficulties, so redirect to gamma by default
 			return {
 				status: 308,
-				redirect: `/boss/${map}/${boss}-gamma`
+				redirect: `/boss/${map}/${boss}-gamma`,
 			};
 		} catch {}
 
 		// Not found, so redirect to the main boss page
 		return {
 			status: 308,
-			redirect: '/boss'
+			redirect: '/boss',
 		};
 	};
 </script>
 
 <script lang="ts">
 	import Boss from '$lib/boss/Boss.svelte';
+	import Metadata from '$lib/Metadata.svelte';
 
 	export let map: string;
 	export let boss: string;
 </script>
+
+<Metadata
+	title={[boss_data[map].bosses[boss].display, boss_data[map].display, 'Bossopedia']}
+	description="Everything you need to know if you want to beat {boss_data[map].bosses[boss]
+		.display} on {boss_data[map].display}. {boss_data[map].bosses[boss].note}"
+	preview="/boss"
+/>
 
 <div class="text-sm breadcrumbs mb-2">
 	<ul class="text-sm ml-4">

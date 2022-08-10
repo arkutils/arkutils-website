@@ -40,7 +40,11 @@
 	export let data: BossMap;
 </script>
 
-<Metadata title={[data.display, 'Bossopedia']} description="" nopreview />
+<Metadata
+	title={[data.display, 'Bossopedia']}
+	description="Find all the info you need about the bosses of {data.display}. Summon items, unlocked engrams, boss health and boss loot all on one page."
+	preview="/boss"
+/>
 
 <div class="text-sm breadcrumbs mb-2">
 	<ul class="text-sm ml-4">

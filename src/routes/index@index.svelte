@@ -123,7 +123,11 @@
 	}
 
 	.infos {
-		@apply grid grid-cols-[300px] sm:grid-cols-[300px,300px] lg:grid-cols-[300px,300px,300px] grid-flow-row gap-4;
+		/* @apply grid grid-cols-[300px] sm:grid-cols-[300px,300px] lg:grid-cols-[300px,300px,300px] grid-flow-row gap-4; */
+		@apply flex flex-wrap gap-4 justify-center;
+	}
+	.infos > div {
+		width: 300px;
 	}
 
 	.tool {

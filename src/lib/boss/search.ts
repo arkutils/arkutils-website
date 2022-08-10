@@ -41,7 +41,7 @@ export class AbortTriggered extends Error {
 }
 
 export function shouldPerformSearch(query: string) {
-    return query && query.length > 2 && query.trim() !== 'tek';
+    return query && query.length > 2;
 }
 
 export type AbortToken = {

@@ -122,3 +122,24 @@
 		</section>
 	{/if}
 </div>
+
+<style lang="postcss">
+	section {
+		/* Nice, standards-based scrollbars for Firefox */
+		scrollbar-width: thin;
+		scrollbar-color: hsla(var(--bc) / 50) hsla(var(--b-300));
+	}
+
+	/* Ugly non-standards compliant scrollbars for Chrome/Edge/Safari */
+	section::-webkit-scrollbar {
+		width: 15px;
+		height: 16px;
+	}
+	section::-webkit-scrollbar-track {
+		@apply bg-base-300 rounded-full;
+	}
+	section::-webkit-scrollbar-thumb {
+		@apply bg-base-content/50 rounded-lg border-[3px] border-base-300 border-solid;
+		height: 4px !important;
+	}
+</style>

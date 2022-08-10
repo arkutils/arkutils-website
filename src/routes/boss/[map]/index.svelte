@@ -55,7 +55,13 @@
 </div>
 
 <div class="flex gap-2">
-	<img src="/imgs/maps/{data.icon}" alt="Icon for {data.display}" width="50" height="50" class="" />
+	<img
+		src="/imgs/maps/{data.icon}"
+		alt="Icon for {data.display}"
+		width="50"
+		height="50"
+		class="w-12 h-12"
+	/>
 	<h1 class="text-secondary text-5xl">{data.display}</h1>
 </div>
 
@@ -106,12 +112,6 @@
 		{/each}
 	</section>
 {/if}
-
-<h3 class="mt-8">Content plan:</h3>
-<ul class="text-sm ml-4">
-	<li>Header</li>
-	<li>List of bosses in [map]</li>
-</ul>
 
 <style lang="postcss">
 	a.bossbutton {

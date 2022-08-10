@@ -9,7 +9,7 @@
 	$: data = dataForBoss(map, boss);
 </script>
 
-<nav class="grid grid-cols-3 gap-4 items-center text-sm">
+<nav class="grid grid-cols-3 gap-4 items-center text-xs sm:text-sm">
 	<a href="/boss/{map}/{boss}-gamma" disabled={difficulty === 'gamma'} class="gamma">
 		<div>
 			<img src="/imgs/bosses/{getIconForDifficulty('gamma', data)}" alt="Gamma Difficulty" />

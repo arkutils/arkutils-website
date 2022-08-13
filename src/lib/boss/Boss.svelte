@@ -11,6 +11,7 @@
 	import type { Difficulty } from './types';
 	import { dataForBoss, difficultyForBoss, filterOutRichTextTags, getIconForDifficulty } from './utils';
 
+	import ArkWikiLink from '$lib/ArkWikiLink.svelte';
 	import RestrictedList from '$lib/RestrictedList.svelte';
 	import DifficultySelector from './DifficultySelector.svelte';
 
@@ -143,6 +144,13 @@
 				<!-- TODO: insert damage reduction -->
 			</p>
 
+			<p class="text-sm flex items-baseline gap-2">
+				<span class="opacity-70">Official wiki:</span>
+				<ArkWikiLink name={data.display}>
+					<p>{data.display}</p>
+				</ArkWikiLink>
+			</p>
+
 			{#if data.note}
 				<p>{data.note}</p>
 			{/if}
@@ -193,6 +201,7 @@
 			<RestrictedList items={$summon?.items} max={25} let:item={req}>
 				<li title={filterOutRichTextTags(req.item?.description)}>
 					{req.qty} x {req.item?.name}
+					<ArkWikiLink name={req.item?.name} />
 				</li>
 			</RestrictedList>
 		{/if}
@@ -208,6 +217,7 @@
 		<RestrictedList items={$engrams} max={restrictListCount} let:item>
 			<li title={filterOutRichTextTags(item.description)}>
 				{item.name}
+				<ArkWikiLink name={item.name} />
 			</li>
 		</RestrictedList>
 	{/await}
@@ -237,6 +247,7 @@
 						{#if min === max}{min}{:else}{min}-{max}{/if} x
 						{item.name}
 						{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
+						<ArkWikiLink name={item.name} />
 					</li>
 				</RestrictedList>
 			{/if}
@@ -256,6 +267,7 @@
 				<li title={filterOutRichTextTags(item.description)}>
 					{item.name}
 					{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
+					<ArkWikiLink name={item.name} />
 				</li>
 			</RestrictedList>
 		{/await}

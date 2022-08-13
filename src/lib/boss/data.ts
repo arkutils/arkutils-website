@@ -929,7 +929,7 @@ export const boss_data: Record<string, BossMap> = {
                         ],
                         bp: '/Game/Fjordur/Boss/Fenrir_Character_BP_Boss_Medium.Fenrir_Character_BP_Boss_Medium',
                         summon: '/Game/Fjordur/Boss/Arena/PrimalItem_BossTribute_FenrirBoss_Medium.PrimalItem_BossTribute_FenrirBoss_Medium_C',
-                        dropsNote: '1 x Cryopod Fenrir Lvl 19'
+                        dropsNote: '1 x Cryopod Fenrir Lvl 190'
                     },
                     alpha: {
                         manualDrops: [

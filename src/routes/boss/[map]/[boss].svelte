@@ -63,3 +63,9 @@
 </div>
 
 <Boss {map} {boss} difficulty={null} />
+
+<style lang="postcss">
+	.breadcrumbs > ul {
+		@apply flex-wrap;
+	}
+</style>

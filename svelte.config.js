@@ -16,6 +16,7 @@ const config = {
         prerender: {
             default: true,
             crawl: true,
+            origin: "https://arkutils.netlify.app"
         }
     }
 };

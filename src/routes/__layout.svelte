@@ -4,7 +4,7 @@
 	import '../app.postcss';
 </script>
 
-<div class="hidden">
+<div class="absolute w-0 h-0">
 	<!-- Filters for Alpha/Beta/Gamma color tint filters -->
 	<svg xmlns="http://www.w3.org/2000/svg">
 		<filter id="tintGamma" color-interpolation-filters="sRGB">

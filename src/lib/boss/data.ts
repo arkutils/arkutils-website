@@ -579,7 +579,7 @@ export const boss_data: Record<string, BossMap> = {
                 note: 'Moeder is an underwater boss. She will spawn eels as minions and becomes vulnerable once all eels are killed.',
                 species: {
                     gamma: {
-                        summonNote: "Boss arena is entered through an underwater mission terminal",
+                        summonNote: "Boss arena is entered through an underwater mission terminal.",
                         manualDrops: [
                             { item: "PrimalItemStructure_Flag_EelBoss_C", min: 1, max: 1, chance: 1, bp: 0 },
                         ],
@@ -587,7 +587,7 @@ export const boss_data: Record<string, BossMap> = {
                         dropsNote: 'Moeder drops various items, but we\'re currently not able to provide a list of them.',
                     },
                     beta: {
-                        summonNote: "Boss arena is entered through an underwater mission terminal",
+                        summonNote: "Boss arena is entered through an underwater mission terminal.",
                         manualDrops: [
                             { item: "PrimalItemStructure_Flag_EelBoss_C", min: 1, max: 1, chance: 1, bp: 0 },
                         ],
@@ -595,7 +595,7 @@ export const boss_data: Record<string, BossMap> = {
                         dropsNote: 'Moeder drops various items, but we\'re currently not able to provide a list of them.',
                     },
                     alpha: {
-                        summonNote: "Boss arena is entered through an underwater mission terminal",
+                        summonNote: "Boss arena is entered through an underwater mission terminal.",
                         manualDrops: [
                             { item: "PrimalItemStructure_Flag_EelBoss_C", min: 1, max: 1, chance: 1, bp: 0 },
                         ],

@@ -166,13 +166,13 @@
 	{:then}
 		{#if $summon}
 			<p><span class="text-secondary mr-1">Level needed:</span> <b>{$summon?.levelReq}</b></p>
-			<ul>
-				{#each $summon?.items || [] as req}
-					<li title={filterOutRichTextTags(req.item?.description)}>
-						{req.qty} x {req.item?.name}
-					</li>
-				{/each}
-			</ul>
+		{/if}
+		{#if !difficultyData.summonNote || $summon?.items?.length}
+			<RestrictedList items={$summon?.items} max={25} let:item={req}>
+				<li title={filterOutRichTextTags(req.item?.description)}>
+					{req.qty} x {req.item?.name}
+				</li>
+			</RestrictedList>
 		{/if}
 	{/await}
 </div>
@@ -183,58 +183,41 @@
 	{#await loadAll([engrams])}
 		...loading...
 	{:then}
-		{#if $engrams && $engrams.length}
-			<ul>
-				{#each restrictItems($engrams || [], showFullEngrams) as item}
-					<li title={filterOutRichTextTags(item.description)}>
-						{item.name}
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<p class="text-base-content/70 italic">No engrams</p>
-		{/if}
+		<RestrictedList items={$engrams} max={restrictListCount} let:item>
+			<li title={filterOutRichTextTags(item.description)}>
+				{item.name}
+			</li>
+		</RestrictedList>
 	{/await}
-	{#if ($engrams || []).length > restrictListCount}
-		<button
-			on:click={() => (showFullEngrams = !showFullEngrams)}
-			class="mt-4 -ml-2 btn btn-xs btn-ghost text-secondary"
-		>
-			Show
-			{#if showFullEngrams}
-				less
-			{:else}
-				{($engrams || []).length - restrictListCount} more Engram(s)
-			{/if}
-		</button>
-	{/if}
 </div>
 
 <div class="mt-4 grid grid-rows-[auto,auto,auto] grid-cols-1 xs:grid-cols-2 xs:grid-flow-col gap-2">
 	<!-- Guaranteed Drops -->
 	<h2 class="ml-1 text-primary">Guaranteed Loot</h2>
 	<p class="ml-1 text-sm text-base-content/70">
-		This loot will always drop. <b>Flags and skins are not listed</b> because they are awarded directly to
-		each player involved.
+		This loot will always drop. Note that some items are harvested on kill and others go straight to your
+		inventory.
 	</p>
-	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm">
+	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm sm:text-base">
+		{#if difficultyData.dropsNote}
+			<p>{difficultyData.dropsNote}</p>
+		{/if}
 		{#await loadAll([drops])}
 			...loading...
 		{:then}
-			<ul>
-				{#each $drops?.fixed ?? [] as { min, max, item, bp }}
+			{#if !difficultyData.dropsNote || $drops?.fixed?.length}
+				<RestrictedList
+					items={$drops?.fixed}
+					max={restrictListCount}
+					let:item={{ min, max, item, bp }}
+				>
 					<li title={filterOutRichTextTags(item.description)}>
-						<span class="min-w-20 text-right">
-							{#if min === max}{min}{:else}{min}-{max}{/if} x
-						</span>
+						{#if min === max}{min}{:else}{min}-{max}{/if} x
 						{item.name}
 						{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
 					</li>
-				{/each}
-				{#if difficultyData.dropsNote}
-					<li>{difficultyData.dropsNote}</li>
-				{/if}
-			</ul>
+				</RestrictedList>
+			{/if}
 		{/await}
 	</div>
 
@@ -243,35 +226,17 @@
 	<p class="ml-1 text-sm text-base-content/70">
 		This is the full loot table. You will only get a <b>small selection</b> and some may be blueprints.
 	</p>
-	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm">
+	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm sm:text-base">
 		{#await loadAll([drops])}
 			...loading...
 		{:then}
-			<ul>
-				{#each restrictItems($drops?.random ?? [], showFullDrops) as { min, max, item, bp }}
-					<li title={filterOutRichTextTags(item.description)}>
-						{item.name}
-						{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
-					</li>
-				{/each}
-				{#if difficultyData.dropsNote}
-					<li>{difficultyData.dropsNote}</li>
-				{/if}
-			</ul>
+			<RestrictedList items={$drops?.random} max={restrictListCount} let:item={{ item, bp }}>
+				<li title={filterOutRichTextTags(item.description)}>
+					{item.name}
+					{#if bp}<span class="text-secondary/70"> (or BP)</span>{/if}
+				</li>
+			</RestrictedList>
 		{/await}
-		{#if ($drops?.random ?? []).length > restrictListCount}
-			<button
-				on:click={() => (showFullDrops = !showFullDrops)}
-				class="mt-4 -ml-2 btn btn-xs btn-ghost text-secondary"
-			>
-				Show
-				{#if showFullDrops}
-					less
-				{:else}
-					{($drops?.random ?? []).length - restrictListCount} more item(s)
-				{/if}
-			</button>
-		{/if}
 	</div>
 </div>
 

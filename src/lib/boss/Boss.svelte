@@ -230,7 +230,7 @@
 		This loot will always drop. Note that some items are harvested on kill and others go straight to your
 		inventory.
 	</p>
-	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm sm:text-base">
+	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-base xs:text-sm sm:text-base">
 		{#if difficultyData.dropsNote}
 			<p>{difficultyData.dropsNote}</p>
 		{/if}
@@ -259,7 +259,7 @@
 	<p class="ml-1 text-sm text-base-content/70">
 		This is the full loot table. You will only get a <b>small selection</b> and some may be blueprints.
 	</p>
-	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-sm sm:text-base">
+	<div class="bg-base-200 rounded-lg p-2 px-4 my-2 text-base xs:text-sm sm:text-base">
 		{#await loadAll([drops])}
 			...loading...
 		{:then}

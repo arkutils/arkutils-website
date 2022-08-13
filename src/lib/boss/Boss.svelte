@@ -155,6 +155,33 @@
 	</div>
 </section>
 
+<!-- Ascension -->
+{#if difficultyData.ascLevels}
+	<h2 class="ml-1 mt-4 mb-2 text-primary">Ascension</h2>
+	<div class="alert alert-info shadow-lg">
+		<div>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				class="stroke-current flex-shrink-0 w-6 h-6"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
+			</svg>
+			<span>
+				This boss gives you a higher player level cap upon it's first defeat. Each difficulty gives
+				you {difficultyData.ascLevels} levels. If you decide to skip directly to Alpha you will get all
+				{3 * difficultyData.ascLevels} levels in one go.
+			</span>
+		</div>
+	</div>
+{/if}
+
 <!-- Summon -->
 <h2 class="ml-1 mt-4 mb-2 text-primary">Summon</h2>
 <div class="bg-base-200 rounded-lg p-2 px-4 my-2">

@@ -1,4 +1,6 @@
 import { factorial as f } from "$lib/utils/math";
+import { loadAll } from "@square/svelte-store";
+import { modIdFromPath } from "../core";
 import { processedWikiStore, type WikiFileStore } from "./internal";
 import { getItemByClass, type Item, type MinMaxPow } from "./items";
 import type { Lootbag } from "./species";
@@ -77,11 +79,17 @@ export type DropResults = {
     random: ItemResult[];
 }
 
-export function gatherLoot(lootbags: Lootbag[], $wikiDrops: IndexedDropsData): DropResults {
-    const items = lootbags.flatMap(lootbag => {
-        const drops = $wikiDrops.bpLookup[lootbag.item + "_C"];
+export async function gatherLoot(lootbags: Lootbag[]): Promise<DropResults> {
+    // Find items from each lootbag, reading from its associated wiki drops file
+    const bags = await Promise.all(lootbags.map(async (lootbag) => {
+        const modId = modIdFromPath(lootbag.item);
+        const [dropsFile] = await loadAll([getWikiDropsStore(modId)]);
+        const drops = dropsFile.bpLookup[lootbag.item + "_C"];
         return _gatherDrops(drops, lootbag.chance ?? 1);
-    });
+    }));
+
+    // Combine all the items from each lootbag into one array
+    const items = bags.flat();
 
     return {
         fixed: items.filter(result => result.chance >= 1),
@@ -128,15 +136,15 @@ function _gatherEntry(entry: LootSetEntry, outerChance: number): ItemResult[] {
 
     const { min, max } = entry.qty ?? default_qty;
     const avg = (min + max) / 2;
-    const chance = outerChance * avg / entry.items.length;
+    const chance = outerChance / setLen;
+
     const bpChance = entry.bpChance;
 
-    const items = entry.items.flatMap((item) => _gatherItem(item, chance, bpChance));
+    const items = entry.items.flatMap((item) => _gatherItem(item, avg, chance, bpChance));
     return items;
 }
 
-function _gatherItem(pair: [number, string], chance: number, bpChance: number): ItemResult[] {
-    const amt = pair[0] * chance;
+function _gatherItem(pair: [number, string], amt: number, chance: number, bpChance: number): ItemResult[] {
     const item = getItemByClass(pair[1]);
     if (!item) return [];
     return [{

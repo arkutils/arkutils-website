@@ -12,7 +12,9 @@ export type BossMap = {
     display: string;
     isLore?: boolean,
     icon: string;
-    extraModIds?: string[];
+    extraSpeciesModIds?: string[];
+    extraItemsModIds?: string[];
+    extraDropsModIds?: string[];
     sets?: SetInfo[];
     note?: string;
     bosses: Record<string, SingleBoss | ABGBoss>;
@@ -22,7 +24,6 @@ export type BossMap = {
 export type BossBase = {
     display: string;
     searchTerms?: string;
-    extraModIds?: string[];
     note?: string;
     icon: string;
     gammaIconOverride?: string;
@@ -49,6 +50,8 @@ export type BossDifficulty = {
     summon?: string;
     dropsNote?: string;
     summonNote?: string;
+    ascLevels?: number;
+    manualDrops?: Array<{ item: string, min: number, max: number, chance: number, bp: number }>;
     manualEngrams?: string[];
 };
 

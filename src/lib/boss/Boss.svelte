@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { asyncDerived, derived, loadAll } from '@square/svelte-store';
+	import { asyncDerived, loadAll } from '@square/svelte-store';
 
 	import { getModDataStore } from '$lib/obelisk/asb';
 	import { modIdFromPath } from '$lib/obelisk/core';
@@ -8,46 +8,36 @@
 	import { getWikiSpeciesStore } from '$lib/obelisk/wiki/species';
 
 	import { boss_data, difficulties } from './data';
-	import DifficultySelector from './DifficultySelector.svelte';
 	import type { Difficulty } from './types';
 	import { dataForBoss, difficultyForBoss, filterOutRichTextTags, getIconForDifficulty } from './utils';
+
+	import RestrictedList from '$lib/RestrictedList.svelte';
+	import DifficultySelector from './DifficultySelector.svelte';
 
 	export let map: string;
 	export let boss: string;
 	export let difficulty: Difficulty | null;
 
-	let showFullEngrams = false;
-	let showFullDrops = false;
 	const restrictListCount = 8;
 
 	// Looked-up boss data
+	$: mapData = boss_data[map];
 	$: data = dataForBoss(map, boss);
 	$: difficultyData = difficultyForBoss(data, difficulty);
 
-	// Async-derived stores for each file we need from Obelisk - '' is core (not a mod)
-	const asbSpecies = getModDataStore('');
-	const wikiItems = getWikiItemsStore('');
-	const wikiDrops = getWikiDropsStore('');
-	const wikiSpecies = getWikiSpeciesStore('');
-
-	/** The ASB data for the species we're interested in */
-	$: asbData = derived([asbSpecies], ([$asbSpecies]) => {
-		if (!$asbSpecies) return undefined;
-		return $asbSpecies?.speciesLookup[difficultyData.bp];
-	});
-
-	/** The wiki data for the species we're interested in */
-	$: wikiSpeciesData = derived([wikiSpecies], ([$wikiSpecies]) => {
-		if (!$wikiSpecies) return undefined;
-		return $wikiSpecies?.speciesLookup[difficultyData.bp + '_C'];
-	});
-
-	// List of mods needed
-	$: requiredMods = ['', ...(data.extraModIds ?? [])];
-
-	// List of species and item stores we need
-	$: requiredSpeciesStores = requiredMods.map((modId) => getModDataStore(modId));
-	$: requiredModItemStores = requiredMods.map((modId) => getWikiItemsStore(modId));
+	// List of different stores we need, for those that split data out into separate mods
+	$: requiredSpeciesStores = ['', ...(mapData.extraSpeciesModIds ?? [])].map((modId) =>
+		getModDataStore(modId)
+	);
+	$: requiredModSpeciesStores = ['', ...(mapData.extraSpeciesModIds ?? [])].map((modId) =>
+		getWikiSpeciesStore(modId)
+	);
+	$: requiredModItemStores = ['', ...(mapData.extraItemsModIds ?? [])].map((modId) =>
+		getWikiItemsStore(modId)
+	);
+	$: requiredModDropsStores = ['', ...(mapData.extraDropsModIds ?? [])].map((modId) =>
+		getWikiDropsStore(modId)
+	);
 
 	/** HP is pulled out of the ASB stat data, if present */
 	$: hp = asyncDerived([...requiredSpeciesStores], async () => {
@@ -74,43 +64,48 @@
 		return items;
 	});
 
-	/** Loot drops come from the wiki species data, then we lookup loot sets with item names */
-	$: drops = derived(
-		[wikiSpeciesData, wikiItems, wikiDrops, ...requiredModItemStores],
-		([$wikiData, $wikiItems, $wikiDrops]) => {
-			if (!$wikiData || !$wikiItems || !$wikiDrops) return undefined;
+	/** Loot drops come from the wiki species data, drop inventores and item data combined */
+	$: drops = asyncDerived(
+		[...requiredModItemStores, ...requiredModDropsStores, ...requiredModSpeciesStores],
+		async () => {
+			// Find the species in the correct species store
+			const modId = modIdFromPath(difficultyData.bp);
+			const [$speciesStore] = await loadAll([getWikiSpeciesStore(modId)]);
+			const wikiSpecies = $speciesStore.speciesLookup[difficultyData.bp + '_C'];
 
 			// Pull the list of lootbags out of the species death data
-			const lootbagList = $wikiData.death?.lootBags ?? [];
+			const lootbagList = wikiSpecies?.death?.lootBags ?? [];
+			const loot = await gatherLoot(lootbagList);
 
-			// Grab the drop data for each lootbag
-			const loot = gatherLoot(lootbagList, $wikiDrops);
+			// Add any manually-added engrams
+			if (difficultyData.manualDrops) {
+				difficultyData.manualDrops.forEach(({ item, min, max, chance, bp }) => {
+					loot.fixed.push({ item: getItemByClass(item), min, max, chance, bp });
+				});
+			}
+
 			return loot;
 		}
 	);
 
-	/** Summoning items */
-	$: summon = derived(
-		[getWikiItemsStore(modIdFromPath(difficultyData.summon)), ...requiredModItemStores],
-		([$modItems]) => {
-			if (!$modItems || !difficultyData.summon) return undefined;
+	/** Summoning items are gathered from the summon item's recipe */
+	$: summon = asyncDerived([...requiredModItemStores], async () => {
+		// if (!$modItems || !difficultyData.summon) return undefined;
+		if (!difficultyData.summon) return undefined;
 
-			// Crafting recipe contains the level/items needed
-			const summonItem = $modItems.bpLookup[difficultyData.summon];
-			const levelReq = summonItem?.crafting?.levelReq;
-			const items = summonItem?.crafting?.recipe?.map(({ qty, type }) => ({
-				qty,
-				item: getItemByClass(type),
-			}));
-			return { levelReq, items };
-		}
-	);
+		// Crafting recipe contains the level/items needed
+		const modId = modIdFromPath(difficultyData.summon);
+		const [$itemStore] = await loadAll([getWikiItemsStore(modId)]);
+		const summonItem = $itemStore.bpLookup[difficultyData.summon];
+		const levelReq = summonItem?.crafting?.levelReq;
+		const items = summonItem?.crafting?.recipe?.map(({ qty, type }) => ({
+			qty,
+			item: getItemByClass(type),
+		}));
+		return { levelReq, items };
+	});
 
 	$: icon = getIconForDifficulty(difficulty, data);
-
-	function restrictItems<T>(original: T[], full: boolean): T[] {
-		return full ? original : original.slice(0, restrictListCount);
-	}
 </script>
 
 <section class="grid topsection grid-cols-[minmax(100px,200px),auto] gap-4">

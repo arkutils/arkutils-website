@@ -1,5 +1,5 @@
 export class ReentranceLock {
-    lockPromise: Promise<void>;
+    lockPromise: Promise<void> | null;
 
     constructor() {
         this.lockPromise = null;
@@ -16,8 +16,8 @@ export class ReentranceLock {
             return await this.execute(fn);
         } else {
             // Create a locking promise
-            let resolve;
-            let reject;
+            let resolve: () => void = () => null;
+            let reject: () => void = () => null;
             this.lockPromise = new Promise((_resolve, _reject) => {
                 resolve = _resolve;
                 reject = _reject;

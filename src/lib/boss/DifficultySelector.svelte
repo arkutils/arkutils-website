@@ -10,25 +10,34 @@
 </script>
 
 <nav class="grid grid-cols-3 gap-4 items-center text-xs sm:text-sm">
-	<a href="/boss/{map}/{boss}-gamma" disabled={difficulty === 'gamma'} class="gamma">
-		<div>
-			<img src="/imgs/bosses/{getIconForDifficulty('gamma', data)}" alt="Gamma Difficulty" />
-			<div class="colour" />
-		</div>
+	<a
+		href="/boss/{map}/{boss}-gamma"
+		disabled={difficulty === 'gamma'}
+		class="gamma"
+		sveltekit:noscroll
+		sveltekit:prefetch
+	>
+		<img src="/imgs/bosses/{getIconForDifficulty('gamma', data)}" alt="Gamma Difficulty" />
 		Gamma
 	</a>
-	<a href="/boss/{map}/{boss}-beta" disabled={difficulty === 'beta'} class="beta">
-		<div>
-			<img src="/imgs/bosses/{getIconForDifficulty('beta', data)}" alt="Beta Difficulty" />
-			<div class="colour" />
-		</div>
+	<a
+		href="/boss/{map}/{boss}-beta"
+		disabled={difficulty === 'beta'}
+		class="beta"
+		sveltekit:noscroll
+		sveltekit:prefetch
+	>
+		<img src="/imgs/bosses/{getIconForDifficulty('beta', data)}" alt="Beta Difficulty" />
 		Beta
 	</a>
-	<a href="/boss/{map}/{boss}-alpha" disabled={difficulty === 'alpha'} class="alpha">
-		<div>
-			<img src="/imgs/bosses/{getIconForDifficulty('alpha', data)}" alt="Alpha Difficulty" />
-			<div class="colour" />
-		</div>
+	<a
+		href="/boss/{map}/{boss}-alpha"
+		disabled={difficulty === 'alpha'}
+		class="alpha"
+		sveltekit:noscroll
+		sveltekit:prefetch
+	>
+		<img src="/imgs/bosses/{getIconForDifficulty('alpha', data)}" alt="Alpha Difficulty" />
 		Alpha
 	</a>
 </nav>

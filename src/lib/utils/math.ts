@@ -1,8 +1,10 @@
 const factorialCache = new Map<number, bigint>();
 
+const BIGONE = BigInt(1);
+
 export function factorial(n: number, stop = 0): bigint {
     if (n < stop) throw new Error(`n must be >= ${stop}`);
-    if (n == stop) return 1n;
+    if (n == stop) return BIGONE;
     if (n <= 2) return BigInt(n);
     if (stop < 2) {
         const existing = factorialCache.get(n);

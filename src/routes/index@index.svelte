@@ -2,6 +2,7 @@
 	import ArkUtilsLogo from '$lib/imgs/ArkUtilsLogo.svelte';
 	import Brontosaur from '$lib/imgs/toolicons/Brontosaur.svelte';
 	import DinoHatching from '$lib/imgs/toolicons/DinoHatching.svelte';
+	import ProudDino from '$lib/imgs/toolicons/ProudDino.svelte';
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
 	import SpinoSword from '$lib/imgs/toolicons/SpinoSword.svelte';
@@ -9,7 +10,7 @@
 
 	import { slide } from 'svelte/transition';
 
-	const buttons = ['spawnexact', 'incubator', 'colorid', 'bossopedia'];
+	const buttons = ['spawnexact', 'incubator', 'wildstats', 'colorid', 'bossopedia'];
 
 	let show: { [key: string]: boolean } = {};
 
@@ -69,6 +70,24 @@
 					</div>
 				{/if}
 			</div>
+			<div>
+				<a class="tool" href="/tools/wildstats">
+					<figure>
+						<ProudDino />
+					</figure>
+					<span>
+						<div class="font-bold">Stat Evaluator</div>
+						<div class="text-sm">How good are my stats?</div>
+					</span>
+					<button class="help" on:click|preventDefault={() => toggle('wildstats')}> ? </button>
+				</a>
+				{#if show.wildstats}
+					<div transition:slide class="info">
+						See how your stat roll compares to the possible levels. Find out if you got a good or
+						average roll.
+					</div>
+				{/if}
+			</div>
 		</div>
 	</section>
 
@@ -123,8 +142,7 @@
 	}
 
 	.infos {
-		/* @apply grid grid-cols-[300px] sm:grid-cols-[300px,300px] lg:grid-cols-[300px,300px,300px] grid-flow-row gap-4; */
-		@apply flex flex-wrap gap-4 justify-center;
+		@apply grid grid-cols-[300px] sm:grid-cols-[300px,300px] lg:grid-cols-[300px,300px,300px] grid-flow-row gap-4;
 	}
 	.infos > div {
 		width: 300px;

@@ -29,6 +29,12 @@ export function fbyf(n: number, x: number): number {
 }
 
 
+export function clamp(min: number, value: number, max: number) {
+    return Math.min(Math.max(min, value), max);
+}
+
+
+
 /*  The following JavaScript functions for calculating normal and
     chi-square probabilities and critical values were adapted by
     John Walker from C implementations

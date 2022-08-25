@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 
-	import { range } from './utils';
-	import { factorial, fbyf, probabilityToZScore } from './utils/math';
+	import { range } from '../utils';
+	import { factorial, fbyf, probabilityToZScore } from '../utils/math';
 
 	const diagramHeight = 220;
 	const distribution: number[] = Array.from({ length: 255 }, (_) => 0);
@@ -125,7 +125,7 @@
 
 			<div class="bg-base-200 flex items-end h-full col {classes}">
 				<div
-					class="bg-base-300 h-px w-full bar"
+					class="bg-base-300 h-px w-full bar shadow-md"
 					style:height="{Math.round((diagramHeight * $view[x]) / (maxY * 1.35))}px"
 					style:will-change="height"
 				/>
@@ -153,20 +153,24 @@
 		class="stats shadow grid-cols-2 grid-rows-2 grid-flow-row sm:grid-cols-[repeat(4,auto)] sm:grid-rows-1"
 	>
 		<div class="stat place-items-center">
-			<div class="stat-title">Most common</div>
+			<div class="stat-title opacity-80">Average</div>
 			<div class="stat-value">{mostCommon}</div>
+			<div class="stat-desc mt-2">Most common</div>
 		</div>
 		<div class="stat place-items-center">
-			<div class="stat-title">Top 10%</div>
+			<div class="stat-title opacity-80">Top 10%</div>
 			<div class="stat-value text-secondary">{top10}</div>
+			<div class="stat-desc mt-2">1-in-10</div>
 		</div>
 		<div class="stat place-items-center border-l-transparent sm:border-l-base-content/10">
-			<div class="stat-title">Top 1%</div>
+			<div class="stat-title opacity-80">Top 1%</div>
 			<div class="stat-value text-primary">{top1}</div>
+			<div class="stat-desc mt-2">1-in-100</div>
 		</div>
 		<div class="stat place-items-center">
-			<div class="stat-title">Top 0.1%</div>
+			<div class="stat-title opacity-80">Top 0.1%</div>
 			<div class="stat-value text-accent">{top01}</div>
+			<div class="stat-desc mt-2">1-in-1000</div>
 		</div>
 	</div>
 </div>
@@ -210,11 +214,11 @@
 	.top10 .tag {
 		@apply top-12;
 	}
-	.top10:not(.row1) {
+	.top10 {
 		@apply border-l border-secondary;
 	}
 	.grid .inTop10 > .bar {
-		@apply bg-secondary;
+		@apply bg-secondary shadow-md;
 	}
 	.grid .inTop10 + .label {
 		@apply text-secondary;
@@ -223,11 +227,11 @@
 	.top1 .tag {
 		@apply top-28;
 	}
-	.top1:not(.row1):not(.row2) {
+	.top1 {
 		@apply border-l border-primary;
 	}
 	.grid .inTop1 > .bar {
-		@apply bg-primary;
+		@apply bg-primary shadow-md;
 	}
 	.grid .inTop1 + .label {
 		@apply text-primary;
@@ -236,11 +240,11 @@
 	.top01 .tag {
 		@apply top-44;
 	}
-	.top01:not(.row1):not(.row2):not(.row3) {
+	.top01 {
 		@apply border-l border-accent;
 	}
 	.grid .inTop01 > .bar {
-		@apply bg-accent;
+		@apply bg-accent shadow-md;
 	}
 	.grid .inTop01 + .label {
 		@apply text-accent;

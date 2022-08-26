@@ -82,6 +82,35 @@
 	}
 </script>
 
+<div class="flex justify-center">
+	<div
+		class="stats shadow grid-cols-2 grid-rows-2 grid-flow-row sm:grid-cols-[repeat(4,auto)] sm:grid-rows-1"
+	>
+		<div class="stat place-items-center">
+			<div class="stat-title opacity-80">Average</div>
+			<div class="stat-value">{mostCommon}</div>
+			<div class="stat-desc mt-2">Most common</div>
+		</div>
+		<div class="stat place-items-center">
+			<div class="stat-title opacity-80">Top 10%</div>
+			<div class="stat-value text-secondary">{top10}</div>
+			<div class="stat-desc mt-2">1-in-10</div>
+		</div>
+		<div class="stat place-items-center border-l-transparent sm:border-l-base-content/10">
+			<div class="stat-title opacity-80">Top 1%</div>
+			<div class="stat-value text-primary">{top1}</div>
+			<div class="stat-desc mt-2">1-in-100</div>
+		</div>
+		<div class="stat place-items-center">
+			<div class="stat-title opacity-80">Top 0.1%</div>
+			<div class="stat-value text-accent">{top01}</div>
+			<div class="stat-desc mt-2">1-in-1000</div>
+		</div>
+	</div>
+</div>
+
+<!-- <hr class="my-4 border-base-200" /> -->
+
 <div class="px-2 py-1 pb-2 bg-base-200 overflow-hidden">
 	<div
 		class="grid grid-flow-col items-end w-full"
@@ -143,35 +172,6 @@
 				</span>
 			</div>
 		{/each}
-	</div>
-</div>
-
-<hr class="my-4 border-base-200" />
-
-<div class="flex justify-center">
-	<div
-		class="stats shadow grid-cols-2 grid-rows-2 grid-flow-row sm:grid-cols-[repeat(4,auto)] sm:grid-rows-1"
-	>
-		<div class="stat place-items-center">
-			<div class="stat-title opacity-80">Average</div>
-			<div class="stat-value">{mostCommon}</div>
-			<div class="stat-desc mt-2">Most common</div>
-		</div>
-		<div class="stat place-items-center">
-			<div class="stat-title opacity-80">Top 10%</div>
-			<div class="stat-value text-secondary">{top10}</div>
-			<div class="stat-desc mt-2">1-in-10</div>
-		</div>
-		<div class="stat place-items-center border-l-transparent sm:border-l-base-content/10">
-			<div class="stat-title opacity-80">Top 1%</div>
-			<div class="stat-value text-primary">{top1}</div>
-			<div class="stat-desc mt-2">1-in-100</div>
-		</div>
-		<div class="stat place-items-center">
-			<div class="stat-title opacity-80">Top 0.1%</div>
-			<div class="stat-value text-accent">{top01}</div>
-			<div class="stat-desc mt-2">1-in-1000</div>
-		</div>
 	</div>
 </div>
 

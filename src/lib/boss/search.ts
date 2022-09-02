@@ -60,10 +60,11 @@ export async function* performSearch(query: string, abort: { triggered: boolean 
 
         // Start loading all relevant mod files
         // (we check they're loaded later before using them)
-        const modIds = ['', ...map.extraModIds ?? []];
+        const speciesModIds = ['', ...map.extraSpeciesModIds ?? []];
+        const itemsModIds = ['', ...map.extraItemsModIds ?? []];
         /* unawaited */ loadAll([
-            ...modIds.map(id => getWikiSpeciesStore(id)),
-            ...modIds.map(id => getWikiItemsStore(id)),
+            ...speciesModIds.map(id => getWikiSpeciesStore(id)),
+            ...itemsModIds.map(id => getWikiItemsStore(id)),
         ]);
 
         // Check for matching map names
@@ -90,6 +91,7 @@ export async function* performSearch(query: string, abort: { triggered: boolean 
                 if (mapMatch || bossMatch) continue;
 
                 // Look up the species (in its particular mod's data file)
+                await loadAll(speciesModIds.map(id => getWikiSpeciesStore(id)));
                 const species = await getSpecies(difficultyData.bp + '_C');
 
                 // Engrams are a combination of data from the species plus manually added engrams
@@ -97,7 +99,7 @@ export async function* performSearch(query: string, abort: { triggered: boolean 
                 if (!engrams || !engrams.length) continue;
 
                 // Before we go through looking at them, ensure the relevant item files are fully loaded
-                await loadAll(modIds.map(id => getWikiItemsStore(id)));
+                await loadAll(itemsModIds.map(id => getWikiItemsStore(id)));
 
                 // For each engram, ensure the relevant items are loaded then look it up by class
                 for (const engramCls of engrams) {

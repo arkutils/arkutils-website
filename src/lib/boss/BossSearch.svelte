@@ -101,7 +101,7 @@
 		</a>
 	</li>
 
-	<div slot="noResults" class="h-40 bg-pink-500">No results found!</div>
+	<div slot="noResults" class="pt-2 pl-2">No results found!</div>
 </SearchBox>
 
 <style lang="postcss">

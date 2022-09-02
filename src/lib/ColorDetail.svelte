@@ -2,16 +2,18 @@
 	import { createEventDispatcher } from 'svelte';
 
 	import CloseIcon from '$lib/imgs/CloseIcon.svelte';
-	import type { ColorInfo } from './ColorChart.svelte';
-	import { type Color3, selectTextColor, asHex, asRgbTo1, asRgbTo256 } from './colors';
 	import { localstore } from '$lib/localstore';
+	import type { ColorInfo } from './ColorChart.svelte';
+	import { asHex, asRgbTo1, asRgbTo256, selectTextColor, type Color3 } from './colors';
 
 	export let color: ColorInfo;
 
-	let displayFormat = localstore<'hex' | 'rgb1' | 'rgb256'>('displayFormat', { default: 'hex' });
+	type Formats = 'hex' | 'rgb1' | 'rgb256';
+
+	let displayFormat = localstore<Formats>('displayFormat', { default: 'hex' });
 	let dispatch = createEventDispatcher();
 
-	function format(fmt, color: Color3): string {
+	function format(fmt: Formats, color: Color3): string {
 		if (fmt === 'rgb1') {
 			return asRgbTo1(color);
 		} else if (fmt === 'rgb256') {

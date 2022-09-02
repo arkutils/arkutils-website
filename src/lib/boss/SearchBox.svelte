@@ -108,7 +108,7 @@
 			{#if !searchFinished}
 				<div class="absolute right-4 z-60">...</div>
 			{/if}
-			{#if results}
+			{#if results && results.length}
 				<ul class="results">
 					{#each results as result}
 						<slot name="result" {result}>

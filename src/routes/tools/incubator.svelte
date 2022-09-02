@@ -1,24 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	import {
-		isSpeciesUseful,
-		getModDataStore,
-		type Species,
-		type IndexedModData
-	} from '$lib/obelisk/asb';
+	import { getModDataStore, isSpeciesUseful, type IndexedModData, type Species } from '$lib/obelisk/asb';
 	import { selectedModId, selectedSpecies } from '$lib/stores';
 
-	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
-	import Health from '$lib/imgs/stats/Health.svelte';
-	import Stamina from '$lib/imgs/stats/Stamina.svelte';
-	import Oxygen from '$lib/imgs/stats/Oxygen.svelte';
-	import Food from '$lib/imgs/stats/Food.svelte';
-	import Weight from '$lib/imgs/stats/Weight.svelte';
 	import Damage from '$lib/imgs/stats/Damage.svelte';
+	import Food from '$lib/imgs/stats/Food.svelte';
+	import Health from '$lib/imgs/stats/Health.svelte';
+	import Oxygen from '$lib/imgs/stats/Oxygen.svelte';
 	import Speed from '$lib/imgs/stats/Speed.svelte';
+	import Stamina from '$lib/imgs/stats/Stamina.svelte';
 	import Torpor from '$lib/imgs/stats/Torpor.svelte';
+	import Weight from '$lib/imgs/stats/Weight.svelte';
 	import Metadata from '$lib/Metadata.svelte';
+	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
 	import { loadAll } from '@square/svelte-store';
 
 	const STAT_NAMES = [
@@ -33,7 +28,7 @@
 		'Damage',
 		'Speed',
 		'Fortitude',
-		'Crafting'
+		'Crafting',
 	];
 
 	const STAT_IMAGES = [
@@ -48,7 +43,7 @@
 		Damage,
 		Speed,
 		null,
-		null // TODO: Need crafting icon?
+		null, // TODO: Need crafting icon?
 	];
 
 	// Display order, mirroring in-game
@@ -67,7 +62,7 @@
 		[1, 0.17, 0.14, 0.44],
 		[1, 1, 1, 1],
 		[1, 1, 1, 1],
-		[1, 1, 1, 1]
+		[1, 1, 1, 1],
 	];
 
 	const defaultImprintMults = [0.2, 0.0, 0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2, 0.2, 0.0, 0.0];
@@ -82,7 +77,7 @@
 	let wildLevels: number[] = Array(12).fill(0);
 
 	$: if (loaded) selectMod($selectedModId);
-	$: if (loaded) selectSpecies($selectedSpecies);
+	$: if (loaded && $selectedSpecies) selectSpecies($selectedSpecies);
 
 	onMount(async () => {
 		// Load core
@@ -103,10 +98,7 @@
 
 		// Look for egg temps
 		if (speciesData.breeding) {
-			eggTemp = calculateOptimalTemp(
-				speciesData.breeding.eggTempMin,
-				speciesData.breeding.eggTempMax
-			);
+			eggTemp = calculateOptimalTemp(speciesData.breeding.eggTempMin, speciesData.breeding.eggTempMax);
 			similarEggs = findSimilarEggs(eggTemp, $selectedSpecies);
 		} else {
 			eggTemp = null;
@@ -121,7 +113,7 @@
 		return optimalTemp;
 	}
 
-	function findSimilarEggs(temp: number | null, thisSpecies: string) {
+	function findSimilarEggs(temp: number | null, thisSpecies: string | null) {
 		if (temp === null || modData === null) return [];
 
 		const matches: string[] = [];
@@ -135,10 +127,7 @@
 			// Skip minions, bosses, currupt, etc
 			if (!isSpeciesUseful(species)) continue;
 
-			const thisTemp = calculateOptimalTemp(
-				species.breeding.eggTempMin,
-				species.breeding.eggTempMax
-			);
+			const thisTemp = calculateOptimalTemp(species.breeding.eggTempMin, species.breeding.eggTempMax);
 
 			if (thisTemp === temp && !matches.includes(species.name)) {
 				matches.push(species.name);
@@ -251,7 +240,7 @@
 	description="The Incubator Calculator lets you calculate the raw stats from level points in the ARK Incubator but it also lets you calculate the level points when you only have raw stats without the need of a modded spyglass."
 />
 
-<main class="flex flex-col gap-8">
+<main class="flex flex-col gap-4">
 	<!-- Info -->
 	<header class="flex flex-wrap justify-center gap-x-4 ">
 		<div class="overflow-visible flex justify-center">
@@ -277,16 +266,11 @@
 	<!-- Species selection -->
 	<section class="flex flex-col gap-4">
 		<h2>Select species</h2>
-		<SpeciesSelector
-			bind:selectedSpecies={$selectedSpecies}
-			bind:selectedModId={$selectedModId}
-		/>
+		<SpeciesSelector bind:selectedSpecies={$selectedSpecies} bind:selectedModId={$selectedModId} />
 	</section>
 
 	<!-- Stats -->
-	<section
-		class="flex flex-wrap gap-x-8 sm:gap-x-24 gap-y-6 sm:gap-y-8 px-4 sm:px-8 justify-center"
-	>
+	<section class="flex flex-wrap gap-x-8 sm:gap-x-24 gap-y-6 sm:gap-y-8 px-4 sm:px-8 justify-center">
 		{#each selectStats(speciesData) as i (`stat-${i}`)}
 			<div class="flex gap-4 items-center">
 				<span title={STAT_NAMES[i]} class="text-[60px] sm:text-[75px] text-[#ded]">
@@ -346,8 +330,8 @@
 			<h2 class=" font-thin text-2xl mb-2">It didn't work?</h2>
 			<ul>
 				<li>- You have different server stats than vanilla</li>
-				<li>- You chose the wrong creature</li>
-				<li>- You have Single-Player Settings active</li>
+				<li>- You chose the wrong species</li>
+				<li>- You have single player settings active</li>
 			</ul>
 			<div class=" mt-2">
 				In this case please use <a href="http://cadon.github.io/ARKStatsExtractor/">
@@ -362,9 +346,3 @@
 		</div>
 	</section>
 </main>
-
-<style lang="postcss">
-	* {
-		/* @apply bg-white/3; */
-	}
-</style>

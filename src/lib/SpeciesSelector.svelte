@@ -1,23 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
 	import { localstore } from '$lib/localstore';
-	import {
-		isSpeciesUseful,
-		getModDataStore,
-		type Species,
-		type IndexedModData
-	} from '$lib/obelisk/asb';
+	import { getModDataStore, isSpeciesUseful, type IndexedModData, type Species } from '$lib/obelisk/asb';
 
-	import ModSelector from './ModSelector.svelte';
 	import { loadAll } from '@square/svelte-store';
+	import ModSelector from './ModSelector.svelte';
 
 	export let selectedModId: string | null = null;
 	export let selectedSpecies: string | null = '';
 
 	let filterUseless = localstore('arkutils-filter-species', {
 		default: true,
-		dontWatchTabs: true
+		dontWatchTabs: true,
 	});
 
 	// Store containing the current mod data (loadable/async)

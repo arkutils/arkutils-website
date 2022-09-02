@@ -4,7 +4,7 @@
 	let tip_visible = false;
 	let current_timeout: any;
 
-	function fallbackCopyTextToClipboard(text) {
+	function fallbackCopyTextToClipboard(text: string) {
 		var textArea = document.createElement('textarea');
 		textArea.value = text;
 
@@ -27,7 +27,7 @@
 
 		document.body.removeChild(textArea);
 	}
-	function copyTextToClipboard(text) {
+	function copyTextToClipboard(text: string) {
 		if (!navigator.clipboard) {
 			fallbackCopyTextToClipboard(text);
 			return;

@@ -38,7 +38,7 @@
 	</h1>
 
 	<section class="infogroup">
-		<h3 class="ml-4 my-2 text-primary text-2xl uppercase font-800">Tools</h3>
+		<h2 class="ml-4 my-2 text-primary text-2xl uppercase font-bold">Tools</h2>
 
 		<div class="infos">
 			<div>
@@ -92,7 +92,7 @@
 	</section>
 
 	<section class="infogroup">
-		<h3 class="ml-4 my-2 text-primary text-2xl uppercase font-800 w-full">Information</h3>
+		<h2 class="ml-4 my-2 text-primary text-2xl uppercase font-800 w-full">Information</h2>
 		<div class="infos">
 			<div>
 				<a class="tool" href="/tools/colorids">

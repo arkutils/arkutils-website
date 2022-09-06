@@ -35,7 +35,7 @@ export function localstore<T>(name: string, options: LocalStoreOptions<T>): Writ
     let value: T;
 
     // Handle initialisation from store or default
-    if (browser) json = window.localStorage.getItem(name) ?? "undefined";
+    if (browser) json = window.localStorage.getItem(name) || "null";
     json = json ?? JSON.stringify(options.default);
     value = JSON.parse(json);
 

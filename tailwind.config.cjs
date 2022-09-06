@@ -24,7 +24,7 @@ const config = {
                     'primary-content': '#e0f1e0',
                     secondary: '#37cdbe',
                     'secondary-focus': '#2d8f86',
-                    'secondary-content': '#e7f3f1',
+                    'secondary-content': '#2a2e37',
                     accent: '#b713d8',
                     'accent-focus': '#8d1fa3',
                     'accent-content': '#f3e6f4',

@@ -2,16 +2,16 @@
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 
-	import { srgbFilm, srgbPow22, asHex } from '$lib/colors';
+	import { asHex, srgbFilm, srgbPow22 } from '$lib/colors';
 
-	import { getModDataStore, type ColorDef } from '$lib/obelisk/asb';
 	import { localstore } from '$lib/localstore';
+	import { getModDataStore, type ColorDef } from '$lib/obelisk/asb';
 
 	import type { ColorInfo } from '$lib/ColorChart.svelte';
 	import ColorChart from '$lib/ColorChart.svelte';
-	import ModSelector from '$lib/ModSelector.svelte';
 	import ColorDetail from '$lib/ColorDetail.svelte';
 	import Metadata from '$lib/Metadata.svelte';
+	import ModSelector from '$lib/ModSelector.svelte';
 	import { loadAll } from '@square/svelte-store';
 
 	const BASE_COLORID = 1;
@@ -54,10 +54,8 @@
 	});
 
 	async function selectMod(modId: string) {
-		console.log(`selectMod(${JSON.stringify(modId)})`);
 		if (modId === loadedModId) return;
 		const [modData] = await loadAll([getModDataStore(modId)]);
-		console.log(modData);
 		modColors = parseColors(modData.colorDefinitions || [], BASE_COLORID);
 		modDyes = parseColors(modData.dyeDefinitions || [], BASE_DYEID);
 		loadedModId = modId;
@@ -88,10 +86,8 @@
 		_filterParts: (string | number)[] | null
 	) {
 		// ...arguments are ignored, used to trigger Svelte to re-run this function
-		console.log(`applyFilter(${hideCore}, ${JSON.stringify(selectedModId)})`);
 		filteredColors = modColors.filter(filterColor);
 		filteredDyes = modDyes.filter(filterColor);
-		console.log('filteredColors', filteredColors);
 	}
 
 	function parseColors(colors: ColorDef[], startId: number): ColorInfo[] {
@@ -111,7 +107,7 @@
 			gamma22: gamma22,
 			gammaFilm: gammaFilm,
 			gamma22Hex: asHex(gamma22),
-			gammaFilmHex: asHex(gammaFilm)
+			gammaFilmHex: asHex(gammaFilm),
 		};
 	}
 
@@ -147,12 +143,10 @@
 <h1 class="mb-4">ARK Color IDs</h1>
 
 <!-- Info text -->
-<p class="mb-2">
-	This page lists all color IDs in ARK: Survival Evolved, plus a list of supported mods.
-</p>
+<p class="mb-2">This page lists all color IDs in ARK: Survival Evolved, plus a list of supported mods.</p>
 <p class="mb-4">
-	The normal colours can be picked for wild creatures, while mutations and special events can pick
-	from both normal and dye colours.
+	The normal colours can be picked for wild creatures, while mutations and special events can pick from
+	both normal and dye colours.
 </p>
 
 <!-- Input section -->
@@ -160,16 +154,8 @@
 	<div class="flex flex-col gap-2 flex-1">
 		<h3>Choose Mod</h3>
 		<ModSelector bind:selectedModId />
-		<label
-			class:text-gray-500={!selectedModId}
-			class="select-none flex flex-row items-center gap-2"
-		>
-			<input
-				type="checkbox"
-				class="checkbox"
-				bind:checked={hideCore}
-				disabled={!selectedModId}
-			/>
+		<label class:text-gray-500={!selectedModId} class="select-none flex flex-row items-center gap-2">
+			<input type="checkbox" class="checkbox" bind:checked={hideCore} disabled={!selectedModId} />
 			Hide duplicates from core
 		</label>
 	</div>
@@ -200,20 +186,11 @@
 	<section
 		transition:fly={{ x: -5, y: -10 }}
 		class="fixed left-0 top-0 w-full h-full grid content-center justify-center"
-		on:click={() => {
-			displayedColor = null;
-			console.log('click on dialog');
-		}}
+		on:click={() => (displayedColor = null)}
 	>
 		<!-- Actual dialog -->
-		<div on:click|stopPropagation={() => {}}>
-			<ColorDetail
-				color={displayedColor}
-				on:close={() => {
-					displayedColor = null;
-					console.log('close event');
-				}}
-			/>
+		<div on:click|stopPropagation>
+			<ColorDetail color={displayedColor} on:close={() => (displayedColor = null)} />
 		</div>
 	</section>
 {/if}

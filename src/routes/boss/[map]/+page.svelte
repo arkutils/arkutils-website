@@ -1,48 +1,18 @@
-<script context="module" lang="ts">
-	import { boss_data } from '$lib/boss/data';
-	import type { BossMap } from '$lib/boss/types';
-	import { urlForBoss } from '$lib/boss/utils';
-
-	import type { Load } from './__types/index';
-
-	/** A load function that looks up and validates [map] */
-	export const load: Load = async ({ params }) => {
-		// Grab the params from the URL
-		const { map } = params;
-
-		// See if we have data for this map-boss-difficulty
-		try {
-			const data = boss_data[map];
-
-			if (data) {
-				// Got everything, render it
-				return {
-					props: {
-						map,
-						data,
-					},
-				};
-			}
-		} catch {}
-
-		// Not found, so redirect to the main boss page
-		return {
-			status: 308,
-			redirect: '/boss',
-		};
-	};
-</script>
-
 <script lang="ts">
+	import type { BossMap } from '$lib/boss/types';
+
+	import { urlForBoss } from '$lib/boss/utils';
 	import Metadata from '$lib/Metadata.svelte';
 
-	export let map: string;
-	export let data: BossMap;
+	import type { PageData } from './$types';
+
+	export let data: PageData & { mapId: string; map: BossMap }; // !*!*! SvelteKit bug? Shouldn't be needed
+	$: ({ mapId, map } = data);
 </script>
 
 <Metadata
-	title={[data.display, 'Bossopedia']}
-	description="Find all the info you need about the bosses of {data.display}. Summon items, unlocked engrams, boss health and boss loot all on one page."
+	title={[map.display, 'Bossopedia']}
+	description="Find all the info you need about the bosses of {map.display}. Summon items, unlocked engrams, boss health and boss loot all on one page."
 	preview="/boss"
 />
 
@@ -50,33 +20,27 @@
 	<ul class="text-sm ml-4">
 		<li><a href="/">Home</a></li>
 		<li><a href="/boss">Bosses</a></li>
-		<li>{data.display}</li>
+		<li>{map.display}</li>
 	</ul>
 </div>
 
 <div class="flex gap-2">
-	<img
-		src="/imgs/maps/{data.icon}"
-		alt="Icon for {data.display}"
-		width="50"
-		height="50"
-		class="w-12 h-12"
-	/>
-	<h1 class="text-secondary text-5xl">{data.display}</h1>
+	<img src="/imgs/maps/{map.icon}" alt="Icon for {map.display}" width="50" height="50" class="w-12 h-12" />
+	<h1 class="text-secondary text-5xl">{map.display}</h1>
 </div>
 
-{#if data.note}
-	<p class="my-4">{data.note}</p>
+{#if map.note}
+	<p class="my-4">{map.note}</p>
 {/if}
 
-{#if data.sets}
-	{#each data.sets as set}
+{#if map.sets}
+	{#each map.sets as set}
 		<h2 class="mt-8 text-2xl text-secondary">{set.name}</h2>
 		<section class="flex flex-wrap justify-center mx-4 gap-8 mt-8">
 			{#each set.bosses as bossId}
-				{@const boss = data.bosses[bossId]}
+				{@const boss = map.bosses[bossId]}
 				<a
-					href={urlForBoss(map, bossId, boss)}
+					href={urlForBoss(mapId, bossId, boss)}
 					class="bossbutton bg-base-200 rounded-lg p-4 pb-2 flex flex-col items-center justify-between w-48 shadow"
 				>
 					<div class="grid content-center h-full">
@@ -95,9 +59,9 @@
 	{/each}
 {:else}
 	<section class="flex flex-wrap justify-center mx-4 gap-8 mt-8">
-		{#each Object.entries(data.bosses) as [bossId, boss]}
+		{#each Object.entries(map.bosses) as [bossId, boss]}
 			<a
-				href={urlForBoss(map, bossId, boss)}
+				href={urlForBoss(mapId, bossId, boss)}
 				class="bossbutton bg-base-200 rounded-lg p-4 pb-2 flex flex-col items-center justify-between w-48 shadow"
 			>
 				<div class="grid content-center h-full">

@@ -1,5 +1,5 @@
-import { browser } from '$app/env';
-import { writable, type Writable } from 'svelte/store';
+import { browser } from '$app/environment';
+import { writable, type Writable } from '@square/svelte-store';
 
 export type LocalStoreOptions<T> = {
     default: T,
@@ -13,7 +13,7 @@ if (browser) {
     // Watch for localStorage changes in other tabs
     window.addEventListener('storage', (ev) => {
         if (ev.storageArea !== window.localStorage) return;
-        registeredWatchers.get(ev.key)?.set(JSON.parse(ev.newValue));
+        registeredWatchers.get(ev.key ?? '---undefined-key---')?.set(JSON.parse(ev.newValue ?? 'undefined'));
     });
 }
 
@@ -31,11 +31,11 @@ export function localstore<T>(name: string, options: LocalStoreOptions<T>): Writ
     if (existing) return existing as Writable<T>;
 
     // We want to maintain both the value and its JSON version
-    let json: string;
+    let json: string = JSON.stringify(options.default);
     let value: T;
 
     // Handle initialisation from store or default
-    if (browser) json = window.localStorage.getItem(name) ?? undefined;
+    if (browser) json = window.localStorage.getItem(name) ?? "undefined";
     json = json ?? JSON.stringify(options.default);
     value = JSON.parse(json);
 

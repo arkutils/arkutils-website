@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	import { type Color3, type Color4, selectTextColor } from './colors';
+	import { selectTextColor, type Color3, type Color4 } from './colors';
 
 	export type ColorChartEvents = {
 		selected: ColorInfo;
@@ -17,9 +17,9 @@
 </script>
 
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
-	import { createEventDispatcher } from 'svelte';
 
 	export let colors: ColorInfo[] = [];
 

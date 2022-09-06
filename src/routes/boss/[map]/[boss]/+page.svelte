@@ -1,49 +1,12 @@
-<script context="module" lang="ts">
-	import { boss_data } from '$lib/boss/data';
-	import { isSingleDifficulty } from '$lib/boss/utils';
-
-	import type { Load } from './__types/[boss]';
-
-	/** A load function that looks up [map] and [boss] to find boss data */
-	export const load: Load = async ({ params }) => {
-		// Grab the params from the URL
-		const { map, boss } = params;
-
-		// See if we have data for this map-boss without difficulty
-		try {
-			const data = boss_data[map].bosses[boss];
-
-			if (isSingleDifficulty(data)) {
-				// This boss doesn't need difficulty, so we're good
-				return {
-					props: {
-						map,
-						boss,
-					},
-				};
-			}
-
-			// This boss has difficulties, so redirect to gamma by default
-			return {
-				status: 308,
-				redirect: `/boss/${map}/${boss}-gamma`,
-			};
-		} catch {}
-
-		// Not found, so redirect to the main boss page
-		return {
-			status: 308,
-			redirect: '/boss',
-		};
-	};
-</script>
-
 <script lang="ts">
 	import Boss from '$lib/boss/Boss.svelte';
+	import { boss_data } from '$lib/boss/data';
 	import Metadata from '$lib/Metadata.svelte';
 
-	export let map: string;
-	export let boss: string;
+	import type { PageData } from './$types';
+
+	export let data: PageData & { map: string; boss: string }; // !*!*! SvelteKit bug? Shouldn't be needed
+	$: ({ map, boss } = data);
 </script>
 
 <Metadata

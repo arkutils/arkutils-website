@@ -5,7 +5,7 @@
 <main class="px-2 py-4 sm:px-8 min-h-screen max-w-4xl mx-auto">
 	<slot />
 
-	<footer class="flex flex-wrap p-2 mt-12 w-full justify-between">
+	<footer class="flex flex-wrap p-2 mt-12 w-full justify-between gap-x-8 text-base-content/70">
 		<span>
 			This site is <a href="https://github.com/arkutils/arkutils-website" target="_blank">
 				open source on GitHub <span class="-mt-1 relative -top-0.5 text-20px">

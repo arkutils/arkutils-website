@@ -4,7 +4,8 @@ const BIGONE = BigInt(1);
 
 export function factorial(n: number, stop = 0): bigint {
     if (n < stop) throw new Error(`n must be >= ${stop}`);
-    if (n == stop) return BIGONE;
+    if (n <= stop) return BIGONE;
+    if (n === 0) return BIGONE;
     if (n <= 2) return BigInt(n);
     if (stop < 2) {
         const existing = factorialCache.get(n);
@@ -52,7 +53,6 @@ export function clamp(min: number, value: number, max: number) {
 */
 
 export function zScoreToProbability(z: number) {
-
     const Z_MAX = 6;
     let y, x, w;
 

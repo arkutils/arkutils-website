@@ -104,7 +104,7 @@ function calculateChance(options: number, count: number, allowRepeats: boolean):
     } else {
         if (count > options) return 1;
         const combinations = f(options) / (f(count) * f(options - count));
-        return Math.min(1, Number(combinations / BigInt(count)));
+        return Math.min(1, Number(combinations));
     }
 }
 

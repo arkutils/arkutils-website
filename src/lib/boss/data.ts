@@ -855,7 +855,7 @@ export const boss_data: Record<string, BossMap> = {
             },
             megapithecus: {
                 display: 'Megapithecus',
-                note: 'All three bosses spawn together on Valguero. The Megapithecus has several strong attacks. It also spawns Gigantopithecus and Mesopithecus as minions that attack the player and their tames.',
+                note: 'The Megapithecus has several strong attacks. It also spawns Gigantopithecus and Mesopithecus as minions that attack the player and their tames.',
                 searchTerms: 'monkey gorilla',
                 species: {
                     gamma: {

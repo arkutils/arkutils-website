@@ -2,6 +2,7 @@
 	import ArkUtilsLogo from '$lib/imgs/ArkUtilsLogo.svelte';
 	import Brontosaur from '$lib/imgs/toolicons/Brontosaur.svelte';
 	import DinoHatching from '$lib/imgs/toolicons/DinoHatching.svelte';
+	import DinoLadies from '$lib/imgs/toolicons/DinoLadies.svelte';
 	import ProudDino from '$lib/imgs/toolicons/ProudDino.svelte';
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
@@ -85,6 +86,26 @@
 					<div transition:slide class="info">
 						See how your stat roll compares to the possible levels. Find out if you got a good or
 						average roll.
+					</div>
+				{/if}
+			</div>
+			<div>
+				<a class="tool" href="/tools/howmanyfemales">
+					<figure>
+						<DinoLadies />
+					</figure>
+					<span>
+						<div class="font-bold">How many females?</div>
+						<div class="text-sm">Set up your breeders</div>
+					</span>
+					<button class="help" on:click|preventDefault={() => toggle('howmanyfemales')}>
+						?
+					</button>
+				</a>
+				{#if show.howmanyfemales}
+					<div transition:slide class="info">
+						This little calculator helps you to find out how many females you need for your
+						breeding setup.
 					</div>
 				{/if}
 			</div>

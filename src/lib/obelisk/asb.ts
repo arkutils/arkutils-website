@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { asyncDerived, type Loadable } from "@square/svelte-store";
 
 import { manifestStore, modListStore, type PathForFileFn } from "./core";
@@ -73,9 +74,10 @@ function getAsbSpeciesStoreForMod(modid: string): Loadable<IndexedModData> {
     if (existingStore) return existingStore;
 
     const store = asyncDerived(asbManifestStore, async ($manifest): Promise<IndexedModData> => {
+        if (!browser) throw new Error('Should not be called on server');
         const mod = $manifest.byModId[modid];
-
         const url = asbFilePath(modid, mod.tag, 'values.json');
+        console.log('fetching getAsbSpeciesStoreForMod', url);
         const request = await fetch(url);
         const rawData = await request.json() as ModData;
 

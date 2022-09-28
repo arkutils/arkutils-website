@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { asyncDerived, asyncReadable, derived, type Loadable } from '@square/svelte-store';
 
 import type { IndexedManifest, Manifest, ManifestMod, ModInfo } from './types';
@@ -10,6 +11,8 @@ export type PathForFileFn = (modid: string, modtag: string, filename: string) =>
 export function manifestStore(baseurl: string) {
     const url = `${baseurl}/_manifest.json`;
     return asyncReadable<IndexedManifest>({ format: '', files: {}, baseurl: '', byModId: {}, sortedMods: [] }, async () => {
+        if (!browser) throw new Error('Should not be fetching manifestStore on server');
+        console.log('fetching manifestStore', url);
         const request = await fetch(url);
         const rawManifest = await request.json() as Manifest;
         const indexElements = indexManifest(rawManifest);
@@ -25,8 +28,10 @@ export function modListStore(manifest: Loadable<IndexedManifest>) {
 /** Svelte store with a particular file from an Obelisk manifest */
 export function manifestFileStore<T>(baseurl: string, manifest: Loadable<Manifest>, filename: string): Loadable<T | null> {
     return asyncDerived(manifest, async ($manifest) => {
+        if (!browser) throw new Error('Should not be fetching manifestFileStore on server');
         if (!$manifest.files[filename]) throw new Error('No such file in this manifest');
         const url = `${baseurl}/${filename}`;
+        console.log('fetching manifestFileStore', url);
         const request = await fetch(url);
         return await request.json();
     });

@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { asyncDerived, type Loadable } from "@square/svelte-store";
 import { manifestStore, modListStore, type PathForFileFn } from "../core";
 import { OBELISK } from "../types";
@@ -35,8 +36,10 @@ export function processedWikiStore<TBase extends WikiFileStore, TIndexed extends
         if (existingStore) return existingStore as Loadable<TIndexed>;
 
         const store = asyncDerived(wikiManifestStore, async ($manifest): Promise<TIndexed> => {
+            if (!browser) throw new Error('Should not be called on server');
             const mod = $manifest.byModId[modid];
             const url = wikiFilePath(modid, mod.tag, leafname);
+            console.log('fetching processedWikiStore', url);
             const request = await fetch(url);
             const rawData = await request.json() as TBase;
 

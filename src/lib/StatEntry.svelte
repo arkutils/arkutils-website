@@ -1,8 +1,6 @@
-<script context="module" lang="ts">
-	const STAT_NAMES = ['Health', 'Stamina', 'Oxygen', 'Food', 'Weight', 'Melee', 'Speed'];
-</script>
-
 <script lang="ts">
+	const STAT_NAMES = ['Health', 'Stamina', 'Oxygen', 'Food', 'Weight', 'Melee', 'Speed'];
+
 	export let wild = [0, 0, 0, 0, 0, 0, 0];
 	export let tamed = [0, 0, 0, 0, 0, 0, 0];
 
@@ -18,13 +16,13 @@
 <div class="flex flex-row gap-x-4 gap-y-8">
 	<!-- Normal number entry -->
 	<div class="flex flex-row gap-x-4">
-		<ul class="flex flex-col gap-y-1">
+		<div class="flex flex-col gap-y-1">
 			<span>&nbsp;</span>
 			{#each STAT_NAMES as statName}
-				<li>{statName}</li>
+				<span>{statName}</span>
 			{/each}
-		</ul>
-		<ul class="flex flex-col w-16 gap-y-1">
+		</div>
+		<div class="flex flex-col w-16 gap-y-1">
 			<span class="self-center text-sm text-secondary">Wild</span>
 			{#each STAT_NAMES as _, i}
 				<input
@@ -33,11 +31,12 @@
 					max={255}
 					step={1}
 					bind:value={wild[i]}
+					aria-label="Wild {STAT_NAMES[i]}"
 					class="input input-xs bg-base-200 text-base-content text-center"
 				/>
 			{/each}
-		</ul>
-		<ul class="flex flex-col w-16 gap-y-1">
+		</div>
+		<div class="flex flex-col w-16 gap-y-1">
 			<span class="self-center text-sm text-secondary">Tamed</span>
 			{#each STAT_NAMES as _, i}
 				<input
@@ -45,31 +44,26 @@
 					min={0}
 					max={255}
 					bind:value={tamed[i]}
+					aria-label="Tamed {STAT_NAMES[i]}"
 					class="input input-xs bg-base-200 text-base-content text-center"
 				/>
 			{/each}
-		</ul>
+		</div>
 	</div>
 
 	<!-- Shortcuts -->
 	<div class="grid grid-cols-2 content-center justify-center gap-x-2">
 		<div class="flex flex-col items-center">
 			<span class="text-sm font-medium whitespace-nowrap">All Wild</span>
-			<button on:click={() => setAllWild(0)}>0</button>
-			<button on:click={() => setAllWild(1)}>1</button>
-			<button on:click={() => setAllWild(35)}>35</button>
-			<button on:click={() => setAllWild(100)}>100</button>
-			<button on:click={() => setAllWild(254)}>254</button>
-			<button on:click={() => setAllWild(255)}>255</button>
+			{#each [0, 1, 35, 100, 254, 255] as v}
+				<button on:click={() => setAllWild(v)} aria-label="Set all wild stats to {v}">{v}</button>
+			{/each}
 		</div>
 		<div class="flex flex-col items-center">
 			<span class="text-sm font-medium whitespace-nowrap">All Tamed</span>
-			<button on:click={() => setAllTamed(0)}>0</button>
-			<button on:click={() => setAllTamed(1)}>1</button>
-			<button on:click={() => setAllTamed(35)}>35</button>
-			<button on:click={() => setAllTamed(100)}>100</button>
-			<button on:click={() => setAllTamed(254)}>254</button>
-			<button on:click={() => setAllTamed(255)}>255</button>
+			{#each [0, 1, 35, 100, 254, 255] as v}
+				<button on:click={() => setAllTamed(v)} aria-label="Set all tamed stats to {v}">{v}</button>
+			{/each}
 		</div>
 	</div>
 </div>

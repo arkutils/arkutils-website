@@ -12,6 +12,13 @@
 		max="255"
 		{disabled}
 		bind:value={color}
-		class="input input-xs bg-base-200 text-base-content text-center w-16 disabled:opacity-40"
+		aria-label="Color ID for region {region}"
+		class="input input-xs"
 	/>
 </label>
+
+<style lang="postcss">
+	.input {
+		@apply bg-base-200 text-base-content text-center w-16 disabled:opacity-40;
+	}
+</style>

@@ -272,12 +272,14 @@
 	<!-- Stats -->
 	<section class="flex flex-wrap gap-x-8 sm:gap-x-24 gap-y-6 sm:gap-y-8 px-4 sm:px-8 justify-center">
 		{#each selectStats(speciesData) as i (`stat-${i}`)}
+			{@const statName = STAT_NAMES[i]}
 			<div class="flex gap-4 items-center">
-				<span title={STAT_NAMES[i]} class="text-[60px] sm:text-[75px] text-[#ded]">
+				<label title={statName} for="{statName}inp" class="text-[60px] sm:text-[75px] text-[#ded]">
 					<svelte:component this={STAT_IMAGES[i]} />
-				</span>
+				</label>
 				<div class="flex flex-col items-center justify-center gap-1 mt-1 w-28">
 					<input
+						id="{statName}inp"
 						type="number"
 						class="input input-sm bg-base-200 w-16"
 						min="0"

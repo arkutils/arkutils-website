@@ -2,7 +2,7 @@
 	export let name: string;
 
 	function cleanName(name: string) {
-		name = name.replace(/[^a-zA-Z0-9úö]+/g, '_');
+		name = name.replace(/[^a-zA-Z0-9úö.]+/g, '_');
 		return name;
 	}
 </script>

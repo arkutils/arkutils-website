@@ -424,21 +424,24 @@ export const boss_data: Record<string, BossMap> = {
                             { item: "PrimalItemStructure_Flag_KingKaiju_C", min: 1, max: 1, chance: 1, bp: 0 },
                         ],
                         bp: '/Game/Extinction/Dinos/KingKaiju/KingKaiju_Character_BP.KingKaiju_Character_BP',
-                        summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_KingKaijuEasy.PrimalItem_BossTribute_KingKaijuEasy_C'
+                        summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_KingKaijuEasy.PrimalItem_BossTribute_KingKaijuEasy_C',
+                        overrideLootCrate: '/Game/Extinction/CoreBlueprints/ItemLootSets/SupplyCrates/ArtifactCrate_KingKaiju_EX.ArtifactCrate_KingKaiju_EX_C'
                     },
                     beta: {
                         manualDrops: [
                             { item: "PrimalItemStructure_Flag_KingKaiju_C", min: 1, max: 1, chance: 1, bp: 0 },
                         ],
                         bp: '/Game/Extinction/Dinos/KingKaiju/KingKaiju_Character_BP_Beta.KingKaiju_Character_BP_Beta',
-                        summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_KingKaijuMedium.PrimalItem_BossTribute_KingKaijuMedium_C'
+                        summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_KingKaijuMedium.PrimalItem_BossTribute_KingKaijuMedium_C',
+                        overrideLootCrate: '/Game/Extinction/CoreBlueprints/ItemLootSets/SupplyCrates/ArtifactCrate_KingKaiju_Beta_EX.ArtifactCrate_KingKaiju_Beta_EX_C',
                     },
                     alpha: {
                         manualDrops: [
                             { item: "PrimalItemStructure_Flag_KingKaijuMecha_C", min: 1, max: 1, chance: 1, bp: 0 },
                         ],
                         bp: '/Game/Extinction/Dinos/KingKaiju/KingKaiju_Character_BP_Alpha.KingKaiju_Character_BP_Alpha',
-                        summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_KingKaijuHard.PrimalItem_BossTribute_KingKaijuHard_C'
+                        summon: '/Game/Extinction/CoreBlueprints/Items/Tribute/PrimalItem_BossTribute_KingKaijuHard.PrimalItem_BossTribute_KingKaijuHard_C',
+                        overrideLootCrate: '/Game/Extinction/CoreBlueprints/ItemLootSets/SupplyCrates/ArtifactCrate_KingKaiju_Alpha_EX.ArtifactCrate_KingKaiju_Alpha_EX_C',
                     }
                 },
                 icon: 'KingTitan.webp',

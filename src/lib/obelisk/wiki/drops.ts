@@ -37,11 +37,27 @@ export type DropsData = WikiFileStore & {
     drops: Drops[];
 };
 
+export type Crate = {
+    bp: string;
+    levelReq: number;
+    noRepeatsInSets: boolean;
+    setQty?: MinMaxPow;
+    sets: LootSet[];
+};
+
+export type CrateData = WikiFileStore & {
+    lootCrates: Crate[];
+}
+
+export type IndexedDropsData = DropsData & IndexesForDropsData;
 export type IndexesForDropsData = {
     bpLookup: { [bp: string]: Drops };
 };
 
-export type IndexedDropsData = DropsData & IndexesForDropsData;
+export type IndexedCrateData = CrateData & IndexesForCrateData;
+export type IndexesForCrateData = {
+    bpLookup: { [bp: string]: Crate };
+};
 
 export type ItemsWithQty = {
     qty: MinMaxPow;
@@ -51,6 +67,16 @@ export type ItemsWithQty = {
 
 const default_qty: MinMaxPow = { min: 1, max: 1, pow: 1 };
 
+
+export function indexCrateFile(file: CrateData): IndexesForCrateData {
+    const bpLookup: { [bp: string]: Crate } = {};
+
+    for (const crate of file.lootCrates) {
+        bpLookup[crate.bp] = crate;
+    }
+
+    return { bpLookup };
+}
 
 export function indexDropsFile(file: DropsData): IndexesForDropsData {
     const bpLookup: { [bp: string]: Drops } = {};
@@ -64,6 +90,9 @@ export function indexDropsFile(file: DropsData): IndexesForDropsData {
 
 /** Fetch a mod's drops data from Obelisk (cached and pre-processed) */
 export const getWikiDropsStore = processedWikiStore<DropsData, IndexedDropsData>("drops.json", indexDropsFile);
+
+/** Fetch the global loot crate data from Obelisk (cached and pre-processed) */
+export const getWikiCrateStore = processedWikiStore<CrateData, IndexedCrateData>("loot_crates.json", indexCrateFile);
 
 
 export type ItemResult = {
@@ -79,7 +108,20 @@ export type DropResults = {
     random: ItemResult[];
 }
 
-export async function gatherLoot(lootbags: Lootbag[]): Promise<DropResults> {
+export async function gatherLootCrate(crate: string): Promise<DropResults> {
+    // Find items from the loot crate, reading from the global loot crates file
+    const [cratesFile] = await loadAll([getWikiCrateStore('')]);
+
+    const crateData = cratesFile.bpLookup[crate];
+    const items = _gatherCrate(crateData, 1);
+
+    return {
+        fixed: items.filter(result => result.chance >= 1),
+        random: items.filter(result => result.chance < 1),
+    }
+}
+
+export async function gatherLootBags(lootbags: Lootbag[]): Promise<DropResults> {
     // Find items from each lootbag, reading from its associated wiki drops file
     const bags = await Promise.all(lootbags.map(async (lootbag) => {
         const modId = modIdFromPath(lootbag.item);
@@ -116,6 +158,17 @@ function _gatherDrops(drops: Drops, outerChance: number): ItemResult[] {
     const avg = (min + max) / 2;
     const chance = outerChance * calculateChance(setLen, avg, !drops.noRepeatsInSets);
     const items = drops.sets.flatMap((set) => _gatherSet(set, chance));
+    return items;
+}
+
+function _gatherCrate(crate: Crate, outerChance: number): ItemResult[] {
+    const setLen = crate.sets.length;
+    if (setLen === 0) return [];
+
+    const { min, max } = crate.setQty ?? default_qty;
+    const avg = (min + max) / 2;
+    const chance = outerChance * calculateChance(setLen, avg, !crate.noRepeatsInSets);
+    const items = crate.sets.flatMap((set) => _gatherSet(set, chance));
     return items;
 }
 

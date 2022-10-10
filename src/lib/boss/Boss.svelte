@@ -3,7 +3,7 @@
 
 	import { getModDataStore } from '$lib/obelisk/asb';
 	import { modIdFromPath } from '$lib/obelisk/core';
-	import { gatherLoot, getWikiDropsStore } from '$lib/obelisk/wiki/drops';
+	import { gatherLootBags, gatherLootCrate, getWikiDropsStore } from '$lib/obelisk/wiki/drops';
 	import { getItemByClass, getWikiItemsStore } from '$lib/obelisk/wiki/items';
 	import { getWikiSpeciesStore } from '$lib/obelisk/wiki/species';
 
@@ -74,9 +74,11 @@
 			const [$speciesStore] = await loadAll([getWikiSpeciesStore(modId)]);
 			const wikiSpecies = $speciesStore.speciesLookup[difficultyData.bp + '_C'];
 
-			// Pull the list of lootbags out of the species death data
-			const lootbagList = wikiSpecies?.death?.lootBags ?? [];
-			const loot = await gatherLoot(lootbagList);
+			// Gather loot either from the death lootbag or a custom loot create
+			if (difficultyData.overrideLootCrate) console.log('crate', difficultyData.overrideLootCrate);
+			const loot = difficultyData.overrideLootCrate
+				? await gatherLootCrate(difficultyData.overrideLootCrate)
+				: await gatherLootBags(wikiSpecies?.death?.lootBags ?? []);
 
 			// Add any manually-added engrams
 			if (difficultyData.manualDrops) {

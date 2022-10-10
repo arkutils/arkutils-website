@@ -51,6 +51,7 @@ export type BossDifficulty = {
     dropsNote?: string;
     summonNote?: string;
     ascLevels?: number;
+    overrideLootCrate?: string;
     manualDrops?: Array<{ item: string, min: number, max: number, chance: number, bp: number }>;
     manualEngrams?: string[];
 };

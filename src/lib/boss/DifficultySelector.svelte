@@ -14,8 +14,8 @@
 		href="/boss/{map}/{boss}-gamma"
 		disabled={difficulty === 'gamma'}
 		class="gamma"
-		sveltekit:noscroll
-		sveltekit:prefetch
+		data-sveltekit-noscroll
+		data-sveltekit-prefetch
 	>
 		<img src="/imgs/bosses/{getIconForDifficulty('gamma', data)}" alt="Gamma Difficulty" />
 		Gamma
@@ -24,8 +24,8 @@
 		href="/boss/{map}/{boss}-beta"
 		disabled={difficulty === 'beta'}
 		class="beta"
-		sveltekit:noscroll
-		sveltekit:prefetch
+		data-sveltekit-noscroll
+		data-sveltekit-prefetch
 	>
 		<img src="/imgs/bosses/{getIconForDifficulty('beta', data)}" alt="Beta Difficulty" />
 		Beta
@@ -34,8 +34,8 @@
 		href="/boss/{map}/{boss}-alpha"
 		disabled={difficulty === 'alpha'}
 		class="alpha"
-		sveltekit:noscroll
-		sveltekit:prefetch
+		data-sveltekit-noscroll
+		data-sveltekit-prefetch
 	>
 		<img src="/imgs/bosses/{getIconForDifficulty('alpha', data)}" alt="Alpha Difficulty" />
 		Alpha

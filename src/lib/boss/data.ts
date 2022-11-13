@@ -261,7 +261,10 @@ export const boss_data: Record<string, BossMap> = {
                 icon: 'LavaElemental.webp',
                 species: {
                     bp: '/Game/Mods/Ragnarok/Custom_Assets/JacksonL/LavaGolem/LavaGolem_Character_BP.LavaGolem_Character_BP',
-                    summonNote: 'Appears as soon as you enter the right part of the lava cave.'
+                    summonNote: 'Appears as soon as you enter the right part of the lava cave.',
+                    manualDrops: [
+                        { item: "PrimalItemArmor_CarchaSaddle_C", min: 1, max: 1, chance: 0.02, bp: 0.9 },
+                    ]
                 }
             },
             dragon: {
@@ -789,8 +792,11 @@ export const boss_data: Record<string, BossMap> = {
                 species: {
                     bp: '/Game/Fjordur/Dinos/Beyla/Beyla_Character_BP.Beyla_Character_BP',
                     summon: '/Game/Mods/FjordurOfficial/Assets/Teleports/BossTributes/PrimalItem_BossTribute_Beyla.PrimalItem_BossTribute_Beyla_C',
+                    manualDrops: [
+                        { item: "PrimalItemArmor_CarchaSaddle_C", min: 1, max: 1, chance: 0.02, bp: 0.9 },
+                    ]
                 },
-                icon: 'Beyla.webp'
+                icon: 'Beyla.webp',
             },
             hati: {
                 display: 'Hati',
@@ -800,6 +806,9 @@ export const boss_data: Record<string, BossMap> = {
                     bp: '/Game/Fjordur/Dinos/HatiSkoll/Fenrir_Character_BP_MiniBoss_Hati.Fenrir_Character_BP_MiniBoss_Hati',
                     summonNote: 'Hati & Sköll are summoned together',
                     summon: '/Game/Mods/FjordurOfficial/Assets/Teleports/BossTributes/PrimalItem_BossTribute_HatiAndSkoll.PrimalItem_BossTribute_HatiAndSkoll_C',
+                    manualDrops: [
+                        { item: "PrimalItemArmor_CarchaSaddle_C", min: 1, max: 1, chance: 0.02, bp: 0.9 },
+                    ]
                 },
 
                 icon: 'Hati.webp'
@@ -812,6 +821,9 @@ export const boss_data: Record<string, BossMap> = {
                     bp: '/Game/Fjordur/Dinos/HatiSkoll/Fenrir_Character_BP_MiniBoss_Skoll.Fenrir_Character_BP_MiniBoss_Skoll',
                     summonNote: 'Hati & Sköll are summoned together',
                     summon: '/Game/Mods/FjordurOfficial/Assets/Teleports/BossTributes/PrimalItem_BossTribute_HatiAndSkoll.PrimalItem_BossTribute_HatiAndSkoll_C',
+                    manualDrops: [
+                        { item: "PrimalItemArmor_CarchaSaddle_C", min: 1, max: 1, chance: 0.02, bp: 0.9 },
+                    ]
                 },
 
                 icon: 'Skoll.webp'
@@ -823,6 +835,9 @@ export const boss_data: Record<string, BossMap> = {
                 species: {
                     bp: '/Game/Fjordur/Dinos/Steinbjorn/Steinbjorn_Character_BP.Steinbjorn_Character_BP',
                     summon: '/Game/Mods/FjordurOfficial/Assets/Teleports/BossTributes/PrimalItem_BossTribute_Steinbjorn.PrimalItem_BossTribute_Steinbjorn_C',
+                    manualDrops: [
+                        { item: "PrimalItemArmor_CarchaSaddle_C", min: 1, max: 1, chance: 0.02, bp: 0.9 },
+                    ]
                 },
 
                 icon: 'Steinbjorn.webp'

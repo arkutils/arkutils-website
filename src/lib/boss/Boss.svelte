@@ -83,7 +83,11 @@
 			// Add any manually-added engrams
 			if (difficultyData.manualDrops) {
 				difficultyData.manualDrops.forEach(({ item, min, max, chance, bp }) => {
-					loot.fixed.push({ item: getItemByClass(item), min, max, chance, bp });
+					if (chance == 1) {
+						loot.fixed.push({ item: getItemByClass(item), min, max, chance, bp });
+					} else {
+						loot.random.push({ item: getItemByClass(item), min, max, chance, bp });
+					}
 				});
 			}
 

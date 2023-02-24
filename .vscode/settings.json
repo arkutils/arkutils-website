@@ -48,5 +48,6 @@
         "sveltejs",
         "Unsubscriber",
         "Valguero"
-    ]
+    ],
+    "terminal.integrated.wordSeparators": " []{}',\"`─‘’"
 }

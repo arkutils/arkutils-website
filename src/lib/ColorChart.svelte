@@ -35,6 +35,7 @@
 				animate:flip={{ duration: 100 }}
 				transition:fade={{ duration: 100 }}
 				on:click={() => dispatch('selected', color)}
+				on:keypress={(e) => e.key === 'Enter' && dispatch('selected', color)}
 			>
 				{color.id}: {color.name}
 			</li>

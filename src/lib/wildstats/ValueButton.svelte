@@ -11,11 +11,17 @@
 		class:btn-active={active}
 		selected={active}
 		on:click={() => (value = set)}
+		on:keypress={(k) => k.key === 'Enter' && (value = set)}
 	>
 		<slot name="value">{set}</slot>
 	</button>
 
-	<span on:click|preventDefault on:focus|preventDefault>
+	<span
+		on:click|preventDefault
+		on:focus|preventDefault
+		on:keydown|preventDefault
+		on:keypress|preventDefault
+	>
 		<slot />
 	</span>
 </label>

@@ -1,7 +1,5 @@
 <script lang="ts">
 	import '../app.postcss';
-
-	export const prerender = true;
 </script>
 
 <div class="absolute w-0 h-0 z-[-1000]">

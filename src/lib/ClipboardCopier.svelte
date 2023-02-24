@@ -42,7 +42,7 @@
 		);
 	}
 
-	function copy_text(_: MouseEvent) {
+	function copy_text(_: MouseEvent | KeyboardEvent) {
 		copyTextToClipboard(content);
 
 		tip_visible = true;
@@ -55,7 +55,7 @@
 </script>
 
 <div class="outer">
-	<span class="content" on:click={copy_text}>
+	<span class="content" on:click={copy_text} on:keypress={(e) => e.key === 'Enter' && copy_text(e)}>
 		<slot>{content}</slot>
 	</span>
 	<span class="tip" class:visible={tip_visible}>

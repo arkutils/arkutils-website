@@ -8,12 +8,13 @@
 </script>
 
 {#if name}
+	<!-- svelte-ignore security-anchor-rel-noreferrer -->
 	<a
 		href="https://ark.wiki.gg/wiki/{cleanName(name)}"
 		class="inline-block wikilink"
 		title="Link to ark.wiki.gg"
 		target="_blank"
-		rel="external"
+		rel="external noopener"
 	>
 		<slot>
 			<img

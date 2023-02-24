@@ -187,9 +187,10 @@
 		transition:fly={{ x: -5, y: -10 }}
 		class="fixed left-0 top-0 w-full h-full grid content-center justify-center"
 		on:click={() => (displayedColor = null)}
+		on:keypress={(e) => e.key === 'Escape' && (displayedColor = null)}
 	>
 		<!-- Actual dialog -->
-		<div on:click|stopPropagation>
+		<div on:click|stopPropagation on:keydown|stopPropagation on:keypress|stopPropagation>
 			<ColorDetail color={displayedColor} on:close={() => (displayedColor = null)} />
 		</div>
 	</section>

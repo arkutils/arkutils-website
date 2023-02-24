@@ -90,7 +90,12 @@
 					class:input-secondary={level !== 150 && level !== 217 && level !== 224}
 					bind:value={level}
 				/>
-				<span on:click|preventDefault on:focus|preventDefault>
+				<span
+					on:click|preventDefault
+					on:focus|preventDefault
+					on:keydown|preventDefault
+					on:keypress|preventDefault
+				>
 					<p class="text-sm">Custom level</p>
 					{#if !isFirefox}<p class="text-base-content/50 text-sm">Or drag the slider below</p>{/if}
 				</span>

@@ -34,7 +34,11 @@
 		<div class="flex text-lg font-bold gap-2 items-center self-stretch">
 			<!-- <span>{color.id}:</span> -->
 			<span class="flex-grow">{color.name}</span>
-			<span class="p-1 cursor-pointer" on:click={() => dispatch('close')}>
+			<span
+				class="p-1 cursor-pointer"
+				on:click={() => dispatch('close')}
+				on:keypress={(e) => e.key === 'Enter' && dispatch('close')}
+			>
 				<CloseIcon width={20} />
 			</span>
 		</div>

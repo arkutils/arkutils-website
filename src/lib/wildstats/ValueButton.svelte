@@ -7,9 +7,10 @@
 
 <label class="flex items-center gap-4">
 	<button
-		class="btn btn-sm w-20"
+		class="btn btn-sm w-20 !outline-secondary"
 		class:btn-active={active}
 		selected={active}
+		aria-selected={active}
 		on:click={() => (value = set)}
 		on:keypress={(k) => k.key === 'Enter' && (value = set)}
 	>

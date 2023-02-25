@@ -52,7 +52,12 @@
 		searchOpen = !!query;
 		searchFinished = false;
 		searchAbortToken = { triggered: false };
-		/* unawaited */ beginSearch(query, searchAbortToken);
+
+		if (searchOpen) {
+			/* unawaited */ beginSearch(query, searchAbortToken);
+		} else {
+			results = [];
+		}
 	}
 
 	async function beginSearch(query: string, abortToken: AbortToken) {

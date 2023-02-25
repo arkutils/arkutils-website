@@ -71,8 +71,9 @@
 		mutations in ARK.
 	</p>
 	<p class="my-2">
-		The number of females needed is affected by how many mutatable stats the species has, whether one
-		parent has more than 20 mutations, and is hugely improved if you are using the S+ Mutator.
+		The chance to get your specific stat mutation (and therefore the number of females needed) is
+		affected by how many mutatable stats the species has, whether one parent has more than 20 mutations,
+		and is hugely improved if you are using the S+ Mutator.
 	</p>
 </header>
 

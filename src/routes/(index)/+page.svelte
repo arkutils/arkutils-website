@@ -1,5 +1,7 @@
 <script lang="ts">
+	import Metadata from '$lib/Metadata.svelte';
 	import ArkUtilsLogo from '$lib/imgs/ArkUtilsLogo.svelte';
+	import BetterSaddle from '$lib/imgs/toolicons/BetterSaddle.svelte';
 	import Brontosaur from '$lib/imgs/toolicons/Brontosaur.svelte';
 	import DinoHatching from '$lib/imgs/toolicons/DinoHatching.svelte';
 	import DinoLadies from '$lib/imgs/toolicons/DinoLadies.svelte';
@@ -7,7 +9,6 @@
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
 	import SpinoSword from '$lib/imgs/toolicons/SpinoSword.svelte';
-	import Metadata from '$lib/Metadata.svelte';
 
 	import { slide } from 'svelte/transition';
 
@@ -106,6 +107,26 @@
 					<div transition:slide class="info">
 						This little calculator helps you to find out how many females you need for your
 						breeding setup.
+					</div>
+				{/if}
+			</div>
+			<div>
+				<a class="tool" href="/tools/saddlecalculator">
+					<figure class="!text-[76px] !ml-0">
+						<BetterSaddle />
+					</figure>
+					<span>
+						<div class="font-bold">Saddle Armor Calculator</div>
+						<div class="text-sm">Using your crafting skill</div>
+					</span>
+					<button class="help" on:click|preventDefault={() => toggle('saddlecalculator')}>
+						?
+					</button>
+				</a>
+				{#if show.saddlecalculator}
+					<div transition:slide class="info">
+						Helps you to calculate the maximum saddle armor when crafting a blueprint with
+						crafting skill.
 					</div>
 				{/if}
 			</div>

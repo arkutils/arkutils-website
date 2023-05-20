@@ -57,12 +57,12 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<div class="text-sm breadcrumbs mb-2">
+<nav class="text-sm breadcrumbs mb-2">
 	<ul class="text-sm ml-4">
 		<li><a href="/">Home</a></li>
 		<li>How many females?</li>
 	</ul>
-</div>
+</nav>
 
 <header>
 	<h1 class="title mb-4">How many females are needed?</h1>

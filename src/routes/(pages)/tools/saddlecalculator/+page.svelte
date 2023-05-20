@@ -65,12 +65,12 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<div class="text-sm breadcrumbs mb-2">
+<nav class="text-sm breadcrumbs mb-2">
 	<ul class="text-sm ml-4">
 		<li><a href="/">Home</a></li>
 		<li>Saddle calculator</li>
 	</ul>
-</div>
+</nav>
 
 <aside class="text-[6rem] xs:text-[10rem] float-right">
 	<BetterSaddle />

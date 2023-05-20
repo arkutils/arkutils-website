@@ -43,12 +43,12 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<div class="text-sm breadcrumbs mb-2">
+<nav class="text-sm breadcrumbs mb-2">
 	<ul class="text-sm ml-4">
 		<li><a href="/">Home</a></li>
 		<li>Stat Evaluator</li>
 	</ul>
-</div>
+</nav>
 
 <h1 class="title">How good are my stats?</h1>
 <p class="mt-2">

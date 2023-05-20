@@ -240,6 +240,14 @@
 	description="The Incubator Calculator lets you calculate the raw stats from level points in the ARK Incubator but it also lets you calculate the level points when you only have raw stats without the need of a modded spyglass."
 />
 
+<!-- Site navigation breadcrumbs -->
+<nav class="text-sm breadcrumbs mb-2">
+	<ul class="text-sm ml-4">
+		<li><a href="/">Home</a></li>
+		<li>Incubator Calculator</li>
+	</ul>
+</nav>
+
 <main class="flex flex-col gap-4">
 	<!-- Info -->
 	<header class="flex flex-wrap justify-center gap-x-4 ">

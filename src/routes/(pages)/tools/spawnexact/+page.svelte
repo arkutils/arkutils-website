@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { selectedSpecies, selectedModId } from '$lib/stores';
+	import { selectedModId, selectedSpecies } from '$lib/stores';
 
 	import ClipboardCopier from '$lib/ClipboardCopier.svelte';
-	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
-	import StatEntry from '$lib/StatEntry.svelte';
 	import ColorRegions from '$lib/ColorRegions.svelte';
 	import Metadata from '$lib/Metadata.svelte';
+	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
+	import StatEntry from '$lib/StatEntry.svelte';
 
 	let wild = [0, 0, 0, 0, 0, 0, 0];
 	let tamed = [0, 0, 0, 0, 0, 0, 0];
@@ -37,27 +37,32 @@
 	description="This generator for the spawnexactdino admin command can help you spawn creatures with every level, color and stat distribution that you want. It also supports many modded dinos."
 />
 
+<!-- Site navigation breadcrumbs -->
+<nav class="text-sm breadcrumbs mb-2">
+	<ul class="text-sm ml-4">
+		<li><a href="/">Home</a></li>
+		<li>Spawn Exact Dino</li>
+	</ul>
+</nav>
+
 <main class="flex flex-col gap-8">
 	<header class="flex flex-col gap-2">
 		<h1 class="mb-2"><code>/spawnexactdino</code> Generator</h1>
 		<p>
-			This generator helps you create admin spawncodes for creatures in ARK: Survival Evolved.
-			You can decide over the stat and color distribution.
+			This generator helps you create admin spawncodes for creatures in ARK: Survival Evolved. You can
+			decide over the stat and color distribution.
 		</p>
 		<p>
-			The generator also supports many modded creatures and lets you set an imprinter and
-			imprint amount. Please be aware that creatures need to be cryo'd once or twice until
-			they show the right stats and colors.
+			The generator also supports many modded creatures and lets you set an imprinter and imprint
+			amount. Please be aware that creatures need to be cryo'd once or twice until they show the right
+			stats and colors.
 		</p>
 	</header>
 
 	<!-- Species selection -->
 	<section class="flex flex-col gap-4">
 		<h2 class="text-primary">Select Species</h2>
-		<SpeciesSelector
-			bind:selectedSpecies={$selectedSpecies}
-			bind:selectedModId={$selectedModId}
-		/>
+		<SpeciesSelector bind:selectedSpecies={$selectedSpecies} bind:selectedModId={$selectedModId} />
 	</section>
 
 	<div class="flex flex-wrap gap-x-16 gap-y-8 justify-center">
@@ -99,10 +104,7 @@
 					class="input input-xs w-22 bg-base-200 text-base-content text-center"
 				/>
 			</label>
-			<label
-				class="flex gap-2 items-baseline justify-between"
-				title="Ark ID for rider imprint bonus"
-			>
+			<label class="flex gap-2 items-baseline justify-between" title="Ark ID for rider imprint bonus">
 				Imprinter's Ark ID
 				<input
 					type="number"
@@ -111,9 +113,8 @@
 					class="input input-xs w-28 bg-base-200 text-base-content text-center"
 				/>
 			</label>
-			<span
-				class="text-sm text-secondary italic self-end"
-				title="Not the same as your Steam ID!">(showmyadminmanager for Ark ID)</span
+			<span class="text-sm text-secondary italic self-end" title="Not the same as your Steam ID!"
+				>(showmyadminmanager for Ark ID)</span
 			>
 		</section>
 	</div>
@@ -136,8 +137,8 @@
 			{/if}
 		</div>
 		<div class="flex justify-center rounded-xl bg-warning text-warning-content p-2 px-4">
-			<em class="font-bold mr-2">Warning:</em> Creatures spawned with this method are broken
-			until cryo'd.<br />Maybe even twice. You have been warned!
+			<em class="font-bold mr-2">Warning:</em> Creatures spawned with this method are broken until
+			cryo'd.<br />Maybe even twice. You have been warned!
 		</div>
 	</section>
 </main>

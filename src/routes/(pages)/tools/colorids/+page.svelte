@@ -140,6 +140,14 @@
 	description="This infopage shows you all the color IDs that are available on dinosaurs in ARK: Survival Evolved. Some are only available through mutating or special events. The Dino Color ID infopage also supports many modded colors."
 />
 
+<!-- Site navigation breadcrumbs -->
+<nav class="text-sm breadcrumbs mb-2">
+	<ul class="text-sm ml-4">
+		<li><a href="/">Home</a></li>
+		<li>Color IDs</li>
+	</ul>
+</nav>
+
 <h1 class="mb-4">ARK Color IDs</h1>
 
 <!-- Info text -->

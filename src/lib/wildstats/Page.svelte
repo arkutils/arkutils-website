@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	export const LEVEL_MIN = 30;
-	export const LEVEL_MAX = 400;
+	export const LEVEL_MAX = 1000;
 </script>
 
 <script lang="ts">

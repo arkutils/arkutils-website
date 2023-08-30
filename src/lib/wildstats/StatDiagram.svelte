@@ -46,7 +46,7 @@
 			}
 		} else {
 			// Use binomial distribution for smaller numbers
-			for (let x = 0; x <= 255; x++) {
+			for (let x = 0; x <= n; x++) {
 				const y = binomial(n, x) * p ** x * (1 - p) ** (n - x);
 				if (y < Infinity && y > maxY) maxY = y;
 				distribution[x] = y;

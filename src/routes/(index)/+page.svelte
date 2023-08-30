@@ -8,11 +8,13 @@
 	import ProudDino from '$lib/imgs/toolicons/ProudDino.svelte';
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
+	import ServerDatabase from '$lib/imgs/toolicons/ServerDatabase.svelte';
+	import ServerDino from '$lib/imgs/toolicons/ServerDino.svelte';
 	import SpinoSword from '$lib/imgs/toolicons/SpinoSword.svelte';
 
 	import { slide } from 'svelte/transition';
 
-	const buttons = ['spawnexact', 'incubator', 'wildstats', 'colorid', 'bossopedia'];
+	const buttons = ['spawnexact', 'incubator', 'wildstats', 'colorid', 'bossopedia', 'officialdownload'];
 
 	let show: { [key: string]: boolean } = {};
 
@@ -166,6 +168,25 @@
 				{#if show.bossopedia}
 					<div transition:slide class="info">
 						Shows you <b>everything you need to know</b> about bosses.
+					</div>
+				{/if}
+			</div>
+			<div>
+				<a class="tool" href="/tools/officialdownload">
+					<figure>
+						<span class="text-seccondary text-[1.1em]"><ServerDatabase /></span>
+						<span class="text-teal-700 text-[1.3em]">
+							<ServerDino />
+						</span>
+					</figure>
+					<span>Official Server<br /><b>Downloads</b></span>
+					<button class="help" on:click|preventDefault={() => toggle('officialdownload')}>
+						?
+					</button>
+				</a>
+				{#if show.officialdownload}
+					<div transition:slide class="info">
+						Find your <b>server backup</b> for your official server.
 					</div>
 				{/if}
 			</div>

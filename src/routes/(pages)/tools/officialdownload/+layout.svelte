@@ -26,6 +26,11 @@
 	<p class="my-2">
 		Studio Wildcard did not provide any console backups for now therefore we can't show them here.
 	</p>
+	<p class="my-2">
+		<b class="text-secondary">Note:</b> You will need to add the command-line arguments
+		<code class="text-secondary">-newsaveformat -usestore</code> in order to load these saves in both single-player
+		mode or on a server.
+	</p>
 </header>
 
 <main><slot /></main>

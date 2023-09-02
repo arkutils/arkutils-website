@@ -26,11 +26,23 @@
 	<p class="my-2">
 		Studio Wildcard did not provide any console backups for now therefore we can't show them here.
 	</p>
-	<p class="my-2">
-		<b class="text-secondary">Note:</b> You will need to add the command-line arguments
-		<code class="text-secondary">-newsaveformat -usestore</code> in order to load these saves in both single-player
-		mode or on a server.
-	</p>
+	<div class="my-2 rounded bg-base-200 border border-base-content/30 py-2 px-4">
+		<p>
+			<b class="text-secondary">Note:</b> You will need to add the command-line arguments
+			<code class="text-secondary">-newsaveformat -usestore</code> in order to load these saves in both
+			single-player mode or on a server.
+		</p>
+		<p class="mt-2">
+			<b>For more instructions</b> please refer to
+			<!-- svelte-ignore security-anchor-rel-noreferrer - we're safe as we don't have a login system -->
+			<a
+				href="https://arkmag.rocks/how-to-add-your-official-server-save-file-to-your-singleplayer-game-steam-epic/"
+				target="_blank"
+			>
+				the full guide
+			</a> made by Tiia Aurora.
+		</p>
+	</div>
 </header>
 
 <main><slot /></main>

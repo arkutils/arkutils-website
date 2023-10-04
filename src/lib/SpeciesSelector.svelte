@@ -1,17 +1,25 @@
 <script lang="ts">
-	import { localstore } from '$lib/localstore';
-	import { getModDataStore, isSpeciesUseful, type IndexedModData, type Species } from '$lib/obelisk/asb';
-
 	import { loadAll } from '@square/svelte-store';
+
+	import { getModDataStore, isSpeciesUseful, type IndexedModData, type Species } from '$lib/obelisk/asb';
+	import { filterUseless } from '$lib/stores';
 	import ModSelector from './ModSelector.svelte';
+	import LoadingSpinner from './imgs/LoadingSpinner.svelte';
+	import WarningTriangle from './imgs/WarningTriangle.svelte';
 
 	export let selectedModId: string | null = null;
 	export let selectedSpecies: string | null = '';
+	export let loading = true;
+	export let errored = false;
 
-	let filterUseless = localstore('arkutils-filter-species', {
-		default: true,
-		dontWatchTabs: true,
-	});
+	let modSelectorLoading = true;
+	let modSelectorErrored = false;
+
+	$: loading = modSelectorLoading || !modData || !$modData;
+	$: errored = modSelectorErrored;
+
+	$: console.log('SpeciesSelector.loading', loading);
+	$: console.log('SpeciesSelector.errored', errored);
 
 	// Store containing the current mod data (loadable/async)
 	$: modData = selectedModId === null ? null : getModDataStore(selectedModId);
@@ -36,25 +44,38 @@
 	}
 </script>
 
-<ModSelector bind:selectedModId />
+<ModSelector bind:selectedModId bind:loading={modSelectorLoading} />
 
-<select bind:value={selectedSpecies} class="select bg-base-200">
-	{#if modData}
-		{#await loadAll([modData])}
-			<option selected disabled value={null}>...loading...</option>
-		{:then}
-			{#if $modData}
-				{#each $modData.species as species}
-					{#if !$filterUseless || isSpeciesUseful(species)}
-						<option value={species.blueprintPath}>
-							{species.name}{fmtVariants(species)}
-						</option>
-					{/if}
-				{/each}
-			{/if}
-		{/await}
+<div class="relative">
+	<select bind:value={selectedSpecies} class="select bg-base-200 w-full" class:pl-12={loading || errored}>
+		{#if modData}
+			{#await loadAll([modData])}
+				<option selected disabled value={null}>...loading...</option>
+			{:then}
+				{#if $modData}
+					{#each $modData.species as species}
+						{#if !$filterUseless || isSpeciesUseful(species)}
+							<option value={species.blueprintPath}>
+								{species.name}{fmtVariants(species)}
+							</option>
+						{/if}
+					{/each}
+				{/if}
+			{:catch}
+				<option selected disabled value={null}>Failed to load species list!</option>
+			{/await}
+		{/if}
+	</select>
+	{#if errored}
+		<div class="absolute left-0 top-0 text-warning">
+			<WarningTriangle />
+		</div>
+	{:else if loading}
+		<div class="absolute left-0 top-0">
+			<LoadingSpinner width={26} />
+		</div>
 	{/if}
-</select>
+</div>
 
 <label title="Hide bosses, mission spawns, etc" class="flex items-center gap-2">
 	<input type="checkbox" bind:checked={$filterUseless} class="bg-base-200 checkbox" />

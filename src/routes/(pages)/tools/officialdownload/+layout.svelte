@@ -40,7 +40,15 @@
 				target="_blank"
 			>
 				the full guide
-			</a> made by Tiia Aurora.
+			</a>
+			made by Tiia Aurora, or the
+			<a
+				href="https://ark.wiki.gg/wiki/2023_official_server_save_files"
+				target="_blank"
+				rel="noreferrer"
+			>
+				official wiki
+			</a>.
 		</p>
 	</div>
 </header>

@@ -13,8 +13,8 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16",
-    "@commitlint/config-conventional": "^16",
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17",
     "@square/svelte-store": "^0",
     "@sveltejs/adapter-auto": "^1",
     "@sveltejs/kit": "^1",

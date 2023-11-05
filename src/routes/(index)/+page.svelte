@@ -38,7 +38,9 @@
 
 <div class="flex flex-col gap-8 mt-8 items-center">
 	<h1 class="text-center text-secondary">
-		<span class="text-2xl text-base-content">Helpful tools for</span><br /> ARK: Survival Evolved
+		<span class="text-2xl text-base-content">Helpful tools for</span>
+		<br />
+		ARK: Survival Evolved <span class="text-base-content mx-2">and</span> ARK: Survival Ascended
 	</h1>
 
 	<section class="infogroup">

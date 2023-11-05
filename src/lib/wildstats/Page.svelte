@@ -55,6 +55,10 @@
 	Wonder if your 30 points in health are actually good or just average? How rare is it to find better
 	stats? Is it worth your time to look for better stats? This is what this tool is for.
 </p>
+<p class="mt-2">
+	This tool supports both Ark: Survival Evolved and Ark: Survival Ascended. Be careful to select the
+	correct number of stats for your creature and game.
+</p>
 
 <div class="flex flex-col-reverse sm:flex-row gap-4 sm:gap-8 mt-6">
 	<!-- Level -->
@@ -113,16 +117,20 @@
 			</p>
 		</div>
 		<div class="flex flex-col gap-1">
+			<ValueButton bind:value={stats} set={5}>
+				<p class="text-sm">ASA water species</p>
+				<p class="text-base-content/50 text-sm">Without movement speed and oxygen</p>
+			</ValueButton>
 			<ValueButton bind:value={stats} set={6}>
-				<p class="text-sm">For flyers</p>
+				<p class="text-sm">ASA normal, and ASE flyers</p>
 				<p class="text-base-content/50 text-sm">Without movement speed</p>
 			</ValueButton>
 			<ValueButton bind:value={stats} set={7}>
-				<p class="text-sm">Normal non-flyers</p>
+				<p class="text-sm">ASE non-flyers</p>
 				<p class="text-base-content/50 text-sm">Includes movement speed</p>
 			</ValueButton>
 			<ValueButton bind:value={stats} set={8}>
-				<p class="text-sm">Gachas</p>
+				<p class="text-sm">ASE Gachas</p>
 				<p class="text-base-content/50 text-sm">Includes crafting skill</p>
 			</ValueButton>
 		</div>

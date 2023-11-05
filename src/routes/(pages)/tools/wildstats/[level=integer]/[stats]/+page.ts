@@ -12,7 +12,7 @@ export const load: PageLoad = async ({ params }) => {
         const levelNum = parseInt(level, 10);
         const statsNum = parseInt(stats, 10);
 
-        if (levelNum >= LEVEL_MIN && levelNum <= LEVEL_MAX && statsNum >= 6 && statsNum <= 8) {
+        if (levelNum >= LEVEL_MIN && levelNum <= LEVEL_MAX && statsNum >= 5 && statsNum <= 8) {
             return {
                 level: levelNum,
                 stats: statsNum,

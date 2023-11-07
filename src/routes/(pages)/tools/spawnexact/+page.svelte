@@ -65,9 +65,10 @@
 			amount. Please be aware that creatures need to be cryo'd once or twice until they show the right
 			stats and colors.
 		</p>
-		<p class="text-secondary-focus font-bold">
-			Warning: Attempting to spawn a creature that is not in your game my produce a crash.
-		</p>
+		<div class="flex justify-center rounded-xl bg-accent text-accent-content p-2 px-4">
+			<em class="font-bold mr-2">Warning:</em> Trying to spawn in creatures that are not yet available in
+			ASA might crash and corrupt your game!
+		</div>
 	</header>
 
 	<!-- Species selection -->

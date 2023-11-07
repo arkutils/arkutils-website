@@ -4,6 +4,8 @@ import { LEVEL_MAX, LEVEL_MIN } from '$lib/wildstats/Page.svelte';
 
 import type { PageLoad } from './$types';
 
+export const prerender = false;
+
 export const load: PageLoad = async ({ params }) => {
     // Grab the params from the URL
     const { level, stats } = params;

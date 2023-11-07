@@ -9,6 +9,7 @@
 	export let selectedModId: string | null = null;
 	export let loading = true;
 	export let errored = false;
+	export let showASA = false;
 
 	let modList = getModListStore();
 	let ready = false;
@@ -43,10 +44,12 @@
 			<option selected disabled value={null}>...loading...</option>
 		{:else if ready}
 			{#each $modList as mod}
-				<option value={mod.id}>
-					{mod.title}
-					{#if !isNaN(parseInt(mod.id))}[{mod.id}]{/if}
-				</option>
+				{#if mod.id !== 'ASA' || showASA}
+					<option value={mod.id}>
+						{mod.title}
+						{#if !isNaN(parseInt(mod.id))}[{mod.id}]{/if}
+					</option>
+				{/if}
 			{/each}
 		{/if}
 	</select>

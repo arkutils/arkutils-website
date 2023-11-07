@@ -56,8 +56,20 @@
 	async function selectMod(modId: string) {
 		if (modId === loadedModId) return;
 		const [modData] = await loadAll([getModDataStore(modId)]);
-		modColors = parseColors(modData.colorDefinitions || [], BASE_COLORID);
-		modDyes = parseColors(modData.dyeDefinitions || [], BASE_DYEID);
+		let colorStartIndex = BASE_COLORID;
+		let dyeStartIndex = BASE_DYEID;
+		if (modData.colorStartIndex) {
+			colorStartIndex = modData.colorStartIndex;
+		}
+		if (modData.dyeStartIndex) {
+			dyeStartIndex = modData.dyeStartIndex;
+		}
+		if (modData.colorDefinitions) {
+			modColors = parseColors(modData.colorDefinitions || [], colorStartIndex);
+		}
+		if (modData.dyeDefinitions) {
+			modDyes = parseColors(modData.dyeDefinitions || [], dyeStartIndex);
+		}
 		loadedModId = modId;
 	}
 
@@ -113,7 +125,7 @@
 
 	function filterColor(color: ColorInfo): boolean {
 		// Do we filter out core duplicates?
-		const actuallyHideCore = hideCore && selectedModId !== '';
+		const actuallyHideCore = hideCore && selectedModId !== '' && selectedModId !== 'ASA';
 		if (actuallyHideCore && coreColors[color.name]) return false;
 
 		// We're done if there's no filter string set
@@ -170,7 +182,7 @@
 <section class="flex flex-col gap-2 sm:flex-row justify-evenly mt-4">
 	<div class="flex flex-col gap-2 flex-1">
 		<h3>Choose Mod</h3>
-		<ModSelector bind:selectedModId />
+		<ModSelector bind:selectedModId showASA={true} />
 		<label class:text-gray-500={!selectedModId} class="select-none flex flex-row items-center gap-2">
 			<input type="checkbox" class="checkbox" bind:checked={hideCore} disabled={!selectedModId} />
 			Hide duplicates from core

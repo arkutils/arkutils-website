@@ -26,7 +26,9 @@ export type ModData = {
     version: string;
     format: string;
     species: Species[];
+    colorStartIndex?: number;
     colorDefinitions: ColorDef[];
+    dyeStartIndex?: number;
     dyeDefinitions: ColorDef[];
 };
 
@@ -52,6 +54,8 @@ function indexSpeciesFile(file: ModData) {
 const asbFilePath: PathForFileFn = function (modid: string, modtag: string, leafname: string) {
     if (!modid) {
         return `${BASEURL}/${leafname}`;
+    } else if (modid === 'ASA') {
+        return `${BASEURL}/ASA-values.json`;
     } else {
         return `${BASEURL}/${modid}-${modtag}.json`;
     }
@@ -80,6 +84,20 @@ function getAsbSpeciesStoreForMod(modid: string): Loadable<IndexedModData> {
         console.log('fetching getAsbSpeciesStoreForMod', url);
         const request = await fetch(url);
         const rawData = await request.json() as ModData;
+
+        // Merge data with the core data, if it matches
+        if (modid !== '') {
+            const coreValues = await asbModStores[''].load();
+            rawData.species = rawData.species.map((species) => {
+                const coreSpecies = coreValues.speciesLookup[species.blueprintPath];
+                if (coreSpecies) {
+                    // For each field, use the core data but allow the mod data to override any complete fields
+                    return { ...coreSpecies, ...species };
+                } else {
+                    return species;
+                }
+            });
+        }
 
         // Sort by name, and put less variants first
         rawData.species.sort((a: Species, b: Species) => a.name.localeCompare(b.name) || compareVariants(a, b));

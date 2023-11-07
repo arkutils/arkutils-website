@@ -45,8 +45,8 @@
 		{:else if ready}
 			{#each $modList as mod}
 				{#if mod.id !== 'ASA' || showASA}
-					<option value={mod.id}>
-						{mod.title}
+					<option value={mod.id} selected={mod.id === selectedModId}>
+						{#if showASA && mod.id === ''}ARK: Survival Evolved{:else}{mod.title}{/if}
 						{#if !isNaN(parseInt(mod.id))}[{mod.id}]{/if}
 					</option>
 				{/if}

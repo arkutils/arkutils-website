@@ -4,7 +4,6 @@
 
 	import { asHex, srgbFilm, srgbPow22 } from '$lib/colors';
 
-	import { localstore } from '$lib/localstore';
 	import { getModDataStore, type ColorDef } from '$lib/obelisk/asb';
 
 	import type { ColorInfo } from '$lib/ColorChart.svelte';
@@ -12,13 +11,13 @@
 	import ColorDetail from '$lib/ColorDetail.svelte';
 	import Metadata from '$lib/Metadata.svelte';
 	import ModSelector from '$lib/ModSelector.svelte';
+	import { selectedModId } from '$lib/stores';
 	import { loadAll } from '@square/svelte-store';
 
 	const BASE_COLORID = 1;
 	const BASE_DYEID = 201;
 
 	let displayedColor: ColorInfo | null = null;
-	// let selectedModId: string | null = null;
 	let loadedModId: string | null = null;
 	let hideCore: boolean = true;
 	let filter: string = '';
@@ -26,30 +25,29 @@
 
 	let modColors: ColorInfo[];
 	let modDyes: ColorInfo[];
+	let coreColors: ColorInfo[];
+	let coreDyes: ColorInfo[];
 	let filteredColors: ColorInfo[] = [];
 	let filteredDyes: ColorInfo[] = [];
 	let loaded: boolean = false;
 
-	let coreColors: Record<string, true> = {};
+	let coreColorNames: Record<string, true> = {};
 	let filterParts: Array<string | number> | null = null;
 
-	const modStore = localstore('arkutils-last-mod', { default: '', dontWatchTabs: true });
-	$: selectedModId = $modStore;
-
-	$: if (loaded && selectedModId !== null) selectMod(selectedModId);
+	$: if (loaded && $selectedModId !== null) selectMod($selectedModId);
 	$: filterChanged(filter);
 	$: if (loaded) applyFilter(hideCore, loadedModId, filterParts);
 
 	onMount(async () => {
 		// Load core
-		const [modData] = await loadAll([getModDataStore('')]);
-		modColors = parseColors(modData.colorDefinitions || [], 1);
-		modDyes = parseColors(modData.dyeDefinitions || [], 201);
-		selectedModId = '';
+		const [coreData] = await loadAll([getModDataStore('')]);
+		coreColors = modColors = parseColors(coreData.colorDefinitions || [], 1);
+		coreDyes = modDyes = parseColors(coreData.dyeDefinitions || [], 201);
+		$selectedModId = $selectedModId;
 
 		// Also record core color names for duplicate removal
-		modColors.forEach((color) => (coreColors[color.name] = true));
-		modDyes.forEach((color) => (coreColors[color.name] = true));
+		modColors.forEach((color) => (coreColorNames[color.name] = true));
+		modDyes.forEach((color) => (coreColorNames[color.name] = true));
 		loaded = true;
 	});
 
@@ -64,10 +62,14 @@
 		if (modData.dyeStartIndex) {
 			dyeStartIndex = modData.dyeStartIndex;
 		}
-		if (modData.colorDefinitions) {
+		const hasDyeIndex = modData.dyeStartIndex !== undefined;
+		if (hasDyeIndex) {
+			modColors = modData.colorDefinitions
+				? parseColors(modData.colorDefinitions, colorStartIndex)
+				: coreColors;
+			modDyes = modData.dyeDefinitions ? parseColors(modData.dyeDefinitions, dyeStartIndex) : coreDyes;
+		} else {
 			modColors = parseColors(modData.colorDefinitions || [], colorStartIndex);
-		}
-		if (modData.dyeDefinitions) {
 			modDyes = parseColors(modData.dyeDefinitions || [], dyeStartIndex);
 		}
 		loadedModId = modId;
@@ -125,8 +127,8 @@
 
 	function filterColor(color: ColorInfo): boolean {
 		// Do we filter out core duplicates?
-		const actuallyHideCore = hideCore && selectedModId !== '' && selectedModId !== 'ASA';
-		if (actuallyHideCore && coreColors[color.name]) return false;
+		const actuallyHideCore = hideCore && $selectedModId !== '' && $selectedModId !== 'ASA';
+		if (actuallyHideCore && coreColorNames[color.name]) return false;
 
 		// We're done if there's no filter string set
 		if (!filterParts || filterParts.length === 0) return true;
@@ -183,10 +185,15 @@
 <!-- Input section -->
 <section class="flex flex-col gap-2 sm:flex-row justify-evenly mt-4">
 	<div class="flex flex-col gap-2 flex-1">
-		<h3>Choose Mod</h3>
-		<ModSelector bind:selectedModId showASA={true} />
-		<label class:text-gray-500={!selectedModId} class="select-none flex flex-row items-center gap-2">
-			<input type="checkbox" class="checkbox" bind:checked={hideCore} disabled={!selectedModId} />
+		<h3>Choose Game / Mod</h3>
+		<ModSelector bind:selectedModId={$selectedModId} showASA={true} />
+		<label class:text-gray-500={!$selectedModId} class="select-none flex flex-row items-center gap-2">
+			<input
+				type="checkbox"
+				class="checkbox"
+				bind:checked={hideCore}
+				disabled={!$selectedModId || $selectedModId === 'ASA'}
+			/>
 			Hide duplicates from core
 		</label>
 	</div>

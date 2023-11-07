@@ -18,9 +18,6 @@
 	$: loading = modSelectorLoading || !modData || !$modData;
 	$: errored = modSelectorErrored;
 
-	$: console.log('SpeciesSelector.loading', loading);
-	$: console.log('SpeciesSelector.errored', errored);
-
 	// Store containing the current mod data (loadable/async)
 	$: modData = selectedModId === null ? null : getModDataStore(selectedModId);
 

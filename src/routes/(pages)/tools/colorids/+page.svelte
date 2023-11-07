@@ -141,24 +141,33 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<nav class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>Color IDs</li>
-	</ul>
-</nav>
+<div class="flex">
+	<nav class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>Color IDs</li>
+		</ul>
+	</nav>
+	<div
+		class="bg-error text-error-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="This page is not yet update to support Ark: Survival Ascended"
+	>
+		Not yet for ASA
+	</div>
+</div>
 
 <h1 class="mb-4">ARK Color IDs</h1>
 
 <!-- Info text -->
 <p class="mb-2">This page lists all color IDs in ARK: Survival Evolved, plus a list of supported mods.</p>
-<p class="mb-4">
+<p class="mb-2">
 	The normal colours can be picked for wild creatures, while mutations and special events can pick from
 	both normal and dye colours.
 </p>
+<p class="mb-2">The new colours in Ark: Survival Ascended are not yet supported, but will be added soon.</p>
 
 <!-- Input section -->
-<section class="flex flex-col gap-2 sm:flex-row justify-evenly">
+<section class="flex flex-col gap-2 sm:flex-row justify-evenly mt-4">
 	<div class="flex flex-col gap-2 flex-1">
 		<h3>Choose Mod</h3>
 		<ModSelector bind:selectedModId />

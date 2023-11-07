@@ -65,12 +65,20 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<nav class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>Saddle calculator</li>
-	</ul>
-</nav>
+<div class="flex">
+	<nav class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>Saddle calculator</li>
+		</ul>
+	</nav>
+	<div
+		class="bg-error text-error-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="This page is not updated for Ark: Survival Ascended"
+	>
+		Not verified for ASA
+	</div>
+</div>
 
 <aside class="text-[6rem] xs:text-[10rem] float-right">
 	<BetterSaddle />
@@ -84,6 +92,10 @@
 	you can get higher armor crafts out of saddle blueprints. The higher your crafting skill is the higher is
 	the possible armor on the crafted saddle. But how high can the armor actually get? This tool helps you to
 	find it out.
+</p>
+
+<p class="mb-4">
+	Note: This tool is not yet verified or updated for Ark: Survival Ascended. It might not work correctly.
 </p>
 
 <p class="mb-4">

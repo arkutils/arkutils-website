@@ -38,17 +38,25 @@
 
 <Metadata
 	title="Is my stat good?"
-	description="This tool will tell you if the stats on your tame in ARK: Survival Evolved are bad, average or extremly good. You will also see how likely it is to get a better stat."
+	description="This tool will tell you if the stats on your tame in ARK: Survival Evolved are bad, average or extremely good. You will also see how likely it is to get a better stat."
 	preview="/tools/wildstats"
 />
 
 <!-- Site navigation breadcrumbs -->
-<nav class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>Stat Evaluator</li>
-	</ul>
-</nav>
+<div class="flex">
+	<nav class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>Stat Evaluator</li>
+		</ul>
+	</nav>
+	<div
+		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="This page fully supports Ark: Survival Ascended"
+	>
+		Works for ASA
+	</div>
+</div>
 
 <h1 class="title">How good are my stats?</h1>
 <p class="mt-2">

@@ -11,11 +11,19 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<div class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>Bosses</li>
-	</ul>
+<div class="flex">
+	<div class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>Bosses</li>
+		</ul>
+	</div>
+	<div
+		class="bg-error text-error-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="This page is not updated for Ark: Survival Ascended"
+	>
+		Not verified for ASA
+	</div>
 </div>
 
 <header class="flex justify-center items-center">

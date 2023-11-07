@@ -57,12 +57,20 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<nav class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>How many females?</li>
-	</ul>
-</nav>
+<div class="flex">
+	<nav class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>How many females?</li>
+		</ul>
+	</nav>
+	<div
+		class="bg-secondary text-secondary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="Partial support for Ark: Survival Ascended - still investigating mutation rates"
+	>
+		Partial ASA Support
+	</div>
+</div>
 
 <header>
 	<h1 class="title mb-4">How many females are needed?</h1>
@@ -74,6 +82,10 @@
 		The chance to get your specific stat mutation (and therefore the number of females needed) is
 		affected by how many mutatable stats the species has, whether one parent has more than 20 mutations,
 		and is hugely improved if you are using the S+ Mutator.
+	</p>
+	<p class="my-2">
+		For Ark: Survival Ascended it looks like the mutation rate is the same, but we'll investigate fully
+		and update this tool as soon as possible.
 	</p>
 </header>
 

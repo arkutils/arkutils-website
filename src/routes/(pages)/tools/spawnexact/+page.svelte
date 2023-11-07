@@ -38,12 +38,20 @@
 />
 
 <!-- Site navigation breadcrumbs -->
-<nav class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>Spawn Exact Dino</li>
-	</ul>
-</nav>
+<div class="flex">
+	<nav class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>Spawn Exact Dino</li>
+		</ul>
+	</nav>
+	<div
+		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="This page fully supports Ark: Survival Ascended"
+	>
+		Works for ASA
+	</div>
+</div>
 
 <main class="flex flex-col gap-8">
 	<header class="flex flex-col gap-2">

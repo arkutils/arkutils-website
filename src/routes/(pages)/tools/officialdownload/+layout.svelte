@@ -17,7 +17,7 @@
 
 <header>
 	<h1 class="title mb-4">Official Server Downloads</h1>
-	<h2 class="title mb-4">Find your Official Server backup easily</h2>
+	<h2 class="title mb-4 text-secondary">Find your Ark: Survival Evolved Official Server backup easily</h2>
 	<p class="my-2">
 		This is an improved <b>searchable</b> database for <b>quick access</b> to your Official Server backup.
 		Just type in your server name or the server number and let autocomplete do the rest. Download it directly

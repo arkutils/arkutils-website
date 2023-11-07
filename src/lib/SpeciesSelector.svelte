@@ -42,6 +42,11 @@
 	function fmtVariants(species: Species) {
 		return species.variants ? ` (${species.variants.join(', ')})` : '';
 	}
+
+	function print_error(e: Error) {
+		console.error(e);
+		return '';
+	}
 </script>
 
 <ModSelector bind:selectedModId bind:loading={modSelectorLoading} />
@@ -61,8 +66,8 @@
 						{/if}
 					{/each}
 				{/if}
-			{:catch}
-				<option selected disabled value={null}>Failed to load species list!</option>
+			{:catch e}
+				<option selected disabled value={null}>Failed to load species list! {print_error(e)}</option>
 			{/await}
 		{/if}
 	</select>

@@ -87,7 +87,7 @@ function getAsbSpeciesStoreForMod(modid: string): Loadable<IndexedModData> {
 
         // Merge data with the core data, if it matches
         if (modid !== '') {
-            const coreValues = await asbModStores[''].load();
+            const coreValues = await getModDataStore('').load();
             rawData.species = rawData.species.map((species) => {
                 const coreSpecies = coreValues.speciesLookup[species.blueprintPath];
                 if (coreSpecies) {

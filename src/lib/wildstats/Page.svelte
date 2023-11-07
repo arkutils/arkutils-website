@@ -52,7 +52,7 @@
 	</nav>
 	<div
 		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page fully supports Ark: Survival Ascended"
+		title="This page fully supports ARK: Survival Ascended"
 	>
 		Works for ASA
 	</div>
@@ -64,7 +64,7 @@
 	stats? Is it worth your time to look for better stats? This is what this tool is for.
 </p>
 <p class="mt-2">
-	This tool supports both Ark: Survival Evolved and Ark: Survival Ascended. Be careful to select the
+	This tool supports both ARK: Survival Evolved and ARK: Survival Ascended. Be careful to select the
 	correct number of stats for your creature and game.
 </p>
 

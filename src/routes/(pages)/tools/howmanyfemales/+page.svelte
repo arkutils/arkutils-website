@@ -52,7 +52,7 @@
 
 <Metadata
 	title="How many females are needed for mutating?"
-	description="This calculator will help you to find out how many females are needed for your breeding setup in Ark: Survival Evolved. You can enter how many possible stats you can mutate and also get information on when you use the S+ Mutator."
+	description="This calculator will help you to find out how many females are needed for your breeding setup in ARK: Survival Evolved. You can enter how many possible stats you can mutate and also get information on when you use the S+ Mutator."
 	preview="/tools/howmanyfemales"
 />
 
@@ -66,7 +66,7 @@
 	</nav>
 	<div
 		class="bg-secondary text-secondary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="Partial support for Ark: Survival Ascended - still investigating mutation rates"
+		title="Partial support for ARK: Survival Ascended - still investigating mutation rates"
 	>
 		Partial ASA Support
 	</div>
@@ -84,7 +84,7 @@
 		and is hugely improved if you are using the S+ Mutator.
 	</p>
 	<p class="my-2">
-		For Ark: Survival Ascended it looks like the mutation rate is the same, but we'll investigate fully
+		For ARK: Survival Ascended it looks like the mutation rate is the same, but we'll investigate fully
 		and update this tool as soon as possible.
 	</p>
 </header>

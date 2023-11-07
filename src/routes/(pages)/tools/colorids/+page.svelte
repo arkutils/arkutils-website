@@ -162,7 +162,7 @@
 	</nav>
 	<div
 		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page is updated for Ark: Survival Ascended"
+		title="This page is updated for ARK: Survival Ascended"
 	>
 		Works for ASA
 	</div>

@@ -74,7 +74,7 @@
 	</nav>
 	<div
 		class="bg-error text-error-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page is not updated for Ark: Survival Ascended"
+		title="This page is not updated for ARK: Survival Ascended"
 	>
 		Not verified for ASA
 	</div>
@@ -95,7 +95,7 @@
 </p>
 
 <p class="mb-4">
-	Note: This tool is not yet verified or updated for Ark: Survival Ascended. It might not work correctly.
+	Note: This tool is not yet verified or updated for ARK: Survival Ascended. It might not work correctly.
 </p>
 
 <p class="mb-4">

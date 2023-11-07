@@ -1,6 +1,6 @@
 # Ark Tools website utilities
 
-A small collection of utilities focused on an around the game Ark: Survival Evolved.
+A small collection of utilities focused on an around the game ARK: Survival Evolved.
 
 
 ## Developing

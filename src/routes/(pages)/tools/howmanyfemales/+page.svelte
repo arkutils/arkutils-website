@@ -9,6 +9,8 @@
 	let oneParentCapped = false;
 	let usingSPlus = false;
 	let customNumFemales = 100;
+	let customNumFemalesRaw = 0;
+	let customScale = 1;
 
 	// The actual mutation change value to use
 	$: mutChance = lookupMutChance(oneParentCapped, usingSPlus);
@@ -20,16 +22,32 @@
 	let customFailChance = 0;
 	let customFailRounds = 0;
 	let maxFemales = 0;
-	$: (numStats, usingSPlus, oneParentCapped), (maxFemales = getMaxCustomFemales());
+	$: (numStats, usingSPlus, oneParentCapped), updateMaxCustomFemales();
 	$: (customNumFemales, usingSPlus, oneParentCapped, numStats), setCustomCalcs();
+
+	// Update the custom females count by revering the log scale
+	$: customNumFemales = Math.round(toLogScale(customNumFemalesRaw) * customScale + 1);
 
 	function lookupMutChance(oneParentCapped: boolean, usingSPlus: boolean) {
 		if (usingSPlus) return oneParentCapped ? 0.5 : 1;
 		return oneParentCapped ? 0.0407 : 0.0731406;
 	}
 
-	function getMaxCustomFemales() {
-		return calcFemales(0.000000011111111, failChance);
+	function updateMaxCustomFemales() {
+		// Remember the old current count
+		const oldCustomNumFemales = customNumFemales;
+
+		// Calculate the new max
+		maxFemales = calcFemales(1 / 10000, failChance);
+
+		// Update the custom scale
+		customScale = (maxFemales - 1) / toLogScale(1.0);
+
+		// Work backwards to maintain the same custom count (if possible)
+		customNumFemalesRaw = toLinearScale((oldCustomNumFemales - 1) / customScale);
+		if (Number.isNaN(customNumFemalesRaw) || customNumFemalesRaw > 1) {
+			customNumFemalesRaw = 0.5;
+		}
 	}
 
 	function calcFemales(acceptableFailRate: number, failChance: number) {
@@ -47,6 +65,14 @@
 
 	function fmt(n: number, digits = 3) {
 		return new Intl.NumberFormat(getLocale(), { maximumSignificantDigits: digits }).format(n);
+	}
+
+	function toLogScale(value: number) {
+		return 1 - Math.sqrt(1 - Math.pow(value, 2));
+	}
+
+	function toLinearScale(value: number) {
+		return Math.sqrt(1 - Math.pow(1 - value, 2));
 	}
 </script>
 
@@ -169,10 +195,10 @@
 			<input
 				type="range"
 				class="range"
-				min="1"
-				max={maxFemales}
-				step="1"
-				bind:value={customNumFemales}
+				min="0"
+				max="1"
+				step="0.001"
+				bind:value={customNumFemalesRaw}
 			/>
 		</div>
 		<div class="grid grid-cols-[auto,auto] justify-start gap-x-4 items-center">

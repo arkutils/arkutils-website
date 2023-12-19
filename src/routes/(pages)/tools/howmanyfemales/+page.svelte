@@ -5,7 +5,7 @@
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
 
 	// User inputs
-	let numStats = 7;
+	let numStats = 6;
 	let oneParentCapped = false;
 	let usingSPlus = false;
 	let customNumFemales = 100;
@@ -66,9 +66,9 @@
 	</nav>
 	<div
 		class="bg-secondary text-secondary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="Partial support for ARK: Survival Ascended - still investigating mutation rates"
+		title="Verified for ARK: Survival Ascended"
 	>
-		Partial ASA Support
+		Works for ASA
 	</div>
 </div>
 
@@ -94,16 +94,20 @@
 		<!-- Number of stats buttons -->
 		<div class="flex flex-col gap-1 stat-buttons">
 			<h2 class="mb-2">Number of stats</h2>
+			<ValueButton bind:value={numStats} set={5}>
+				<p class="text-sm">ASA water species</p>
+				<p class="text-base-content/50 text-sm">Without movement speed and oxygen</p>
+			</ValueButton>
 			<ValueButton bind:value={numStats} set={6}>
-				<p class="text-sm">For flyers, Shadowmanes</p>
-				<p class="text-base-content/50 text-sm">With less mutatable stats</p>
+				<p class="text-sm">ASA normal, and ASE flyers</p>
+				<p class="text-base-content/50 text-sm">Without movement speed</p>
 			</ValueButton>
 			<ValueButton bind:value={numStats} set={7}>
-				<p class="text-sm">Normal creatures</p>
+				<p class="text-sm">ASE non-flyers</p>
 				<p class="text-base-content/50 text-sm">Includes movement speed</p>
 			</ValueButton>
 			<ValueButton bind:value={numStats} set={8}>
-				<p class="text-sm">Gachas</p>
+				<p class="text-sm">ASE Gachas</p>
 				<p class="text-base-content/50 text-sm">Includes crafting skill</p>
 			</ValueButton>
 		</div>

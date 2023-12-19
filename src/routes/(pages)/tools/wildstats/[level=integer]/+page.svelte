@@ -6,4 +6,4 @@
 	export let data: PageData;
 </script>
 
-<Page level={data.level} stats={7} />
+<Page level={data.level} stats={6} />

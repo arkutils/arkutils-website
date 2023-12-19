@@ -13,7 +13,7 @@
 	import StatDiagram from '$lib/wildstats/StatDiagram.svelte';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
 
-	export let stats = 6;
+	export let stats = 7;
 	export let level = 224;
 
 	let urlTimeout: any;

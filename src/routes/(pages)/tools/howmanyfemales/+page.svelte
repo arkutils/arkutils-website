@@ -20,6 +20,7 @@
 
 	// Reverse calculator values
 	let customFailChance = 0;
+	let customSuccessRounds = 0;
 	let customFailRounds = 0;
 	let maxFemales = 0;
 	$: (numStats, usingSPlus, oneParentCapped), updateMaxCustomFemales();
@@ -60,6 +61,7 @@
 		}
 
 		customFailChance = Math.pow(failChance, customNumFemales);
+		customSuccessRounds = Math.round(1 / (1 - customFailChance));
 		customFailRounds = Math.round(1 / customFailChance);
 	}
 
@@ -205,13 +207,22 @@
 			<div class="font-bold text-left">Females:</div>
 			<span class="text-secondary text-2xl font-bold">{customNumFemales}</span>
 			<div class="font-bold text-left">Success rate:</div>
-			<div class="text-primary text-xl font-bold">{fmt((1 - customFailChance) * 100, 10)}%</div>
+			<div>
+				<span class="text-primary text-xl font-bold">{fmt((1 - customFailChance) * 100, 10)}%</span>
+				{#if customSuccessRounds > 1}
+					<span class="text-primary whitespace-nowrap">
+						(1 in {customSuccessRounds} rounds)
+					</span>
+				{/if}
+			</div>
 			<div class="font-bold text-left">Failure rate:</div>
 			<div>
 				<span class="text-accent text-xl font-bold">{fmt(customFailChance * 100, 3)}%</span>
-				<span class="text-accent whitespace-nowrap">
-					(1 in {customFailRounds} rounds)
-				</span>
+				{#if customFailRounds > 1}
+					<span class="text-accent whitespace-nowrap">
+						(1 in {customFailRounds} rounds)
+					</span>
+				{/if}
 			</div>
 		</div>
 	</div>

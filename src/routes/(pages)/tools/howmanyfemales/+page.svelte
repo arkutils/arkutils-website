@@ -4,6 +4,10 @@
 	import Metadata from '$lib/Metadata.svelte';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
 
+	const RED_HUE = 12;
+	const GREEN_HUE = 107;
+	const GOOD_SUCCESS = 0.85;
+
 	// User inputs
 	let numStats = 6;
 	let oneParentCapped = false;
@@ -75,6 +79,26 @@
 
 	function toLinearScale(value: number) {
 		return Math.sqrt(1 - Math.pow(1 - value, 2));
+	}
+
+	function calcSliderColor(failChance: number) {
+		const successChance = 1 - failChance;
+
+		// We have a three-colour gradient based on success chance: red, white, green
+		// So we just the lightness of the HSL colour to interpolate between them
+		// 0-50%: red to white interpolation
+		// 50-GOOD%: white to green interpolation
+		// GOOD-100%: full green
+
+		if (successChance < 0.5) {
+			const lightness = 50 + successChance * 2 * 50;
+			return `${RED_HUE} 100% ${lightness}%`;
+		} else if (successChance < GOOD_SUCCESS) {
+			const lightness = 100 - (successChance - 0.5) * (1 / (GOOD_SUCCESS - 0.5)) * 50;
+			return `${GREEN_HUE} 100% ${lightness}%`;
+		} else {
+			return `${GREEN_HUE} 100% 50%`;
+		}
 	}
 </script>
 
@@ -195,8 +219,9 @@
 		</p>
 		<div>
 			<input
+				style:--range-shdw={calcSliderColor(customFailChance)}
 				type="range"
-				class="range"
+				class="range range-accent"
 				min="0"
 				max="1"
 				step="0.001"
@@ -208,7 +233,7 @@
 			<span class="text-secondary text-2xl font-bold">{customNumFemales}</span>
 			<div class="font-bold text-left">Success rate:</div>
 			<div>
-				<span class="text-primary text-xl font-bold">{fmt((1 - customFailChance) * 100, 10)}%</span>
+				<span class="text-primary text-xl font-bold">{fmt((1 - customFailChance) * 100, 6)}%</span>
 				{#if customSuccessRounds > 1}
 					<span class="text-primary whitespace-nowrap">
 						(1 in {customSuccessRounds} rounds)

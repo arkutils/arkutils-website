@@ -14,7 +14,7 @@
 	$: mutChance = lookupMutChance(oneParentCapped, usingSPlus);
 
 	// Calculate the output
-	$: failChance = 1 - mutChance / numStats;
+	$: failChance = 1 - (mutChance / numStats) * 0.55; // includes chance to inherit the correct stack
 
 	// Reverse calculator values
 	let customFailChance = 0;

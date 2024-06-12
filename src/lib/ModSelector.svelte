@@ -5,11 +5,12 @@
 	import { getModListStore } from '$lib/obelisk/asb';
 	import LoadingSpinner from './imgs/LoadingSpinner.svelte';
 	import WarningTriangle from './imgs/WarningTriangle.svelte';
+	import { OBELISK } from './obelisk/types';
 
 	export let selectedModId: string | null = null;
 	export let loading = true;
 	export let errored = false;
-	export let showASA = false;
+	export let showASA = true;
 
 	let modList = getModListStore();
 	let ready = false;
@@ -36,6 +37,13 @@
 	});
 </script>
 
+<svelte:head>
+	<!-- Preload manifest and default values file -->
+	<link rel="preload" href={`${OBELISK}/asb/_manifest.json`} as="fetch" crossorigin="anonymous" />
+	<link rel="preload" href={`${OBELISK}/asb/values.json`} as="fetch" crossorigin="anonymous" />
+	<link rel="preload" href={`${OBELISK}/asb/ASA-values.json`} as="fetch" crossorigin="anonymous" />
+</svelte:head>
+
 <div class="relative">
 	<select bind:value={selectedModId} class="select bg-base-200 w-full" class:pl-12={loading || errored}>
 		{#if errored}
@@ -46,7 +54,7 @@
 			{#each $modList as mod}
 				{#if mod.id !== 'ASA' || showASA}
 					<option value={mod.id} selected={mod.id === selectedModId}>
-						{#if showASA && mod.id === ''}ARK: Survival Evolved{:else}{mod.title}{/if}
+						{mod.title}
 						{#if !isNaN(parseInt(mod.id))}[{mod.id}]{/if}
 					</option>
 				{/if}

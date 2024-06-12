@@ -16,6 +16,7 @@ export type Species = {
     blueprintPath: string;
     variants: string[];
     fullStatsRaw: SpeciesStatMults[];
+    altBaseStats?: Record<number, number>;
     TamedBaseHealthMultiplier: number;
     statImprintMult: number[];
     displayedStats: number;
@@ -99,7 +100,7 @@ function getAsbSpeciesStoreForMod(modid: string): Loadable<IndexedModData> {
             });
         }
 
-        // Sort by name, and put less variants first
+        // Sort by name, and put least variants first
         rawData.species.sort((a: Species, b: Species) => a.name.localeCompare(b.name) || compareVariants(a, b));
 
         // Add indexing fields

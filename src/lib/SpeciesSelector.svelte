@@ -25,6 +25,8 @@
 	$: if ($modData && selectedModId !== null) modChanged($modData);
 
 	function modChanged($modData: IndexedModData) {
+		if (!$modData) return;
+
 		// Check we have a valid species for this mod
 		if (selectedSpecies !== null && !$modData.speciesLookup[selectedSpecies]) {
 			selectedSpecies = null;
@@ -57,7 +59,10 @@
 				{#if $modData}
 					{#each $modData.species as species}
 						{#if !$filterUseless || isSpeciesUseful(species)}
-							<option value={species.blueprintPath}>
+							<option
+								value={species.blueprintPath}
+								selected={species.blueprintPath === selectedSpecies}
+							>
 								{species.name}{fmtVariants(species)}
 							</option>
 						{/if}

@@ -77,12 +77,11 @@
 	let wildLevels: number[] = Array(12).fill(0);
 
 	$: if (loaded) selectMod($selectedModId);
-	$: if (loaded && $selectedSpecies) selectSpecies($selectedSpecies);
+	$: if (loaded && $selectedSpecies && modData) selectSpecies($selectedSpecies);
 
 	onMount(async () => {
 		// Load core
 		[modData] = await loadAll([getModDataStore('')]);
-		$selectedModId = loadedModId = '';
 		loaded = true;
 	});
 
@@ -97,7 +96,7 @@
 		speciesData = modData.speciesLookup[speciesId];
 
 		// Look for egg temps
-		if (speciesData.breeding) {
+		if (speciesData?.breeding) {
 			eggTemp = calculateOptimalTemp(speciesData.breeding.eggTempMin, speciesData.breeding.eggTempMax);
 			similarEggs = findSimilarEggs(eggTemp, $selectedSpecies);
 		} else {
@@ -144,7 +143,7 @@
 		// Species values
 		// @ts-ignore - TS fails to see that this is a number[]
 		const [B, Iw, Id, Ta, Tm]: number[] = speciesData.fullStatsRaw[stat];
-		const TBHM = speciesData.TamedBaseHealthMultiplier;
+		const TBHM = speciesData.TamedBaseHealthMultiplier ?? 1.0;
 		const IBm = speciesData.statImprintMult
 			? speciesData.statImprintMult[stat]
 			: defaultImprintMults[stat];
@@ -249,10 +248,10 @@
 		</ul>
 	</nav>
 	<div
-		class="bg-secondary text-secondary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="Partial ARK: Survival Ascended - egg temps not yet checked"
+		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
+		title="Fully compatible with ARK: Survival Ascended"
 	>
-		Partial ASA Support
+		Works for ASA
 	</div>
 </div>
 
@@ -314,6 +313,33 @@
 		{/each}
 	</section>
 
+	<!-- Troodonism warning -->
+	{#if speciesData?.altBaseStats}
+		<div role="alert" class="alert alert-warning">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="stroke-current shrink-0 h-6 w-6"
+				fill="none"
+				viewBox="0 0 24 24"
+				><path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+				/></svg
+			>
+			<span class="block">
+				<b>Warning</b>: This species suffers from a bug we call a Troodonism and often calculates its
+				stats incorrectly <span class="whitespace-nowrap">in-game</span>. For full details please see
+				the
+				<a
+					class="inline text-warning-content font-bold italic"
+					href="https://ark.wiki.gg/wiki/Troodonism">Troodonism</a
+				> page on the wiki.
+			</span>
+		</div>
+	{/if}
+
 	<!-- Egg info -->
 	{#if eggTemp}
 		<section class="bg-base-200 p-4 rounded-lg shadow-lg">
@@ -358,7 +384,7 @@
 			</div>
 		</div>
 		<div class="flex justify-center items-center">
-			<a href="https://cadon.github.io/ARKStatsExtractor/" alt="Ark Smart Breeding tool">
+			<a href="https://cadon.github.io/ARKStatsExtractor/" title="Ark Smart Breeding tool">
 				<img src="/imgs/asb.png" alt="Ark breeding logo" class="w-24 h-24" />
 			</a>
 		</div>

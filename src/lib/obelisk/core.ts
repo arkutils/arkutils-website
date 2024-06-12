@@ -44,9 +44,13 @@ function indexManifest(manifest: Manifest) {
         const mod = entry.mod ?? {
             id: '',
             tag: '',
-            title: 'Core (Vanilla)',
+            title: 'Ark: Survival Evolved',
+            official: true,
         };
         byModId[mod.id] = { ...mod, order: sortableNameForMod(mod) }
+        if (mod.official) {
+            byModId[mod.id].title += ' (Official)';
+        }
     }
 
     // Sort by modid, with named entries first
@@ -74,11 +78,13 @@ function sortedModList(mods: { [modid: string]: ManifestMod }): ModInfo[] {
 function sortableNameForMod(mod: ManifestMod) {
     // Core mod is special and always first
     if (!mod.id) return '0';
+    // ASA is special and always second
+    if (mod.id === 'ASA') return '1';
 
     const intId = parseInt(mod.id);
     if (isNaN(intId)) {
         // Named mods come next
-        return mod.title;
+        return `aaaaa${mod.title}`;
     } else {
         // Then numeric mods
         return `zzzzz${intId.toString().padStart(12, '0')}`;

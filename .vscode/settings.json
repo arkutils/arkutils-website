@@ -6,20 +6,20 @@
     "[typescript]": {
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.organizeImports": true,
+            "source.organizeImports": "explicit"
         }
     },
     "[javascript]": {
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.organizeImports": true,
+            "source.organizeImports": "explicit"
         }
     },
     "[svelte]": {
         "editor.defaultFormatter": "svelte.svelte-vscode",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.organizeImports": true,
+            "source.organizeImports": "explicit"
         }
     },
     "[json]": {
@@ -49,6 +49,7 @@
         "Steinbjorn",
         "sveltejs",
         "Tiia",
+        "Troodonism",
         "Unsubscriber",
         "Valguero"
     ],

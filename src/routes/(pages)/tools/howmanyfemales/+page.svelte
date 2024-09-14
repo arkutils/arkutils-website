@@ -2,11 +2,25 @@
 	import { getLocale } from '$lib/utils/locale';
 
 	import Metadata from '$lib/Metadata.svelte';
+	import { pct } from '$lib/utils/math';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
+	import TraitGroup from './TraitGroup.svelte';
+	import { accumulateTraitEffects } from './traits';
+
+	const BASE_ROLL_CHANCE = 0.025;
+	const BASE_DONOR_PICK_CHANCE = 0.55;
+	const BASE_STAT_WEIGHT = 1;
 
 	const RED_HUE = 12;
 	const GREEN_HUE = 107;
 	const GOOD_SUCCESS = 0.85;
+
+	const MAX_TRAITS = 5;
+	const MAX_MUTABLE_STACKS = 3;
+	const MAX_ROBUST_STACKS = 3;
+	const MUTABLE_ROLL_CHANCE_EFFECTS = [0.01, 0.015, 0.02];
+	const MUTABLE_STAT_WEIGHT_EFFECTS = [0.5, 0.75, 1.0];
+	const ROBUST_DONOR_PICK_EFFECTS = [0.015, 0.0225, 0.03];
 
 	// User inputs
 	let numStats = 6;
@@ -15,12 +29,35 @@
 	let customNumFemales = 100;
 	let customNumFemalesRaw = 0;
 	let customScale = 1;
+	let matTraits = Array(MAX_TRAITS).fill('');
+	let patTraits = Array(MAX_TRAITS).fill('');
 
-	// The actual mutation change value to use
-	$: mutChance = lookupMutChance(oneParentCapped, usingSPlus);
+	// Intermediate values
+	$: rollChanceOffset =
+		accumulateTraitEffects(matTraits, 'Mutable', MUTABLE_ROLL_CHANCE_EFFECTS) +
+		accumulateTraitEffects(patTraits, 'Mutable', MUTABLE_ROLL_CHANCE_EFFECTS);
+	$: rollChance = BASE_ROLL_CHANCE + rollChanceOffset;
+	$: statWeightOffset =
+		accumulateTraitEffects(matTraits, 'Mutable', MUTABLE_STAT_WEIGHT_EFFECTS) +
+		accumulateTraitEffects(patTraits, 'Mutable', MUTABLE_STAT_WEIGHT_EFFECTS);
+	$: statPickChance =
+		(BASE_STAT_WEIGHT + statWeightOffset) / (numStats * BASE_STAT_WEIGHT + statWeightOffset);
+	$: donorPickOffset =
+		accumulateTraitEffects(matTraits, 'Robust', ROBUST_DONOR_PICK_EFFECTS) +
+		accumulateTraitEffects(patTraits, 'Robust', ROBUST_DONOR_PICK_EFFECTS);
+	$: donorPickChance = BASE_DONOR_PICK_CHANCE + donorPickOffset;
 
-	// Calculate the output
-	$: failChance = 1 - (mutChance / numStats) * 0.55; // includes chance to inherit the correct stack
+	// The actual mutation chance value to use
+	$: mutChance = calcGoodMutChance(
+		oneParentCapped,
+		usingSPlus,
+		rollChance,
+		statPickChance,
+		donorPickChance
+	);
+	$: failChance = 1 - mutChance;
+
+	$: console.log({ mutChance, failChance });
 
 	// Reverse calculator values
 	let customFailChance = 0;
@@ -28,14 +65,49 @@
 	let customFailRounds = 0;
 	let maxFemales = 0;
 	$: (numStats, usingSPlus, oneParentCapped), updateMaxCustomFemales();
-	$: (customNumFemales, usingSPlus, oneParentCapped, numStats), setCustomCalcs();
+	$: (customNumFemales, failChance), setCustomCalcs();
 
 	// Update the custom females count by revering the log scale
 	$: customNumFemales = Math.round(toLogScale(customNumFemalesRaw) * customScale + 1);
 
-	function lookupMutChance(oneParentCapped: boolean, usingSPlus: boolean) {
-		if (usingSPlus) return oneParentCapped ? 0.5 : 1;
-		return oneParentCapped ? 0.0407 : 0.0731406;
+	function calcGoodMutChance(
+		oneParentCapped: boolean,
+		usingSPlus: boolean,
+		rollChance: number,
+		statPickChance: number,
+		donorPickChance: number
+	) {
+		if (usingSPlus) {
+			const mutChance = oneParentCapped ? 0.5 : 1;
+			const statChance = 1 / numStats;
+			const donorChance = BASE_DONOR_PICK_CHANCE;
+			const finalMutChance = mutChance * statChance * donorChance;
+
+			console.log('S+ Mutator', {
+				mutChance,
+				statChance,
+				donorChance,
+				finalMutChance,
+			});
+
+			return finalMutChance;
+		} else {
+			const anyMutChance = 1 - (1 - rollChance) ** 3;
+			const mutRightStatChance = anyMutChance * statPickChance;
+			const mutRightStatRightDonorChance = mutRightStatChance * donorPickChance;
+			const finalMutChance = oneParentCapped
+				? mutRightStatRightDonorChance * 0.55
+				: mutRightStatRightDonorChance;
+
+			console.log({
+				anyMutChance,
+				mutRightStatChance,
+				mutRightStatRightDonorChance,
+				finalMutChance,
+			});
+
+			return finalMutChance;
+		}
 	}
 
 	function updateMaxCustomFemales() {
@@ -142,8 +214,10 @@
 </header>
 
 <div class="flex flex-col gap-8 xs:items-center">
-	<section class="flex flex-col sm:flex-row xs:flex-wrap gap-y-4 gap-x-8 mt-6">
-		<!-- Number of stats buttons -->
+	<section
+		class="grid grid-rows-[auto,auto,auto] sm:grid-rows-[auto,auto] sm:grid-cols-[auto,auto] gap-y-4 gap-x-8 mt-6"
+	>
+		<!-- Number of stats -->
 		<div class="flex flex-col gap-1 stat-buttons">
 			<h2 class="mb-2">Number of stats</h2>
 			<ValueButton bind:value={numStats} set={5}>
@@ -164,7 +238,7 @@
 			</ValueButton>
 		</div>
 
-		<!-- Checkboxes for mutation chances -->
+		<!-- General settings -->
 		<div class="flex flex-col gap-3 sm:gap-6">
 			<h2>Settings</h2>
 			<label class="flex flex-row gap-3 items-center">
@@ -181,6 +255,42 @@
 					<p class="text-base-content/50 text-sm">Or any mod that guarantees mutations</p>
 				</div>
 			</label>
+		</div>
+
+		<!-- Traits -->
+		<div class="flex flex-col gap-3 sm:gap-3 sm:col-span-2">
+			<h2>Traits (Bob's Tall Tales)</h2>
+			{#if usingSPlus}
+				<p class="italic text-base-content/50 text-sm">(disabled when S+ Mutator is selected)</p>
+			{:else}
+				<p class="flex w-full flex-col sm:flex-row gap-x-2 justify-between">
+					<span class="whitespace-nowrap"
+						>+{pct(rollChanceOffset, 1)} per-roll mutation chance</span
+					>
+					<span class="whitespace-nowrap">+{statWeightOffset} stat weight offset</span>
+					<span class="whitespace-nowrap">+{pct(donorPickOffset, 0)} donor selection offset</span>
+				</p>
+				<div class="grid grid-cols-2 sm:grid-rows-2 sm:grid-cols-1 gap-x-4 gap-y-2">
+					<div>
+						<h3>Father</h3>
+						<TraitGroup
+							bind:traits={patTraits}
+							slots={MAX_TRAITS}
+							maxMutables={MAX_MUTABLE_STACKS}
+							maxRobusts={MAX_ROBUST_STACKS}
+						/>
+					</div>
+					<div>
+						<h3>Mother</h3>
+						<TraitGroup
+							bind:traits={matTraits}
+							slots={MAX_TRAITS}
+							maxMutables={MAX_MUTABLE_STACKS}
+							maxRobusts={MAX_ROBUST_STACKS}
+						/>
+					</div>
+				</div>
+			{/if}
 		</div>
 	</section>
 
@@ -255,6 +365,9 @@
 
 <!-- </section> -->
 <style lang="postcss">
+	/* * {
+		background-color: rgb(255, 255, 255, 0.05);
+	} */
 	.title {
 		font-size: calc(clamp(1.5rem, 6vw, 2.5rem));
 		line-height: 1;

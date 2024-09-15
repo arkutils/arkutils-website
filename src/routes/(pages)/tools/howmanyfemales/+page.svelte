@@ -2,113 +2,72 @@
 	import { getLocale } from '$lib/utils/locale';
 
 	import Metadata from '$lib/Metadata.svelte';
-	import { pct } from '$lib/utils/math';
+	import { pct as fmtPct } from '$lib/utils/math';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
 	import TraitGroup from './TraitGroup.svelte';
-	import { accumulateTraitEffects } from './traits';
-
-	const BASE_ROLL_CHANCE = 0.025;
-	const BASE_DONOR_PICK_CHANCE = 0.55;
-	const BASE_STAT_WEIGHT = 1;
+	import { gatherTraitEffects } from './traits';
 
 	const RED_HUE = 12;
 	const GREEN_HUE = 107;
 	const GOOD_SUCCESS = 0.85;
+
+	const BASE_ROLL_CHANCE = 0.025;
+	const BASE_HIGHER_PICK_CHANCE = 0.55;
+	const BASE_STAT_WEIGHT = 1;
 
 	const MAX_TRAITS = 5;
 	const MAX_MUTABLE_STACKS = 3;
 	const MAX_ROBUST_STACKS = 3;
 	const MUTABLE_ROLL_CHANCE_EFFECTS = [0.01, 0.015, 0.02];
 	const MUTABLE_STAT_WEIGHT_EFFECTS = [0.5, 0.75, 1.0];
-	const ROBUST_DONOR_PICK_EFFECTS = [0.015, 0.0225, 0.03];
+	const ROBUST_HIGHER_PICK_EFFECTS = [0.015, 0.0225, 0.03];
+
+	const BEST_TRAITS = ['Mutable[3]', 'Mutable[3]', 'Mutable[3]', 'Robust[3]', 'Robust[3]'];
 
 	// User inputs
-	let numStats = 6;
-	let oneParentCapped = false;
-	let usingSPlus = false;
-	let customNumFemales = 100;
-	let customNumFemalesRaw = 0;
-	let customScale = 1;
-	let matTraits = Array(MAX_TRAITS).fill('');
-	let patTraits = Array(MAX_TRAITS).fill('');
+	let numStats = 6; // @hmr:keep
+	let oneParentCapped = false; // @hmr:keep
+	let usingSPlus = false; // @hmr:keep
+	let acceptMalesOnly = false; // @hmr:keep
+	let customNumFemales = 100; // @hmr:keep
+	let customNumFemalesRaw = 0; // @hmr:keep
+	let matTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
+	let patTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
 
-	// Intermediate values
-	$: rollChanceOffset =
-		accumulateTraitEffects(matTraits, 'Mutable', MUTABLE_ROLL_CHANCE_EFFECTS) +
-		accumulateTraitEffects(patTraits, 'Mutable', MUTABLE_ROLL_CHANCE_EFFECTS);
-	$: rollChance = BASE_ROLL_CHANCE + rollChanceOffset;
-	$: statWeightOffset =
-		accumulateTraitEffects(matTraits, 'Mutable', MUTABLE_STAT_WEIGHT_EFFECTS) +
-		accumulateTraitEffects(patTraits, 'Mutable', MUTABLE_STAT_WEIGHT_EFFECTS);
-	$: statPickChance =
-		(BASE_STAT_WEIGHT + statWeightOffset) / (numStats * BASE_STAT_WEIGHT + statWeightOffset);
-	$: donorPickOffset =
-		accumulateTraitEffects(matTraits, 'Robust', ROBUST_DONOR_PICK_EFFECTS) +
-		accumulateTraitEffects(patTraits, 'Robust', ROBUST_DONOR_PICK_EFFECTS);
-	$: donorPickChance = BASE_DONOR_PICK_CHANCE + donorPickOffset;
+	// Collect values from traits
+	$: rollChanceOffset = gatherTraitEffects('Mutable', MUTABLE_ROLL_CHANCE_EFFECTS, matTraits, patTraits);
+	$: statWeightOffset = gatherTraitEffects('Mutable', MUTABLE_STAT_WEIGHT_EFFECTS, matTraits, patTraits);
+	$: higherPickOffset = gatherTraitEffects('Robust', ROBUST_HIGHER_PICK_EFFECTS, matTraits, patTraits);
 
-	// The actual mutation chance value to use
-	$: mutChance = calcGoodMutChance(
-		oneParentCapped,
-		usingSPlus,
-		rollChance,
-		statPickChance,
-		donorPickChance
-	);
-	$: failChance = 1 - mutChance;
+	// Decide base values from settings
+	$: numRolls = usingSPlus ? 1 : 3;
+	$: cappedChance = oneParentCapped ? 0.45 : 1;
+	$: rollChance = usingSPlus ? 1 : BASE_ROLL_CHANCE + rollChanceOffset;
+	$: statPickChance = usingSPlus
+		? 1 / numStats // S+ does not respect traits currently
+		: (BASE_STAT_WEIGHT + statWeightOffset) / (numStats * BASE_STAT_WEIGHT + statWeightOffset);
+	$: higherPickChance = usingSPlus ? BASE_HIGHER_PICK_CHANCE : BASE_HIGHER_PICK_CHANCE + higherPickOffset;
+	$: genderChance = acceptMalesOnly ? 0.5 : 1;
 
-	$: console.log({ mutChance, failChance });
+	// Intermediate calculations
+	$: fullRollChance = rollChance * cappedChance * higherPickChance * statPickChance;
+	$: anyMutChance = 1 - (1 - fullRollChance) ** numRolls;
+
+	// Final result
+	$: successChance = anyMutChance * genderChance;
+	$: failChance = 1 - successChance;
 
 	// Reverse calculator values
 	let customFailChance = 0;
 	let customSuccessRounds = 0;
 	let customFailRounds = 0;
 	let maxFemales = 0;
+	let customScale = 1;
 	$: (numStats, usingSPlus, oneParentCapped), updateMaxCustomFemales();
 	$: (customNumFemales, failChance), setCustomCalcs();
 
 	// Update the custom females count by revering the log scale
 	$: customNumFemales = Math.round(toLogScale(customNumFemalesRaw) * customScale + 1);
-
-	function calcGoodMutChance(
-		oneParentCapped: boolean,
-		usingSPlus: boolean,
-		rollChance: number,
-		statPickChance: number,
-		donorPickChance: number
-	) {
-		if (usingSPlus) {
-			const mutChance = oneParentCapped ? 0.5 : 1;
-			const statChance = 1 / numStats;
-			const donorChance = BASE_DONOR_PICK_CHANCE;
-			const finalMutChance = mutChance * statChance * donorChance;
-
-			console.log('S+ Mutator', {
-				mutChance,
-				statChance,
-				donorChance,
-				finalMutChance,
-			});
-
-			return finalMutChance;
-		} else {
-			const anyMutChance = 1 - (1 - rollChance) ** 3;
-			const mutRightStatChance = anyMutChance * statPickChance;
-			const mutRightStatRightDonorChance = mutRightStatChance * donorPickChance;
-			const finalMutChance = oneParentCapped
-				? mutRightStatRightDonorChance * 0.55
-				: mutRightStatRightDonorChance;
-
-			console.log({
-				anyMutChance,
-				mutRightStatChance,
-				mutRightStatRightDonorChance,
-				finalMutChance,
-			});
-
-			return finalMutChance;
-		}
-	}
 
 	function updateMaxCustomFemales() {
 		// Remember the old current count
@@ -143,6 +102,10 @@
 
 	function fmt(n: number, digits = 3) {
 		return new Intl.NumberFormat(getLocale(), { maximumSignificantDigits: digits }).format(n);
+	}
+
+	function pct(n: number, minPlaces = 0) {
+		return fmtPct(n, minPlaces, 4);
 	}
 
 	function toLogScale(value: number) {
@@ -204,12 +167,9 @@
 	</p>
 	<p class="my-2">
 		The chance to get your specific stat mutation (and therefore the number of females needed) is
-		affected by how many mutatable stats the species has, whether one parent has more than 20 mutations,
-		and is hugely improved if you are using the S+ Mutator.
-	</p>
-	<p class="my-2">
-		For ARK: Survival Ascended it looks like the mutation rate is the same, but we'll investigate fully
-		and update this tool as soon as possible.
+		affected by how many mutable stats the species has, whether one parent has more than 20 mutations,
+		and is hugely improved by the new trait system from Bob's Tall Tales, or if you are using the S+
+		Mutator.
 	</p>
 </header>
 
@@ -239,13 +199,20 @@
 		</div>
 
 		<!-- General settings -->
-		<div class="flex flex-col gap-3 sm:gap-6">
+		<div class="flex flex-col gap-3 sm:gap-4">
 			<h2>Settings</h2>
 			<label class="flex flex-row gap-3 items-center">
 				<input class="checkbox checkbox-accent" type="checkbox" bind:checked={oneParentCapped} />
 				<div class="flex flex-col">
 					<p>One parent is mutation capped</p>
-					<p class="text-base-content/50 text-sm">Parent has more than 20 mutations</p>
+					<p class="text-base-content/50 text-sm">One parent has 20 or more mutations</p>
+				</div>
+			</label>
+			<label class="flex flex-row gap-3 items-center">
+				<input class="checkbox checkbox-secondary" type="checkbox" bind:checked={acceptMalesOnly} />
+				<div class="flex flex-col">
+					<p>Only accept males</p>
+					<p class="text-base-content/50 text-sm">Saves an extra step in the process</p>
 				</div>
 			</label>
 			<label class="flex flex-row gap-3 items-center">
@@ -267,12 +234,29 @@
 					<span class="whitespace-nowrap"
 						>+{pct(rollChanceOffset, 1)} per-roll mutation chance</span
 					>
-					<span class="whitespace-nowrap">+{statWeightOffset} stat weight offset</span>
-					<span class="whitespace-nowrap">+{pct(donorPickOffset, 0)} donor selection offset</span>
+					<span class="whitespace-nowrap">+{statWeightOffset} to stat weight</span>
+					<span class="whitespace-nowrap">+{pct(higherPickOffset)} to higher selection chance</span
+					>
 				</p>
 				<div class="grid grid-cols-2 sm:grid-rows-2 sm:grid-cols-1 gap-x-4 gap-y-2">
 					<div>
-						<h3>Father</h3>
+						<div class="flex gap-3 items-baseline">
+							<h3>Father</h3>
+							<!-- svelte-ignore a11y-invalid-attribute -->
+							<a
+								class="text-base-content text-sm ml-auto"
+								href="#"
+								on:click|preventDefault={() => (patTraits = Array.from(BEST_TRAITS))}
+								>(set to best)</a
+							>
+							<!-- svelte-ignore a11y-invalid-attribute -->
+							<a
+								class="text-base-content text-sm"
+								href="#"
+								on:click|preventDefault={() => (patTraits = Array(MAX_TRAITS).fill(''))}
+								>(clear)</a
+							>
+						</div>
 						<TraitGroup
 							bind:traits={patTraits}
 							slots={MAX_TRAITS}
@@ -281,7 +265,23 @@
 						/>
 					</div>
 					<div>
-						<h3>Mother</h3>
+						<div class="flex gap-3 items-baseline">
+							<h3>Mother</h3>
+							<!-- svelte-ignore a11y-invalid-attribute -->
+							<a
+								class="text-base-content text-sm ml-auto"
+								href="#"
+								on:click|preventDefault={() => (matTraits = Array.from(BEST_TRAITS))}
+								>(set to best)</a
+							>
+							<!-- svelte-ignore a11y-invalid-attribute -->
+							<a
+								class="text-base-content text-sm"
+								href="#"
+								on:click|preventDefault={() => (matTraits = Array(MAX_TRAITS).fill(''))}
+								>(clear)</a
+							>
+						</div>
 						<TraitGroup
 							bind:traits={matTraits}
 							slots={MAX_TRAITS}
@@ -324,8 +324,7 @@
 	<div class="flex flex-col w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
 		<h2 class="self-start mb-2">How good is your setup?</h2>
 		<p class="mb-4">
-			Use the slider to check the success rate and the fail rate for your amount of females. Keep in
-			mind that you can never reach 100% success because it is statistically impossible.
+			Use the slider to check the success rate and the fail rate for your amount of females.
 		</p>
 		<div>
 			<input
@@ -361,13 +360,142 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Stats -->
+	<div class="flex flex-col w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
+		<h2 class="self-start mb-2">Numbers for nerds</h2>
+		<p class="mb-4">Here we'll break down the numbers a bit:</p>
+		<div class="flex flex-col gap-y-4">
+			{#if usingSPlus}
+				<div class="inline-flex flex-col">
+					<p>Change for S+ to mutate:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content">= 100% (* 45% if one parent capped)</code>
+						<code>= {pct(fullRollChance)}</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Chance to pick the correct stat (S+ ignores traits):</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content"> 1 in {numStats} </code>
+						<code>
+							= {pct(statPickChance, 1)}
+						</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Chance for higher of the parent stats to be picked (S+ ignores traits):</p>
+					<div class="flex flex-col self-center">
+						<code>
+							= {pct(higherPickChance)}
+						</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Useful mutation chance:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content">
+							roll chance * stat chance * higher chance * capped chance
+						</code>
+						<code>
+							= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
+								cappedChance
+							)}
+							= {pct(fullRollChance, 1)}
+						</code>
+					</div>
+				</div>
+			{:else}
+				<div class="inline-flex flex-col">
+					<p>Basic per-roll mutation chance:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content"> 2.5% + mutable effects </code>
+						<code>
+							= 2.5% + {pct(rollChanceOffset, 1)} =
+							{pct(rollChance)}
+						</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Chance to pick the correct stat:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content">
+							(1 + mutable effects) in (num stats + mutable effects)
+						</code>
+						<code>
+							= ({BASE_STAT_WEIGHT} + {statWeightOffset}) / ({numStats} + {statWeightOffset}) = {BASE_STAT_WEIGHT +
+								statWeightOffset} / {numStats + statWeightOffset}
+							= {pct(statPickChance)}
+						</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Chance for higher of the parent stats to be picked:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content"> 55% + robust effects </code>
+						<code>
+							= 55% + {pct(higherPickOffset, 1)} = {pct(higherPickChance, 1)}
+						</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Useful per-roll mutation chance:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content">
+							roll chance * stat chance * higher chance * capped chance
+						</code>
+						<code>
+							= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
+								cappedChance
+							)}
+							= {pct(fullRollChance, 1)}
+						</code>
+					</div>
+				</div>
+				<div class="inline-flex flex-col">
+					<p>Chance for at least one mutation in 3 rolls:</p>
+					<div class="flex flex-col self-center">
+						<code class="text-base-content">1 - (1 - per roll chance)<sup>3</sup></code>
+						<code>
+							= 1 - (1 - {pct(fullRollChance, 1)})<sup>3</sup> = {pct(anyMutChance)}
+						</code>
+					</div>
+				</div>
+			{/if}
+			<div class="inline-flex flex-col">
+				<p>Combined chance for correct mutation and gender:</p>
+				<div class="flex flex-col self-center">
+					<code class="text-base-content"> mutation chance * gender chance </code>
+					<code>
+						= {pct(anyMutChance)} * {pct(genderChance)} = {pct(successChance)}
+					</code>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Variables -->
+	<div class="flex flex-col w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
+		<h2 class="self-start mb-2">Internal variables</h2>
+		<div class="grid grid-cols-2">
+			<span class="font-mono">rollChanceOffset</span><code>+{pct(rollChanceOffset)}</code>
+			<span class="font-mono">statWeightOffset</span><code>+{statWeightOffset}</code>
+			<span class="font-mono">higherPickOffset</span><code>+{pct(higherPickOffset)}</code>
+			<span class="font-mono">numRolls</span><code>{numRolls}</code>
+			<span class="font-mono">cappedChance</span><code>{pct(cappedChance)}</code>
+			<span class="font-mono">rollChance</span><code>{pct(rollChance)}</code>
+			<span class="font-mono">statPickChance</span><code>{pct(statPickChance)}</code>
+			<span class="font-mono">higherPickChance</span><code>{pct(higherPickChance)}</code>
+			<span class="font-mono">genderChance</span><code>{pct(genderChance)}</code>
+			<span class="font-mono">fullRollChance</span><code>{pct(fullRollChance)}</code>
+			<span class="font-mono">anyMutChance</span><code>{pct(anyMutChance)}</code>
+			<span class="font-mono">successChance</span><code>{pct(successChance)}</code>
+			<span class="font-mono">failChance</span><code>{pct(failChance)}</code>
+		</div>
+	</div>
 </div>
 
-<!-- </section> -->
 <style lang="postcss">
-	/* * {
-		background-color: rgb(255, 255, 255, 0.05);
-	} */
 	.title {
 		font-size: calc(clamp(1.5rem, 6vw, 2.5rem));
 		line-height: 1;

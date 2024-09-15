@@ -10,8 +10,6 @@
 
 	export let traits = Array(slots).fill('');
 
-	// const dispatch = createEventDispatcher<{ traitsChanged: null }>();
-
 	$: mutableCount = traits.filter((trait) => trait.startsWith('Mutable')).length;
 	$: robustCount = traits.filter((trait) => trait.startsWith('Robust')).length;
 </script>

@@ -113,10 +113,14 @@ export function probabilityToZScore(p: number) {
 }
 
 
-export function pct(value: number, places: number | undefined = undefined) {
+export function pct(value: number, places: number | undefined = undefined, maxPlaces: number | undefined = undefined) {
     if (value === 0) return "0%";
     if (typeof (value) === "undefined") return "-";
     if (typeof (places) === "undefined") places = Math.floor(-Math.log10(value)) + 2;
     if (places < 0) places = 0;
-    return Number(value).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: places });
+    return Number(value).toLocaleString(undefined, {
+        style: 'percent',
+        minimumFractionDigits: places,
+        maximumFractionDigits: maxPlaces ?? places
+    });
 }

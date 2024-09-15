@@ -4,8 +4,6 @@
 
 	export let value: string = '';
 
-	// const dispatch = createEventDispatcher<{ valueChange: null }>();
-
 	$: traitTier = value.match(/\[(\d)\]/)?.[1] ?? '0';
 
 	$: {

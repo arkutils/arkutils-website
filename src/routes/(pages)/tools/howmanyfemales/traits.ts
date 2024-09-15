@@ -1,3 +1,9 @@
+/// Add up all of the effects of traits from multiple sources
+export function gatherTraitEffects(traitName: string, effects: number[], ...traits: string[][]) {
+    return traits.reduce((acc, trait) => {
+        return acc + accumulateTraitEffects(trait, traitName, effects);
+    }, 0);
+}
 
 /// Add up all of the effects of a trait
 export function accumulateTraitEffects(traits: string[], traitName: string, effects: number[]) {

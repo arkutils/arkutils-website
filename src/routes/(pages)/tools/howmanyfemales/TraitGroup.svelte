@@ -14,7 +14,7 @@
 	$: robustCount = traits.filter((trait) => trait.startsWith('Robust')).length;
 </script>
 
-<div class="flex flex-col sm:flex-row gap-2 grow w-full">
+<div class="flex flex-col md:flex-row gap-1 w-full">
 	{#each traits as trait, i}
 		<TraitSelect
 			bind:value={traits[i]}

@@ -16,7 +16,12 @@
 	}
 </script>
 
-<select bind:value class="w-full min-w-0 max-w-40 t{traitTier} bg-base-200">
+<select
+	bind:value
+	class="select select-bordered select-sm w-40 md:w-32 t{traitTier} bg-base-200 border-"
+	class:border-yellow-600={value.startsWith('Mutable')}
+	class:border-rose-600={value.startsWith('Robust')}
+>
 	<option value="" class="t0" selected={value === ''}>-</option>
 	{#if !blockMutable}
 		{#each [1, 2, 3] as i}

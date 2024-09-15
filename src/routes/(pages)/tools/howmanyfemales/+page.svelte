@@ -231,31 +231,36 @@
 				<p class="italic text-base-content/50 text-sm">(disabled when S+ Mutator is selected)</p>
 			{:else}
 				<p class="flex w-full flex-col sm:flex-row gap-x-2 justify-between">
-					<span class="whitespace-nowrap"
-						>+{pct(rollChanceOffset, 1)} per-roll mutation chance</span
-					>
-					<span class="whitespace-nowrap">+{statWeightOffset} to stat weight</span>
-					<span class="whitespace-nowrap">+{pct(higherPickOffset)} to higher selection chance</span
-					>
+					<span class="whitespace-nowrap">
+						<code>+{pct(rollChanceOffset)}</code>
+						<span class="text-sm">per-roll mutation chance</span>
+					</span>
+					<span class="whitespace-nowrap">
+						<code>+{statWeightOffset}</code> <span class="text-sm">to stat weight</span>
+					</span>
+					<span class="whitespace-nowrap">
+						<code>+{pct(higherPickOffset)}</code>
+						<span class="text-sm">to higher stat selection chance</span>
+					</span>
 				</p>
-				<div class="grid grid-cols-2 sm:grid-rows-2 sm:grid-cols-1 gap-x-4 gap-y-2">
+				<div class="grid grid-cols-2 md:grid-rows-2 md:grid-cols-1 gap-x-4 gap-y-2">
 					<div>
 						<div class="flex gap-3 items-baseline">
 							<h3>Father</h3>
-							<!-- svelte-ignore a11y-invalid-attribute -->
-							<a
-								class="text-base-content text-sm ml-auto"
-								href="#"
-								on:click|preventDefault={() => (patTraits = Array.from(BEST_TRAITS))}
-								>(set to best)</a
+							<button
+								class="btn btn-xs btn-ghost ml-0 md:ml-auto hover:bg-primary-focus hover:text-primary-content"
+								title="Set father's traits to the best possible"
+								on:click={() => (patTraits = Array.from(BEST_TRAITS))}
 							>
-							<!-- svelte-ignore a11y-invalid-attribute -->
-							<a
-								class="text-base-content text-sm"
-								href="#"
-								on:click|preventDefault={() => (patTraits = Array(MAX_TRAITS).fill(''))}
-								>(clear)</a
+								Set to best
+							</button>
+							<button
+								class="btn btn-xs btn-ghost"
+								title="Clear father's traits"
+								on:click={() => (patTraits = Array(MAX_TRAITS).fill(''))}
 							>
+								Clear
+							</button>
 						</div>
 						<TraitGroup
 							bind:traits={patTraits}
@@ -267,20 +272,20 @@
 					<div>
 						<div class="flex gap-3 items-baseline">
 							<h3>Mother</h3>
-							<!-- svelte-ignore a11y-invalid-attribute -->
-							<a
-								class="text-base-content text-sm ml-auto"
-								href="#"
-								on:click|preventDefault={() => (matTraits = Array.from(BEST_TRAITS))}
-								>(set to best)</a
+							<button
+								class="btn btn-xs btn-ghost ml-0 md:ml-auto"
+								title="Set mother's traits to the best possible"
+								on:click={() => (matTraits = Array.from(BEST_TRAITS))}
 							>
-							<!-- svelte-ignore a11y-invalid-attribute -->
-							<a
-								class="text-base-content text-sm"
-								href="#"
-								on:click|preventDefault={() => (matTraits = Array(MAX_TRAITS).fill(''))}
-								>(clear)</a
+								Set to best
+							</button>
+							<button
+								class="btn btn-xs btn-ghost"
+								title="Clear mother's traits"
+								on:click={() => (matTraits = Array(MAX_TRAITS).fill(''))}
 							>
+								Clear
+							</button>
 						</div>
 						<TraitGroup
 							bind:traits={matTraits}

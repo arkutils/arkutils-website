@@ -41,7 +41,7 @@
 
 	// Decide base values from settings
 	$: numRolls = usingSPlus ? 1 : 3;
-	$: cappedChance = oneParentCapped ? 0.45 : 1;
+	$: cappedChance = oneParentCapped ? 0.55 : 1;
 	$: rollChance = usingSPlus ? 1 : BASE_ROLL_CHANCE + rollChanceOffset;
 	$: statPickChance = usingSPlus
 		? 1 / numStats // S+ does not respect traits currently
@@ -370,7 +370,7 @@
 				<div class="inline-flex flex-col">
 					<p>Change for S+ to mutate:</p>
 					<div class="flex flex-col self-center">
-						<code class="text-base-content">= 100% (* 45% if one parent capped)</code>
+						<code class="text-base-content">= 100% (* 55% if one parent capped)</code>
 						<code>= {pct(fullRollChance)}</code>
 					</div>
 				</div>

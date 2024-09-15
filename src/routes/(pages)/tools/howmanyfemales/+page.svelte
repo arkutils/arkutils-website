@@ -378,7 +378,7 @@
 			</p>
 		</div>
 		<div class="collapse-content flex flex-col">
-			<p class="mb-4">Here we'll break down the numbers a bit:</p>
+			<p class="mb-4">Here we'll show all of the steps we use to calculate these results.</p>
 			{#if showBreakdown}
 				<div class="flex flex-col gap-y-4">
 					{#if usingSPlus}
@@ -478,7 +478,7 @@
 						</div>
 					{/if}
 					<div class="inline-flex flex-col">
-						<p>Combined chance for correct mutation and gender:</p>
+						<p>Final combined chance for correct mutation and gender:</p>
 						<div class="flex flex-col self-center">
 							<code class="text-base-content"> mutation chance * gender chance </code>
 							<code>

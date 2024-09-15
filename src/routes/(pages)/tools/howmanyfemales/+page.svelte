@@ -34,7 +34,7 @@
 	let customNumFemalesRaw = 0; // @hmr:keep
 	let matTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
 	let patTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
-	let showBreakdown = false;
+	let showBreakdown = false; // @hmr:keep
 
 	// Collect values from traits
 	$: rollChanceOffset = gatherTraitEffects('Mutable', MUTABLE_ROLL_CHANCE_EFFECTS, matTraits, patTraits);
@@ -435,12 +435,14 @@
 							<p>Chance to pick the correct stat:</p>
 							<div class="flex flex-col self-center">
 								<code class="text-base-content">
-									(1 + mutable effects) in (num stats + mutable effects)
+									<span class="text-nowrap"> (1 + mutable effects) </span> in
+									<span class="text-nowrap"> (num stats + mutable effects) </span>
 								</code>
 								<code>
-									= ({BASE_STAT_WEIGHT} + {statWeightOffset}) / ({numStats} + {statWeightOffset})
-									= {BASE_STAT_WEIGHT + statWeightOffset} / {numStats + statWeightOffset}
-									= {pct(statPickChance)}
+									<span class="text-nowrap">
+										= ({BASE_STAT_WEIGHT} + {statWeightOffset}) / ({numStats} + {statWeightOffset})
+									</span>
+									<span class="text-nowrap">= {pct(statPickChance)}</span>
 								</code>
 							</div>
 						</div>
@@ -457,13 +459,17 @@
 							<p>Useful per-roll mutation chance:</p>
 							<div class="flex flex-col self-center">
 								<code class="text-base-content">
-									roll chance * stat chance * higher chance * capped chance
+									<span class="text-nowrap">roll chance</span> *
+									<span class="text-nowrap">stat chance</span>
+									* <span class="text-nowrap">higher chance</span> *
+									<span class="text-nowrap">capped chance</span>
 								</code>
 								<code>
-									= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
-										cappedChance
-									)}
-									= {pct(fullRollChance, 1)}
+									<span class="text-nowrap">
+										= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)}
+										* {pct(cappedChance)}
+									</span>
+									<span class="text-nowrap"> = {pct(fullRollChance, 1)} </span>
 								</code>
 							</div>
 						</div>
@@ -472,7 +478,9 @@
 							<div class="flex flex-col self-center">
 								<code class="text-base-content">1 - (1 - per roll chance)<sup>3</sup></code>
 								<code>
-									= 1 - (1 - {pct(fullRollChance, 1)})<sup>3</sup> = {pct(anyMutChance)}
+									<span class="text-nowrap">
+										= 1 - (1 - {pct(fullRollChance, 1)})<sup>3</sup>
+									</span> <span class="text-nowrap"> = {pct(anyMutChance)} </span>
 								</code>
 							</div>
 						</div>
@@ -480,9 +488,14 @@
 					<div class="inline-flex flex-col">
 						<p>Final combined chance for correct mutation and gender:</p>
 						<div class="flex flex-col self-center">
-							<code class="text-base-content"> mutation chance * gender chance </code>
+							<code class="text-base-content">
+								<span class="text-nowrap">mutation chance</span> *
+								<span class="text-nowrap">gender chance</span>
+							</code>
 							<code>
-								= {pct(anyMutChance)} * {pct(genderChance)} = {pct(successChance)}
+								<span class="text-nowrap"> = {pct(anyMutChance)} </span> * {pct(
+									genderChance
+								)} <span class="text-nowrap">= {pct(successChance)}</span>
 							</code>
 						</div>
 					</div>

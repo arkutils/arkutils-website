@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getLocale } from '$lib/utils/locale';
 
+	import { page } from '$app/stores';
 	import Metadata from '$lib/Metadata.svelte';
 	import { pct as fmtPct } from '$lib/utils/math';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
@@ -33,6 +34,7 @@
 	let customNumFemalesRaw = 0; // @hmr:keep
 	let matTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
 	let patTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
+	let showBreakdown = false;
 
 	// Collect values from traits
 	$: rollChanceOffset = gatherTraitEffects('Mutable', MUTABLE_ROLL_CHANCE_EFFECTS, matTraits, patTraits);
@@ -366,138 +368,150 @@
 		</div>
 	</div>
 
-	<!-- Stats -->
-	<div class="flex flex-col w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
-		<h2 class="self-start mb-2">Numbers for nerds</h2>
-		<p class="mb-4">Here we'll break down the numbers a bit:</p>
-		<div class="flex flex-col gap-y-4">
-			{#if usingSPlus}
-				<div class="inline-flex flex-col">
-					<p>Change for S+ to mutate:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content">= 100% (* 55% if one parent capped)</code>
-						<code>= {pct(fullRollChance)}</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Chance to pick the correct stat (S+ ignores traits):</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content"> 1 in {numStats} </code>
-						<code>
-							= {pct(statPickChance, 1)}
-						</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Chance for higher of the parent stats to be picked (S+ ignores traits):</p>
-					<div class="flex flex-col self-center">
-						<code>
-							= {pct(higherPickChance)}
-						</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Useful mutation chance:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content">
-							roll chance * stat chance * higher chance * capped chance
-						</code>
-						<code>
-							= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
-								cappedChance
-							)}
-							= {pct(fullRollChance, 1)}
-						</code>
-					</div>
-				</div>
-			{:else}
-				<div class="inline-flex flex-col">
-					<p>Basic per-roll mutation chance:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content"> 2.5% + mutable effects </code>
-						<code>
-							= 2.5% + {pct(rollChanceOffset, 1)} =
-							{pct(rollChance)}
-						</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Chance to pick the correct stat:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content">
-							(1 + mutable effects) in (num stats + mutable effects)
-						</code>
-						<code>
-							= ({BASE_STAT_WEIGHT} + {statWeightOffset}) / ({numStats} + {statWeightOffset}) = {BASE_STAT_WEIGHT +
-								statWeightOffset} / {numStats + statWeightOffset}
-							= {pct(statPickChance)}
-						</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Chance for higher of the parent stats to be picked:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content"> 55% + robust effects </code>
-						<code>
-							= 55% + {pct(higherPickOffset, 1)} = {pct(higherPickChance, 1)}
-						</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Useful per-roll mutation chance:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content">
-							roll chance * stat chance * higher chance * capped chance
-						</code>
-						<code>
-							= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
-								cappedChance
-							)}
-							= {pct(fullRollChance, 1)}
-						</code>
-					</div>
-				</div>
-				<div class="inline-flex flex-col">
-					<p>Chance for at least one mutation in 3 rolls:</p>
-					<div class="flex flex-col self-center">
-						<code class="text-base-content">1 - (1 - per roll chance)<sup>3</sup></code>
-						<code>
-							= 1 - (1 - {pct(fullRollChance, 1)})<sup>3</sup> = {pct(anyMutChance)}
-						</code>
+	<!-- Breakdown -->
+	<div class="collapse w-full bg-base-200 rounded-lg shadow">
+		<input type="checkbox" bind:checked={showBreakdown} />
+		<div class="collapse-title flex justify-between items-baseline">
+			<h2>Numbers for nerds</h2>
+			<p>
+				Click to {#if showBreakdown}hide{:else}show{/if}
+			</p>
+		</div>
+		<div class="collapse-content flex flex-col">
+			<p class="mb-4">Here we'll break down the numbers a bit:</p>
+			{#if showBreakdown}
+				<div class="flex flex-col gap-y-4">
+					{#if usingSPlus}
+						<div class="inline-flex flex-col">
+							<p>Change for S+ to mutate:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content">= 100% (* 55% if one parent capped)</code>
+								<code>= {pct(fullRollChance)}</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Chance to pick the correct stat (S+ ignores traits):</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content"> 1 in {numStats} </code>
+								<code>
+									= {pct(statPickChance, 1)}
+								</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Chance for higher of the parent stats to be picked (S+ ignores traits):</p>
+							<div class="flex flex-col self-center">
+								<code>
+									= {pct(higherPickChance)}
+								</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Useful mutation chance:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content">
+									roll chance * stat chance * higher chance * capped chance
+								</code>
+								<code>
+									= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
+										cappedChance
+									)}
+									= {pct(fullRollChance, 1)}
+								</code>
+							</div>
+						</div>
+					{:else}
+						<div class="inline-flex flex-col">
+							<p>Basic per-roll mutation chance:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content"> 2.5% + mutable effects </code>
+								<code>
+									= 2.5% + {pct(rollChanceOffset, 1)} =
+									{pct(rollChance)}
+								</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Chance to pick the correct stat:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content">
+									(1 + mutable effects) in (num stats + mutable effects)
+								</code>
+								<code>
+									= ({BASE_STAT_WEIGHT} + {statWeightOffset}) / ({numStats} + {statWeightOffset})
+									= {BASE_STAT_WEIGHT + statWeightOffset} / {numStats + statWeightOffset}
+									= {pct(statPickChance)}
+								</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Chance for higher of the parent stats to be picked:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content"> 55% + robust effects </code>
+								<code>
+									= 55% + {pct(higherPickOffset, 1)} = {pct(higherPickChance, 1)}
+								</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Useful per-roll mutation chance:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content">
+									roll chance * stat chance * higher chance * capped chance
+								</code>
+								<code>
+									= {pct(rollChance)} * {pct(statPickChance)} * {pct(higherPickChance)} * {pct(
+										cappedChance
+									)}
+									= {pct(fullRollChance, 1)}
+								</code>
+							</div>
+						</div>
+						<div class="inline-flex flex-col">
+							<p>Chance for at least one mutation in 3 rolls:</p>
+							<div class="flex flex-col self-center">
+								<code class="text-base-content">1 - (1 - per roll chance)<sup>3</sup></code>
+								<code>
+									= 1 - (1 - {pct(fullRollChance, 1)})<sup>3</sup> = {pct(anyMutChance)}
+								</code>
+							</div>
+						</div>
+					{/if}
+					<div class="inline-flex flex-col">
+						<p>Combined chance for correct mutation and gender:</p>
+						<div class="flex flex-col self-center">
+							<code class="text-base-content"> mutation chance * gender chance </code>
+							<code>
+								= {pct(anyMutChance)} * {pct(genderChance)} = {pct(successChance)}
+							</code>
+						</div>
 					</div>
 				</div>
 			{/if}
-			<div class="inline-flex flex-col">
-				<p>Combined chance for correct mutation and gender:</p>
-				<div class="flex flex-col self-center">
-					<code class="text-base-content"> mutation chance * gender chance </code>
-					<code>
-						= {pct(anyMutChance)} * {pct(genderChance)} = {pct(successChance)}
-					</code>
-				</div>
-			</div>
 		</div>
 	</div>
 
 	<!-- Variables -->
-	<div class="flex flex-col w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
-		<h2 class="self-start mb-2">Internal variables</h2>
-		<div class="grid grid-cols-2">
-			<span class="font-mono">rollChanceOffset</span><code>+{pct(rollChanceOffset)}</code>
-			<span class="font-mono">statWeightOffset</span><code>+{statWeightOffset}</code>
-			<span class="font-mono">higherPickOffset</span><code>+{pct(higherPickOffset)}</code>
-			<span class="font-mono">numRolls</span><code>{numRolls}</code>
-			<span class="font-mono">cappedChance</span><code>{pct(cappedChance)}</code>
-			<span class="font-mono">rollChance</span><code>{pct(rollChance)}</code>
-			<span class="font-mono">statPickChance</span><code>{pct(statPickChance)}</code>
-			<span class="font-mono">higherPickChance</span><code>{pct(higherPickChance)}</code>
-			<span class="font-mono">genderChance</span><code>{pct(genderChance)}</code>
-			<span class="font-mono">fullRollChance</span><code>{pct(fullRollChance)}</code>
-			<span class="font-mono">anyMutChance</span><code>{pct(anyMutChance)}</code>
-			<span class="font-mono">successChance</span><code>{pct(successChance)}</code>
-			<span class="font-mono">failChance</span><code>{pct(failChance)}</code>
+	{#if $page.url.hash.includes('dev')}
+		<div class="flex flex-col w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
+			<h2 class="self-start mb-2">Internal variables</h2>
+			<div class="grid grid-cols-2 font-mono">
+				<span>rollChanceOffset</span><code>+{pct(rollChanceOffset)}</code>
+				<span>statWeightOffset</span><code>+{statWeightOffset}</code>
+				<span>higherPickOffset</span><code>+{pct(higherPickOffset)}</code>
+				<span>numRolls</span><code>{numRolls}</code>
+				<span>cappedChance</span><code>{pct(cappedChance)}</code>
+				<span>rollChance</span><code>{pct(rollChance)}</code>
+				<span>statPickChance</span><code>{pct(statPickChance)}</code>
+				<span>higherPickChance</span><code>{pct(higherPickChance)}</code>
+				<span>genderChance</span><code>{pct(genderChance)}</code>
+				<span>fullRollChance</span><code>{pct(fullRollChance)}</code>
+				<span>anyMutChance</span><code>{pct(anyMutChance)}</code>
+				<span>successChance</span><code>{pct(successChance)}</code>
+				<span>failChance</span><code>{pct(failChance)}</code>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>
 
 <style lang="postcss">

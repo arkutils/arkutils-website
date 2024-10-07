@@ -1,42 +1,35 @@
 <script lang="ts">
-	export let blockMutable = false;
-	export let blockRobust = false;
+	import { range } from '$lib/utils';
+	import { traitDefinitions } from './traits';
+
+	export let block: string[] = [];
 
 	export let value: string = '';
 
 	$: traitTier = value.match(/\[(\d)\]/)?.[1] ?? '0';
-
-	$: {
-		if (blockMutable && value.startsWith('Mutable')) {
-			value = '';
-		}
-		if (blockRobust && value.startsWith('Robust')) {
-			value = '';
-		}
-	}
 </script>
 
 <select
 	bind:value
-	class="select select-bordered select-sm w-40 md:w-32 t{traitTier} bg-base-200 border-"
-	class:border-yellow-600={value.startsWith('Mutable')}
-	class:border-rose-600={value.startsWith('Robust')}
+	class="select select-bordered select-sm w-48 shrink min-w-0 t{traitTier} bg-base-200"
+	class:border-amber-600={value.startsWith('MutableTarget')}
+	class:border-rose-600={value.startsWith('MutableOther')}
+	class:border-indigo-500={value.startsWith('Robust')}
 >
 	<option value="" class="t0" selected={value === ''}>-</option>
-	{#if !blockMutable}
-		{#each [1, 2, 3] as i}
-			<option value="Mutable[{i}]" class="t{i}" class:font-bold={value === `Mutable[${i}]`}
-				>Mutable T{i}</option
-			>
-		{/each}
-	{/if}
-	{#if !blockRobust}
-		{#each [1, 2, 3] as i}
-			<option value="Robust[{i}]" class="t{i}" class:font-bold={value === `Robust[${i}]`}
-				>Robust T{i}</option
-			>
-		{/each}
-	{/if}
+
+	{#each Object.entries(traitDefinitions) as [traitName, trait]}
+		{#if !(block.includes(traitName) && !value.startsWith(traitName))}
+			{#each range(trait.maxTiers) as i}
+				<option
+					value="{traitName}[{i + 1}]"
+					class="t{i + 1}"
+					class:font-bold={value === `${traitName}[${i + 1}]`}
+					>{trait.name(i + 1)}
+				</option>
+			{/each}
+		{/if}
+	{/each}
 </select>
 
 <style lang="postcss">

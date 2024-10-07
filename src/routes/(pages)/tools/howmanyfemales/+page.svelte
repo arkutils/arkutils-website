@@ -17,13 +17,13 @@
 	const BASE_STAT_WEIGHT = 1;
 
 	const MAX_TRAITS = 5;
-	const MAX_MUTABLE_STACKS = 3;
-	const MAX_ROBUST_STACKS = 3;
-	const MUTABLE_ROLL_CHANCE_EFFECTS = [0.01, 0.015, 0.02];
-	const MUTABLE_STAT_WEIGHT_EFFECTS = [0.5, 0.75, 1.0];
-	const ROBUST_HIGHER_PICK_EFFECTS = [0.015, 0.0225, 0.03];
-
-	const BEST_TRAITS = ['Mutable[3]', 'Mutable[3]', 'Mutable[3]', 'Robust[3]', 'Robust[3]'];
+	const BEST_TRAITS = [
+		'MutableTarget[3]',
+		'MutableTarget[3]',
+		'MutableTarget[3]',
+		'Robust[3]',
+		'Robust[3]',
+	];
 
 	// User inputs
 	let numStats = 6; // @hmr:keep
@@ -37,9 +37,17 @@
 	let showBreakdown = false; // @hmr:keep
 
 	// Collect values from traits
-	$: rollChanceOffset = gatherTraitEffects('Mutable', MUTABLE_ROLL_CHANCE_EFFECTS, matTraits, patTraits);
-	$: statWeightOffset = gatherTraitEffects('Mutable', MUTABLE_STAT_WEIGHT_EFFECTS, matTraits, patTraits);
-	$: higherPickOffset = gatherTraitEffects('Robust', ROBUST_HIGHER_PICK_EFFECTS, matTraits, patTraits);
+	$: rollChanceOffset =
+		gatherTraitEffects('MutableTarget', 'rollChance', matTraits, patTraits) +
+		gatherTraitEffects('MutableOther', 'rollChance', matTraits, patTraits);
+	$: targetStatWeightOffset = gatherTraitEffects(
+		'MutableTarget',
+		'targetStatWeight',
+		matTraits,
+		patTraits
+	);
+	$: offStatWeightOffset = gatherTraitEffects('MutableOther', 'otherStatWeight', matTraits, patTraits);
+	$: higherPickOffset = gatherTraitEffects('Robust', 'higherPick', matTraits, patTraits);
 
 	// Decide base values from settings
 	$: numRolls = usingSPlus ? 1 : 3;
@@ -47,7 +55,8 @@
 	$: rollChance = usingSPlus ? 1 : BASE_ROLL_CHANCE + rollChanceOffset;
 	$: statPickChance = usingSPlus
 		? 1 / numStats // S+ does not respect traits currently
-		: (BASE_STAT_WEIGHT + statWeightOffset) / (numStats * BASE_STAT_WEIGHT + statWeightOffset);
+		: (BASE_STAT_WEIGHT + targetStatWeightOffset) /
+		  (numStats * BASE_STAT_WEIGHT + targetStatWeightOffset + offStatWeightOffset);
 	$: higherPickChance = usingSPlus ? BASE_HIGHER_PICK_CHANCE : BASE_HIGHER_PICK_CHANCE + higherPickOffset;
 	$: genderChance = acceptMalesOnly ? 0.5 : 1;
 
@@ -141,7 +150,7 @@
 
 <Metadata
 	title="How many females are needed for mutating?"
-	description="This calculator will help you to find out how many females are needed for your breeding setup in ARK: Survival Evolved. You can enter how many possible stats you can mutate and also get information on when you use the S+ Mutator."
+	description="This calculator will help you to find out the mutation chance and how many females are needed for your breeding setup in ARK: Survival Evolved. You can enter how many possible stats you can mutate and also get information on when you use the S+ Mutator."
 	preview="/tools/howmanyfemales"
 />
 
@@ -164,20 +173,20 @@
 <header>
 	<h1 class="title mb-4">How many females are needed?</h1>
 	<p class="my-2">
-		This little tool helps you to find out how many females you might want to use when breeding for
-		mutations in ARK.
+		This little tool helps you to find out your mutation chance, and how many females you might want to
+		use when breeding for mutations in ARK.
 	</p>
 	<p class="my-2">
-		The chance to get your specific stat mutation (and therefore the number of females needed) is
-		affected by how many mutable stats the species has, whether one parent has more than 20 mutations,
-		and is hugely improved by the new trait system from Bob's Tall Tales, or if you are using the S+
-		Mutator.
+		The chance to get a specific stat mutation (and therefore the number of females needed) is affected
+		by how many mutable stats the species has and whether one parent has more than 20 mutations. It is
+		also hugely improved by the new trait system introduced with ASA Aberration, or if you are using the
+		S+ Mutator.
 	</p>
 </header>
 
 <div class="flex flex-col gap-8 xs:items-center">
 	<section
-		class="grid grid-rows-[auto,auto,auto] sm:grid-rows-[auto,auto] sm:grid-cols-[auto,auto] gap-y-4 gap-x-8 mt-6"
+		class="grid grid-rows-[auto,auto,auto] sm:grid-rows-[auto,auto] sm:grid-cols-[auto,auto] gap-y-4 gap-x-8 mt-6 self-stretch"
 	>
 		<!-- Number of stats -->
 		<div class="flex flex-col gap-1 stat-buttons">
@@ -233,16 +242,22 @@
 				<p class="italic text-base-content/50 text-sm">(disabled when S+ Mutator is selected)</p>
 			{:else}
 				<p class="flex w-full flex-col sm:flex-row gap-x-2 justify-between">
-					<span class="whitespace-nowrap">
+					<span class="whitespace-nowrap" title="Base chance is 2.5%">
 						<code>+{pct(rollChanceOffset)}</code>
 						<span class="text-sm">per-roll mutation chance</span>
 					</span>
-					<span class="whitespace-nowrap">
-						<code>+{statWeightOffset}</code> <span class="text-sm">to stat weight</span>
+					<span class="whitespace-nowrap" title="Base weight of target stat is 1">
+						<code>+{targetStatWeightOffset}</code> <span class="text-sm">to stat weight</span>
 					</span>
-					<span class="whitespace-nowrap">
+					{#if offStatWeightOffset}
+						<span class="whitespace-nowrap" title="Base weight of off-stat is 1">
+							<code class="text-error">+{offStatWeightOffset}</code>
+							<span class="text-sm">against stat weight</span>
+						</span>
+					{/if}
+					<span class="whitespace-nowrap" title="Base chance is 55%">
 						<code>+{pct(higherPickOffset)}</code>
-						<span class="text-sm">to higher stat selection chance</span>
+						<span class="text-sm">to select higher stat</span>
 					</span>
 				</p>
 				<div class="grid grid-cols-2 md:grid-rows-2 md:grid-cols-1 gap-x-4 gap-y-2">
@@ -251,7 +266,7 @@
 							<h3>Father</h3>
 							<button
 								class="btn btn-xs btn-ghost ml-0 md:ml-auto hover:bg-primary-focus hover:text-primary-content"
-								title="Set father's traits to the best possible"
+								title="Set father's traits to the best possible - note that in a few cases, Mutable (off-stat) might be slightly better than Robust"
 								on:click={() => (patTraits = Array.from(BEST_TRAITS))}
 							>
 								Set to best
@@ -264,19 +279,14 @@
 								Clear
 							</button>
 						</div>
-						<TraitGroup
-							bind:traits={patTraits}
-							slots={MAX_TRAITS}
-							maxMutables={MAX_MUTABLE_STACKS}
-							maxRobusts={MAX_ROBUST_STACKS}
-						/>
+						<TraitGroup bind:traits={patTraits} slots={MAX_TRAITS} />
 					</div>
 					<div>
 						<div class="flex gap-3 items-baseline">
 							<h3>Mother</h3>
 							<button
 								class="btn btn-xs btn-ghost ml-0 md:ml-auto"
-								title="Set mother's traits to the best possible"
+								title="Set mother's traits to the best possible - note that in a few cases, Mutable (off-stat) might be slightly better than Robust"
 								on:click={() => (matTraits = Array.from(BEST_TRAITS))}
 							>
 								Set to best
@@ -289,12 +299,7 @@
 								Clear
 							</button>
 						</div>
-						<TraitGroup
-							bind:traits={matTraits}
-							slots={MAX_TRAITS}
-							maxMutables={MAX_MUTABLE_STACKS}
-							maxRobusts={MAX_ROBUST_STACKS}
-						/>
+						<TraitGroup bind:traits={matTraits} slots={MAX_TRAITS} />
 					</div>
 				</div>
 			{/if}
@@ -303,7 +308,7 @@
 
 	<!-- Results -->
 	<div class="flex flex-col justify-center text-center bg-base-200 rounded-lg shadow px-4 py-2 pb-4">
-		<h2 class="self-start mb-2">Results</h2>
+		<h2 class="self-start mb-2">Breeding Pool Size</h2>
 		<div
 			class="stats shadow grid-cols-2 grid-rows-2 grid-flow-row sm:grid-cols-[repeat(4,auto)] sm:grid-rows-1"
 		>
@@ -435,12 +440,15 @@
 							<p>Chance to pick the correct stat:</p>
 							<div class="flex flex-col self-center">
 								<code class="text-base-content">
-									<span class="text-nowrap"> (1 + mutable effects) </span> in
-									<span class="text-nowrap"> (num stats + mutable effects) </span>
+									<span class="text-nowrap"> (1 + target-stat mutable effects) </span> in
+									<span class="text-nowrap">
+										(num stats + target-stat mutable effects + off-stat mutable effects)
+									</span>
 								</code>
 								<code>
 									<span class="text-nowrap">
-										= ({BASE_STAT_WEIGHT} + {statWeightOffset}) / ({numStats} + {statWeightOffset})
+										= ({BASE_STAT_WEIGHT} + {targetStatWeightOffset}) / ({numStats} + {targetStatWeightOffset}
+										+ {offStatWeightOffset})
 									</span>
 									<span class="text-nowrap">= {pct(statPickChance)}</span>
 								</code>
@@ -510,7 +518,8 @@
 			<h2 class="self-start mb-2">Internal variables</h2>
 			<div class="grid grid-cols-2 font-mono">
 				<span>rollChanceOffset</span><code>+{pct(rollChanceOffset)}</code>
-				<span>statWeightOffset</span><code>+{statWeightOffset}</code>
+				<span>targetStatWeightOffset</span><code>+{targetStatWeightOffset}</code>
+				<span>offStatWeightOffset</span><code>+{offStatWeightOffset}</code>
 				<span>higherPickOffset</span><code>+{pct(higherPickOffset)}</code>
 				<span>numRolls</span><code>{numRolls}</code>
 				<span>cappedChance</span><code>{pct(cappedChance)}</code>
@@ -525,6 +534,24 @@
 			</div>
 		</div>
 	{/if}
+
+	<!-- Changelog -->
+	<div class="w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-2">
+		<h2 class="mb-2">Notable Changes</h2>
+		<h3>September 5th, 2024</h3>
+		<ul class="pl-8 pr-4 pb-2 list-disc list-outside">
+			<li>
+				Added support for Traits from Bob's Tall Tales, massively improving your mutation chances.
+			</li>
+		</ul>
+		<h3>October 7th, 2024</h3>
+		<ul class="pl-8 pr-4 pb-2 list-disc list-outside">
+			<li>
+				Added ability to use off-stat Mutable traits, which can be a little better than Robust before
+				you have enough good target stat Mutables.
+			</li>
+		</ul>
+	</div>
 </div>
 
 <style lang="postcss">

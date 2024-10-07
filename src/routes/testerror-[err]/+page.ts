@@ -6,5 +6,5 @@ export const prerender = false;
 
 export const load: PageLoad = async ({ params }) => {
     const err = parseInt(params.err);
-    throw error(err || 500, 'test error');
+    error(err || 500, 'test error');
 }

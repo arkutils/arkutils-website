@@ -56,7 +56,7 @@
 	$: statPickChance = usingSPlus
 		? 1 / numStats // S+ does not respect traits currently
 		: (BASE_STAT_WEIGHT + targetStatWeightOffset) /
-		  (numStats * BASE_STAT_WEIGHT + targetStatWeightOffset + offStatWeightOffset);
+			(numStats * BASE_STAT_WEIGHT + targetStatWeightOffset + offStatWeightOffset);
 	$: higherPickChance = usingSPlus ? BASE_HIGHER_PICK_CHANCE : BASE_HIGHER_PICK_CHANCE + higherPickOffset;
 	$: genderChance = acceptMalesOnly ? 0.5 : 1;
 

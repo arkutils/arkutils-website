@@ -20,5 +20,5 @@ export const load: PageLoad = async ({ params }) => {
     }
 
     // Not found, so redirect to the main page
-    throw redirect(308, '/wildstats');
+    redirect(308, '/wildstats');
 };

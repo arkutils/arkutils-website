@@ -25,5 +25,5 @@ export const load: PageLoad = async ({ params }) => {
     }
 
     // Not found or bad format, so redirect to the main page
-    throw redirect(308, '/tools/wildstats');
+    redirect(308, '/tools/wildstats');
 };

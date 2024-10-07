@@ -22,11 +22,11 @@ export const load: PageLoad = async ({ params }) => {
         }
 
         // This boss has difficulties, so redirect to gamma by default
-        throw redirect(308, `/boss/${map}/${boss}-gamma`);
+        redirect(308, `/boss/${map}/${boss}-gamma`);
     } catch {
         // ignore
     }
 
     // Not found, so redirect to the main boss page
-    throw redirect(308, '/boss');
+    redirect(308, '/boss');
 };

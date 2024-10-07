@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "csstools.postcss",
+        "svelte.svelte-vscode"
+    ]
+}

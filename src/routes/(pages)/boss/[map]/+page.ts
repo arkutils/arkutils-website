@@ -14,7 +14,7 @@ export const load: PageLoad<{ mapId: string, map: BossMap }> = async ({ params }
     const data = boss_data[map];
     if (!data) {
         // Not found, so redirect to the main boss page
-        throw redirect(308, '/boss');
+        redirect(308, '/boss');
     }
 
     // Got everything, render it

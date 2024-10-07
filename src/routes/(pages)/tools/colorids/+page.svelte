@@ -222,6 +222,7 @@
 
 	<!-- Container -->
 	<section
+		role="dialog"
 		transition:fly={{ x: -5, y: -10 }}
 		class="fixed left-0 top-0 w-full h-full grid content-center justify-center"
 		on:click={() => (displayedColor = null)}

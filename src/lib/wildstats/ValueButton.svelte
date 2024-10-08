@@ -7,7 +7,7 @@
 
 <label class="flex items-center gap-4">
 	<button
-		class="btn btn-sm w-20 !outline-secondary"
+		class="btn btn-sm w-20"
 		class:btn-active={active}
 		selected={active}
 		aria-selected={active}

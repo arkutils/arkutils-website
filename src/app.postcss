@@ -4,28 +4,28 @@
 @tailwind utilities;
 
 a {
-	@apply text-primary;
+    @apply text-primary;
 }
 a:hover {
-	@apply text-primary-focus;
+    @apply text-[color-mix(in_oklab,oklch(var(--p)),black_7%)];
 }
 
 h1 {
-	@apply text-primary font-bold text-3xl;
+    @apply text-primary font-bold text-3xl;
 }
 
 h2 {
-	@apply text-primary font-bold text-xl;
+    @apply text-primary font-bold text-xl;
 }
 
 h3 {
-	@apply text-primary font-bold text-base;
+    @apply text-primary font-bold text-base;
 }
 
 :focus {
-	@apply outline-primary/50;
+    @apply outline-secondary/70;
 }
 
 code {
-	@apply font-mono text-secondary;
+    @apply font-mono text-secondary;
 }

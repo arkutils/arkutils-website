@@ -168,22 +168,16 @@
 	}
 
 	/* Colour active buttons in the groups */
+	.level-buttons :global(button) {
+		@apply outline-secondary;
+	}
 	.level-buttons :global(.btn-active) {
 		@apply border-secondary bg-secondary text-secondary-content;
-		&:hover {
-			@apply border-secondary-focus bg-secondary-focus;
-		}
-		&:focus-visible {
-			outline: 2px solid hsl(var(--s));
-		}
+	}
+	.stats-buttons :global(button) {
+		@apply outline-primary;
 	}
 	.stats-buttons :global(.btn-active) {
 		@apply border-primary bg-primary text-primary-content;
-		&:hover {
-			@apply border-primary-focus bg-primary-focus;
-		}
-		&:focus-visible {
-			outline: 2px solid hsl(var(--p));
-		}
 	}
 </style>

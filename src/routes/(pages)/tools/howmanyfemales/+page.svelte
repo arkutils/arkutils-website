@@ -561,12 +561,6 @@
 	}
 	.stat-buttons :global(.btn-active) {
 		@apply border-secondary bg-secondary text-secondary-content;
-		&:hover {
-			@apply border-secondary-focus bg-secondary-focus;
-		}
-		&:focus-visible {
-			outline: 2px solid hsl(var(--p));
-		}
 	}
 	.stat-row {
 		@apply border-l-transparent sm:border-l-base-content/10;

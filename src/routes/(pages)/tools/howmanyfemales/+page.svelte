@@ -138,12 +138,12 @@
 
 		if (successChance < 0.5) {
 			const lightness = 50 + successChance * 2 * 50;
-			return `${RED_HUE} 100% ${lightness}%`;
+			return `hsl(${RED_HUE} 100% ${lightness}%)`;
 		} else if (successChance < GOOD_SUCCESS) {
 			const lightness = 100 - (successChance - 0.5) * (1 / (GOOD_SUCCESS - 0.5)) * 50;
-			return `${GREEN_HUE} 100% ${lightness}%`;
+			return `hsl(${GREEN_HUE} 100% ${lightness}%)`;
 		} else {
-			return `${GREEN_HUE} 100% 50%`;
+			return `hsl(${GREEN_HUE} 100% 50%)`;
 		}
 	}
 </script>
@@ -342,7 +342,7 @@
 			<input
 				style:--range-shdw={calcSliderColor(customFailChance)}
 				type="range"
-				class="range range-accent"
+				class="range range-accent text-[var(--range-shdw)]"
 				min="0"
 				max="1"
 				step="0.001"

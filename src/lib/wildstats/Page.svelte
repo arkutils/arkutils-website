@@ -42,7 +42,7 @@
 
 	const updateLevel = debounceFn(() => {
 		n = clamp(LEVEL_MIN, level, LEVEL_MAX);
-	}, 50);
+	}, 1);
 
 	onDestroy(() => {
 		updateLevel.cancel();

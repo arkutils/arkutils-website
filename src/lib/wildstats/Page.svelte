@@ -5,11 +5,12 @@
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	import { clamp } from '$lib/utils/math';
 
 	import Metadata from '$lib/Metadata.svelte';
+	import { debounceFn } from '$lib/utils/debouncestore';
 	import StatDiagram from '$lib/wildstats/StatDiagram.svelte';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
 
@@ -27,13 +28,25 @@
 	$: if (typeof history !== 'undefined') {
 		clearTimeout(urlTimeout);
 		urlTimeout = setTimeout(() => {
-			goto(`/tools/wildstats/${level}/${stats}`, { replaceState: true, noScroll: true });
+			goto(`/tools/wildstats/${n}/${stats}`, { replaceState: true, noScroll: true });
 		}, 1000);
 	}
+	onDestroy(() => {
+		clearTimeout(urlTimeout);
+	});
 
 	// Setup the parameters for the diagram
 	$: p = 1 / stats;
-	$: n = clamp(LEVEL_MIN, level, LEVEL_MAX);
+	let n = clamp(LEVEL_MIN, level, LEVEL_MAX);
+	$: level, updateLevel();
+
+	const updateLevel = debounceFn(() => {
+		n = clamp(LEVEL_MIN, level, LEVEL_MAX);
+	}, 50);
+
+	onDestroy(() => {
+		updateLevel.cancel();
+	});
 </script>
 
 <Metadata
@@ -102,6 +115,7 @@
 					class:input-secondary={level !== 150 && level !== 217 && level !== 224}
 					bind:value={level}
 				/>
+				<!-- svelte-ignore a11y-no-static-element-interactions : we're actually disabling all interaction -->
 				<span
 					on:click|preventDefault
 					on:focus|preventDefault

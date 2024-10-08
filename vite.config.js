@@ -8,6 +8,11 @@ const config = {
 
     ssr: {
         noExternal: ['devalue'],
+        optimizeDeps: {
+            exclude: [
+                'cookie-storage',
+            ],
+        }
     }
 };
 

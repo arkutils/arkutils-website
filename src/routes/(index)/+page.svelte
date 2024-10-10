@@ -14,7 +14,16 @@
 
 	import { slide } from 'svelte/transition';
 
-	const buttons = ['spawnexact', 'incubator', 'wildstats', 'colorid', 'bossopedia', 'officialdownload'];
+	const buttons = [
+		'spawnexact',
+		'incubator',
+		'wildstats',
+		'colorid',
+		'bossopedia',
+		'officialdownload',
+		'howmanyfemales',
+		'saddlecalculator',
+	];
 
 	let show: { [key: string]: boolean } = {};
 

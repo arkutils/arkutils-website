@@ -61,7 +61,7 @@
 					<figure>
 						<Brontosaur />
 					</figure>
-					<span><code>/spawnexactdino</code><br /><b>Generator</b></span>
+					<span><code class="whitespace-nowrap">/spawnexactdino</code><br /><b>Generator</b></span>
 					<button class="help" on:click|preventDefault={() => toggle('spawnexact')}> ? </button>
 				</a>
 				{#if show.spawnexact}

@@ -55,13 +55,13 @@
 	<div class="grid grid-cols-2 content-center justify-center gap-x-2">
 		<div class="flex flex-col items-center">
 			<span class="text-sm font-medium whitespace-nowrap">All Wild</span>
-			{#each [0, 1, 35, 100, 254, 255] as v}
+			{#each [0, 1, 35, 60, 100, 254, 255] as v}
 				<button on:click={() => setAllWild(v)} aria-label="Set all wild stats to {v}">{v}</button>
 			{/each}
 		</div>
 		<div class="flex flex-col items-center">
 			<span class="text-sm font-medium whitespace-nowrap">All Tamed</span>
-			{#each [0, 1, 35, 100, 254, 255] as v}
+			{#each [0, 1, 35, 60, 100, 254, 255] as v}
 				<button on:click={() => setAllTamed(v)} aria-label="Set all tamed stats to {v}">{v}</button>
 			{/each}
 		</div>

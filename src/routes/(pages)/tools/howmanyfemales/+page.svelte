@@ -302,6 +302,12 @@
 						<TraitGroup bind:traits={matTraits} slots={MAX_TRAITS} />
 					</div>
 				</div>
+				<div>
+					<p class="text-sm italic text-center">
+						Traits should usually match your target stat, however using off-stat Mutables can
+						sometimes be beneficial.
+					</p>
+				</div>
 			{/if}
 		</div>
 	</section>

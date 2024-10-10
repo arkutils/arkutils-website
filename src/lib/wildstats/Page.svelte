@@ -5,7 +5,7 @@
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	import { clamp } from '$lib/utils/math';
 
@@ -18,11 +18,6 @@
 	export let level = 224;
 
 	let urlTimeout: any;
-	let isFirefox = false;
-
-	onMount(() => {
-		isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-	});
 
 	// Adjust the address bar to match the current level and stats
 	$: if (typeof history !== 'undefined') {
@@ -107,9 +102,9 @@
 			<label class="flex items-center gap-4">
 				<input
 					type="number"
-					min="30"
-					max="300"
-					step="1"
+					min={LEVEL_MIN}
+					max={LEVEL_MAX}
+					step={1}
 					placeholder="Type here"
 					class="input input-sm input-bordered w-20"
 					class:input-secondary={level !== 150 && level !== 217 && level !== 224}
@@ -123,7 +118,7 @@
 					on:keypress|preventDefault
 				>
 					<p class="text-sm">Custom level</p>
-					{#if !isFirefox}<p class="text-base-content/50 text-sm">Or drag the slider below</p>{/if}
+					<p class="text-base-content/50 text-sm">Or drag the slider below</p>
 				</span>
 			</label>
 		</div>
@@ -160,16 +155,14 @@
 </div>
 
 <!-- Level slider -->
-{#if !isFirefox}
-	<input
-		class="range range-xs range-secondary mt-2"
-		type="range"
-		min="30"
-		max={LEVEL_MAX}
-		step="1"
-		bind:value={level}
-	/>
-{/if}
+<input
+	class="range range-xs range-secondary mt-2"
+	type="range"
+	min={LEVEL_MIN}
+	max={LEVEL_MAX}
+	step={1}
+	bind:value={level}
+/>
 
 <!-- Diagram -->
 <h2 class="mt-4 mb-2">Stat distribution</h2>

@@ -10,6 +10,7 @@
 	import { clamp } from '$lib/utils/math';
 
 	import Metadata from '$lib/Metadata.svelte';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 	import { debounceFn } from '$lib/utils/debouncestore';
 	import StatDiagram from '$lib/wildstats/StatDiagram.svelte';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
@@ -58,12 +59,7 @@
 			<li>Stat Evaluator</li>
 		</ul>
 	</nav>
-	<div
-		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page fully supports ARK: Survival Ascended"
-	>
-		Works for ASA
-	</div>
+	<SupportedWidget aseSupport="full" asaSupport="full" />
 </div>
 
 <h1 class="title">How good are my stats?</h1>

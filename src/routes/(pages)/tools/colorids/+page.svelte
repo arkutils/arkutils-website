@@ -12,6 +12,7 @@
 	import Metadata from '$lib/Metadata.svelte';
 	import ModSelector from '$lib/ModSelector.svelte';
 	import { selectedModId } from '$lib/stores';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 	import { loadAll } from '@square/svelte-store';
 
 	const BASE_COLORID = 1;
@@ -162,12 +163,7 @@
 			<li>Color IDs</li>
 		</ul>
 	</nav>
-	<div
-		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page is updated for ARK: Survival Ascended"
-	>
-		Works for ASA
-	</div>
+	<SupportedWidget aseSupport="full" asaSupport="full" />
 </div>
 
 <h1 class="mb-4">ARK Color IDs</h1>

@@ -5,6 +5,7 @@
 	// import Saddle from '$lib/imgs/Saddle.svelte';
 	import BetterSaddle from '$lib/imgs/toolicons/BetterSaddle.svelte';
 	import Metadata from '$lib/Metadata.svelte';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 
 	let crafting_skill = 100;
 	let saddle_armor = 25;
@@ -72,12 +73,11 @@
 			<li>Saddle calculator</li>
 		</ul>
 	</nav>
-	<div
-		class="bg-error text-error-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page is not updated for ARK: Survival Ascended"
-	>
-		Not verified for ASA
-	</div>
+	<SupportedWidget
+		aseSupport="full"
+		asaSupport="partial"
+		asaText="Not yet fully verified for Ark: Survival Ascended but should work as expected"
+	/>
 </div>
 
 <aside class="text-[6rem] xs:text-[10rem] float-right">

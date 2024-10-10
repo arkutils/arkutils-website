@@ -14,6 +14,7 @@
 	import Weight from '$lib/imgs/stats/Weight.svelte';
 	import Metadata from '$lib/Metadata.svelte';
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 	import { loadAll } from '@square/svelte-store';
 
 	const STAT_NAMES = [
@@ -247,12 +248,7 @@
 			<li>Incubator Calculator</li>
 		</ul>
 	</nav>
-	<div
-		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="Fully compatible with ARK: Survival Ascended"
-	>
-		Works for ASA
-	</div>
+	<SupportedWidget aseSupport="full" asaSupport="full" />
 </div>
 
 <main class="flex flex-col gap-4">

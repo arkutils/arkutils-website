@@ -6,6 +6,7 @@
 	import Metadata from '$lib/Metadata.svelte';
 	import SpeciesSelector from '$lib/SpeciesSelector.svelte';
 	import StatEntry from '$lib/StatEntry.svelte';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 
 	let wild = [0, 0, 0, 0, 0, 0, 0];
 	let tamed = [0, 0, 0, 0, 0, 0, 0];
@@ -45,12 +46,7 @@
 			<li>Spawn Exact Dino</li>
 		</ul>
 	</nav>
-	<div
-		class="bg-primary text-primary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="This page fully supports ARK: Survival Ascended"
-	>
-		Works for ASA
-	</div>
+	<SupportedWidget aseSupport="full" asaSupport="full" />
 </div>
 
 <main class="flex flex-col gap-8">

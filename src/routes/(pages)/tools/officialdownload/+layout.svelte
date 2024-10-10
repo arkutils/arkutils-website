@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Metadata from '$lib/Metadata.svelte';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 </script>
 
 <Metadata
@@ -8,12 +9,19 @@
 	preview="tools/officialdownload"
 />
 
-<nav class="text-sm breadcrumbs mb-2">
-	<ul class="text-sm ml-4">
-		<li><a href="/">Home</a></li>
-		<li>Official Server Downloads</li>
-	</ul>
-</nav>
+<div class="flex">
+	<nav class="text-sm breadcrumbs mb-2 flex-grow">
+		<ul class="text-sm ml-4">
+			<li><a href="/">Home</a></li>
+			<li>Official Server Downloads</li>
+		</ul>
+	</nav>
+	<SupportedWidget
+		aseSupport="full"
+		asaSupport="none"
+		asaText="No Official downloads for Ark: Survival Ascended yet!"
+	/>
+</div>
 
 <header>
 	<h1 class="title mb-4">Official Server Downloads</h1>

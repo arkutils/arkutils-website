@@ -3,6 +3,7 @@
 
 	import { page } from '$app/stores';
 	import Metadata from '$lib/Metadata.svelte';
+	import SupportedWidget from '$lib/SupportedWidget.svelte';
 	import { pct as fmtPct } from '$lib/utils/math';
 	import ValueButton from '$lib/wildstats/ValueButton.svelte';
 	import TraitGroup from './TraitGroup.svelte';
@@ -162,12 +163,7 @@
 			<li>How many females?</li>
 		</ul>
 	</nav>
-	<div
-		class="bg-secondary text-secondary-content cursor-default -mt-8 pt-8 px-3 mb-2 rounded-b-xl font-bold"
-		title="Verified for ARK: Survival Ascended"
-	>
-		Works for ASA
-	</div>
+	<SupportedWidget aseSupport="full" asaSupport="full" />
 </div>
 
 <header>
@@ -237,7 +233,7 @@
 
 		<!-- Traits -->
 		<div class="flex flex-col gap-3 sm:gap-3 sm:col-span-2">
-			<h2>Traits (Bob's Tall Tales)</h2>
+			<h2>Traits (Ark: Survival Ascended)</h2>
 			{#if usingSPlus}
 				<p class="italic text-base-content/50 text-sm">(disabled when S+ Mutator is selected)</p>
 			{:else}

@@ -214,6 +214,13 @@
 </div>
 
 <style lang="postcss">
+	@media (prefers-reduced-motion: reduce) {
+		* {
+			animation-delay: 0ms !important;
+			animation-duration: 1ms !important;
+		}
+	}
+
 	a {
 		@apply text-base-content;
 	}

@@ -23,17 +23,25 @@
 		'officialdownload',
 		'howmanyfemales',
 		'saddlecalculator',
-	];
+	] as const;
 
-	let show: { [key: string]: boolean } = {};
+	type ButtonTypes = (typeof buttons)[number];
 
-	function toggle(name: string) {
+	let show = new Map<ButtonTypes, boolean>();
+
+	function toggle(name: ButtonTypes) {
+		// Deactivate all other buttons
 		buttons.forEach((otherName) => {
 			if (otherName !== name) {
-				show[otherName] = false;
+				show.set(otherName, false);
 			}
 		});
-		show[name] = !show[name];
+
+		// Toggle this button
+		show.set(name, !show.get(name));
+
+		// Trigger Svelte reactivity
+		show = show;
 	}
 </script>
 
@@ -64,7 +72,7 @@
 					<span><code class="whitespace-nowrap">/spawnexactdino</code><br /><b>Generator</b></span>
 					<button class="help" on:click|preventDefault={() => toggle('spawnexact')}> ? </button>
 				</a>
-				{#if show.spawnexact}
+				{#if show.get('spawnexact')}
 					<div transition:slide class="info">
 						Lets you spawn a dinosaur with the <b>exact stats</b> and <b>colors</b> you need.
 					</div>
@@ -78,7 +86,7 @@
 					<span>Incubator<br /><b>Calculator</b></span>
 					<button class="help" on:click|preventDefault={() => toggle('incubator')}> ? </button>
 				</a>
-				{#if show.incubator}
+				{#if show.get('incubator')}
 					<div transition:slide class="info">
 						Let's you calculate the <b>raw stats</b> when providing level points and the other way
 						around.
@@ -96,7 +104,7 @@
 					</span>
 					<button class="help" on:click|preventDefault={() => toggle('wildstats')}> ? </button>
 				</a>
-				{#if show.wildstats}
+				{#if show.get('wildstats')}
 					<div transition:slide class="info">
 						See how your stat roll compares to the possible levels. Find out if you got a good or
 						average roll.
@@ -116,7 +124,7 @@
 						?
 					</button>
 				</a>
-				{#if show.howmanyfemales}
+				{#if show.get('howmanyfemales')}
 					<div transition:slide class="info">
 						This little calculator helps you to find out how many females you need for your
 						breeding setup.
@@ -136,7 +144,7 @@
 						?
 					</button>
 				</a>
-				{#if show.saddlecalculator}
+				{#if show.get('saddlecalculator')}
 					<div transition:slide class="info">
 						Helps you to calculate the maximum saddle armor when crafting a blueprint with
 						crafting skill.
@@ -158,7 +166,7 @@
 					<span>Dinosaur<br /><b>Color IDs</b></span>
 					<button class="help" on:click|preventDefault={() => toggle('colorid')}> ? </button>
 				</a>
-				{#if show.colorid}
+				{#if show.get('colorid')}
 					<div transition:slide class="info">
 						Shows you <b>all available color IDs</b> for dinosaurs.
 					</div>
@@ -176,7 +184,7 @@
 					</b>
 					<button class="help" on:click|preventDefault={() => toggle('bossopedia')}> ? </button>
 				</a>
-				{#if show.bossopedia}
+				{#if show.get('bossopedia')}
 					<div transition:slide class="info">
 						Shows you <b>everything you need to know</b> about bosses.
 					</div>
@@ -195,7 +203,7 @@
 						?
 					</button>
 				</a>
-				{#if show.officialdownload}
+				{#if show.get('officialdownload')}
 					<div transition:slide class="info">
 						Find your <b>server backup</b> for your official server.
 					</div>

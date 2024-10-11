@@ -24,7 +24,7 @@
 	$: if (typeof history !== 'undefined') {
 		clearTimeout(urlTimeout);
 		urlTimeout = setTimeout(() => {
-			goto(`/tools/wildstats/${n}/${stats}`, { replaceState: true, noScroll: true });
+			goto(`/tools/wildstats/${n}/${stats}`, { replaceState: true, noScroll: true, keepFocus: true });
 		}, 1000);
 	}
 	onDestroy(() => {

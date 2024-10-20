@@ -8,14 +8,16 @@
 	import StatEntry from '$lib/StatEntry.svelte';
 	import SupportedWidget from '$lib/SupportedWidget.svelte';
 
-	let wild = [0, 0, 0, 0, 0, 0, 0];
-	let tamed = [0, 0, 0, 0, 0, 0, 0];
-	let colors = [0, 0, 0, 0, 0, 0];
-	let wildColors = true;
-	let imprint = 0.0;
-	let imprintName = '';
-	let imprintID: number | null = null;
+	let wild = [0, 0, 0, 0, 0, 0, 0]; // @hmr:keep
+	let tamed = [0, 0, 0, 0, 0, 0, 0]; // @hmr:keep
+	let colors = [0, 0, 0, 0, 0, 0]; // @hmr:keep
+	let wildColors = true; // @hmr:keep
+	let imprint = 0.0; // @hmr:keep
+	let imprintName = ''; // @hmr:keep
+	let imprintID: string = ''; // @hmr:keep
 	let cmd: string | null = '';
+
+	$: sanitiseImprintID(imprintID);
 
 	$: if ($selectedSpecies) {
 		const sumWild = wild.reduce((a, b) => a + b, 1); // starts at 1
@@ -30,6 +32,14 @@
 		cmd += ` 0 0 0 20 20`;
 	} else {
 		cmd = null;
+	}
+
+	function sanitiseImprintID(id: string) {
+		// Ensure the imprint ID is a hex string of no more than 32 characters
+		const cleanID = id.replace(/[^0-9a-fA-F]/g, '').slice(0, 32);
+		if (cleanID !== imprintID) {
+			imprintID = cleanID;
+		}
 	}
 </script>
 
@@ -98,7 +108,7 @@
 					max="1"
 					step="0.01"
 					bind:value={imprint}
-					class="input input-xs w-18 bg-base-200 text-base-content text-center"
+					class="input input-xs w-24 bg-base-200 text-base-content text-center"
 				/>
 			</label>
 			<label
@@ -109,21 +119,24 @@
 				<input
 					type="text"
 					bind:value={imprintName}
-					class="input input-xs w-22 bg-base-200 text-base-content text-center"
+					class="input input-xs w-48 bg-base-200 text-base-content text-center"
 				/>
 			</label>
 			<label class="flex gap-2 items-baseline justify-between" title="Ark ID for rider imprint bonus">
-				Imprinter's Ark ID
+				Imprinter's ID
 				<input
-					type="number"
+					type="text"
 					placeholder=""
 					bind:value={imprintID}
-					class="input input-xs w-28 bg-base-200 text-base-content text-center"
+					class="input input-xs w-48 bg-base-200 text-base-content text-center"
 				/>
 			</label>
-			<span class="text-sm text-secondary italic self-end" title="Not the same as your Steam ID!"
-				>(showmyadminmanager for Ark ID)</span
-			>
+			<span class="text-sm text-secondary italic self-end" title="Not the same as your Steam ID!">
+				showmyadminmanager for Ark ID on ASE
+			</span>
+			<span class="text-sm text-secondary italic self-end" title="Not the same as your Steam ID!">
+				whoami for ID on ASA
+			</span>
 		</section>
 	</div>
 

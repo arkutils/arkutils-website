@@ -70,7 +70,7 @@
 	<nav class="text-sm breadcrumbs mb-2 flex-grow">
 		<ul class="text-sm ml-4">
 			<li><a href="/">Home</a></li>
-			<li>Saddle calculator</li>
+			<li>Saddle Calculator</li>
 		</ul>
 	</nav>
 	<SupportedWidget

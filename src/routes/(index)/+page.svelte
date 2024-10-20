@@ -5,6 +5,7 @@
 	import Brontosaur from '$lib/imgs/toolicons/Brontosaur.svelte';
 	import DinoHatching from '$lib/imgs/toolicons/DinoHatching.svelte';
 	import DinoLadies from '$lib/imgs/toolicons/DinoLadies.svelte';
+	import LittleAlienWormy from '$lib/imgs/toolicons/LittleAlienWormy.svelte';
 	import ProudDino from '$lib/imgs/toolicons/ProudDino.svelte';
 	import Pteranodon from '$lib/imgs/toolicons/Pteranodon.svelte';
 	import Rainbow from '$lib/imgs/toolicons/Rainbow.svelte';
@@ -23,6 +24,7 @@
 		'officialdownload',
 		'howmanyfemales',
 		'saddlecalculator',
+		'reapercalculator',
 	] as const;
 
 	type ButtonTypes = (typeof buttons)[number];
@@ -83,7 +85,7 @@
 					<figure>
 						<DinoHatching />
 					</figure>
-					<span>Incubator<br /><b>Calculator</b></span>
+					<span class="font-bold">Incubator<br />Calculator</span>
 					<button class="help" on:click|preventDefault={() => toggle('incubator')}> ? </button>
 				</a>
 				{#if show.get('incubator')}
@@ -148,6 +150,26 @@
 					<div transition:slide class="info">
 						Helps you to calculate the maximum saddle armor when crafting a blueprint with
 						crafting skill.
+					</div>
+				{/if}
+			</div>
+			<div>
+				<a class="tool" href="/tools/reapercalculator">
+					<figure class="!text-[80px] !ml-0">
+						<LittleAlienWormy />
+					</figure>
+					<span>
+						<div class="font-bold">Reaper Calculator</div>
+						<div class="text-sm">Baby levels for ASA</div>
+					</span>
+					<button class="help" on:click|preventDefault={() => toggle('reapercalculator')}>
+						?
+					</button>
+				</a>
+				{#if show.get('reapercalculator')}
+					<div transition:slide class="info">
+						This little calculator helps you calculating your Reaper baby level in ARK Survival
+						Ascended.
 					</div>
 				{/if}
 			</div>

@@ -77,7 +77,7 @@ export const traitDefinitions: Record<string, TraitInfo> = {
     },
     'MutableOther': {
         maxTiers: 3,
-        maxStacks: 3,
+        maxStacks: 5,
         name: tier => `Mutable (off-stat) T${tier}`,
         effects: {
             rollChance: [0.01, 0.015, 0.02],

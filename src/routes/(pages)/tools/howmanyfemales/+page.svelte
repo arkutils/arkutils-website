@@ -13,6 +13,7 @@
 	const GREEN_HUE = 107;
 	const GOOD_SUCCESS = 0.85;
 
+	const BASE_MUTATION_ROLLS = 3;
 	const BASE_ROLL_CHANCE = 0.025;
 	const BASE_HIGHER_PICK_CHANCE = 0.55;
 	const BASE_STAT_WEIGHT = 1;
@@ -27,6 +28,9 @@
 	];
 
 	// User inputs
+	let baseNumRolls = BASE_MUTATION_ROLLS; // @hmr:keep
+	let pctRollChance = BASE_ROLL_CHANCE * 100; // @hmr:keep
+	let pctPickHigherChance = Math.round(BASE_HIGHER_PICK_CHANCE * 100); // @hmr:keep
 	let numStats = 6; // @hmr:keep
 	let oneParentCapped = false; // @hmr:keep
 	let usingSPlus = false; // @hmr:keep
@@ -36,6 +40,10 @@
 	let matTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
 	let patTraits = Array(MAX_TRAITS).fill(''); // @hmr:keep
 	let showBreakdown = false; // @hmr:keep
+	let showOverrides = false; // @hmr:keep
+
+	$: baseRollChance = pctRollChance / 100;
+	$: basePickHigherChance = pctPickHigherChance / 100;
 
 	// Collect values from traits
 	$: rollChanceOffset =
@@ -51,14 +59,14 @@
 	$: higherPickOffset = gatherTraitEffects('Robust', 'higherPick', matTraits, patTraits);
 
 	// Decide base values from settings
-	$: numRolls = usingSPlus ? 1 : 3;
+	$: numRolls = usingSPlus ? 1 : baseNumRolls;
 	$: cappedChance = oneParentCapped ? 0.55 : 1;
-	$: rollChance = usingSPlus ? 1 : BASE_ROLL_CHANCE + rollChanceOffset;
+	$: rollChance = usingSPlus ? 1 : baseRollChance + rollChanceOffset;
 	$: statPickChance = usingSPlus
 		? 1 / numStats // S+ does not respect traits currently
 		: (BASE_STAT_WEIGHT + targetStatWeightOffset) /
 			(numStats * BASE_STAT_WEIGHT + targetStatWeightOffset + offStatWeightOffset);
-	$: higherPickChance = usingSPlus ? BASE_HIGHER_PICK_CHANCE : BASE_HIGHER_PICK_CHANCE + higherPickOffset;
+	$: higherPickChance = usingSPlus ? basePickHigherChance : basePickHigherChance + higherPickOffset;
 	$: genderChance = acceptMalesOnly ? 0.5 : 1;
 
 	// Intermediate calculations
@@ -375,6 +383,73 @@
 		</div>
 	</div>
 
+	<!-- Config override -->
+	<div class="collapse w-full bg-base-200 rounded-lg shadow">
+		<input type="checkbox" bind:checked={showOverrides} />
+		<div class="collapse-title flex justify-between items-baseline">
+			<h2>Base setting overrides</h2>
+			<p>
+				Click to {#if showOverrides}hide{:else}show{/if}
+			</p>
+		</div>
+		<div class="collapse-content flex flex-col">
+			<p>If you are using a mod that alters the base values you may change them here.</p>
+			<div class="mt-4 inline-grid gap-x-8 gap-y-2 justify-start">
+				<label class="inline-flex gap-4 items-baseline justify-between">
+					<span>Mutation rolls</span>
+					<span>
+						<input
+							type="number"
+							min="1"
+							max="100"
+							step="1"
+							bind:value={baseNumRolls}
+							class="input input-sm w-24 bg-base-100 text-base-content text-right"
+						/> <span class="invisible">%</span>
+					</span>
+				</label>
+				<label class="inline-flex gap-4 items-baseline justify-between">
+					<span>Mutation roll chance</span>
+					<span>
+						<input
+							type="number"
+							min="0"
+							max="100"
+							step="0.1"
+							bind:value={pctRollChance}
+							class="input input-sm w-24 bg-base-100 text-base-content text-right"
+						/> %
+					</span>
+				</label>
+				<label class="inline-flex gap-4 items-baseline justify-between">
+					<span>Chance to pick higher stat</span>
+					<span>
+						<input
+							type="number"
+							min="0"
+							max="100"
+							step="0.1"
+							bind:value={pctPickHigherChance}
+							class="input input-sm w-24 bg-base-100 text-base-content text-right"
+						/> %
+					</span>
+				</label>
+				<div class="inline-flex">
+					<button
+						class="btn btn-link self-start"
+						on:click={() => {
+							baseNumRolls = BASE_MUTATION_ROLLS;
+							pctRollChance = BASE_ROLL_CHANCE * 100;
+							pctPickHigherChance = Math.round(BASE_HIGHER_PICK_CHANCE * 100);
+						}}
+					>
+						Reset to defaults
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Breakdown -->
 	<div class="collapse w-full bg-base-200 rounded-lg shadow">
 		<input type="checkbox" bind:checked={showBreakdown} />
@@ -431,9 +506,11 @@
 						<div class="inline-flex flex-col">
 							<p>Basic per-roll mutation chance:</p>
 							<div class="flex flex-col self-center">
-								<code class="text-base-content"> 2.5% + mutable effects </code>
+								<code class="text-base-content">
+									{fmt(pctRollChance, 4)}% + mutable effects
+								</code>
 								<code>
-									= 2.5% + {pct(rollChanceOffset, 1)} =
+									= {fmt(pctRollChance, 4)}% + {pct(rollChanceOffset, 1)} =
 									{pct(rollChance)}
 								</code>
 							</div>
@@ -459,9 +536,14 @@
 						<div class="inline-flex flex-col">
 							<p>Chance for higher of the parent stats to be picked:</p>
 							<div class="flex flex-col self-center">
-								<code class="text-base-content"> 55% + robust effects </code>
+								<code class="text-base-content">
+									{pctPickHigherChance}% + robust effects
+								</code>
 								<code>
-									= 55% + {pct(higherPickOffset, 1)} = {pct(higherPickChance, 1)}
+									= {pctPickHigherChance}% + {pct(higherPickOffset, 1)} = {pct(
+										higherPickChance,
+										1
+									)}
 								</code>
 							</div>
 						</div>
@@ -484,12 +566,14 @@
 							</div>
 						</div>
 						<div class="inline-flex flex-col">
-							<p>Chance for at least one mutation in 3 rolls:</p>
+							<p>Chance for at least one mutation in {numRolls} rolls:</p>
 							<div class="flex flex-col self-center">
-								<code class="text-base-content">1 - (1 - per roll chance)<sup>3</sup></code>
+								<code class="text-base-content"
+									>1 - (1 - per roll chance)<sup>{numRolls}</sup></code
+								>
 								<code>
 									<span class="text-nowrap">
-										= 1 - (1 - {pct(fullRollChance, 1)})<sup>3</sup>
+										= 1 - (1 - {pct(fullRollChance, 1)})<sup>{numRolls}</sup>
 									</span> <span class="text-nowrap"> = {pct(anyMutChance)} </span>
 								</code>
 							</div>

@@ -624,6 +624,13 @@
 	<!-- Changelog -->
 	<div class="w-full bg-base-200 rounded-lg shadow px-4 py-2 pb-2">
 		<h2 class="mb-2">Notable Changes</h2>
+		<h3>October 28th, 2024</h3>
+		<ul class="pl-8 pr-4 pb-2 list-disc list-outside">
+			<li>
+				Add overrides for base mutation rolls, mutation roll chance, and chance to pick higher stat.
+			</li>
+			<li>Allow more than three off-stat Mutables traits.</li>
+		</ul>
 		<h3>September 5th, 2024</h3>
 		<ul class="pl-8 pr-4 pb-2 list-disc list-outside">
 			<li>

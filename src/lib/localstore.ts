@@ -26,18 +26,30 @@ if (browser) {
  *  * Listens for localStorage changes in other tabs
  */
 export function localstore<T>(name: string, options: LocalStoreOptions<T>): Writable<T> {
-    // Return an existing watcher if we have one for this key
-    const existing = registeredWatchers.get(name);
-    if (existing) return existing as Writable<T>;
+    if (!options.dontWatchTabs) {
+        // Return an existing watcher if we have one for this key
+        const existing = registeredWatchers.get(name);
+        if (existing) return existing as Writable<T>;
+    }
 
     // We want to maintain both the value and its JSON version
     let json: string = JSON.stringify(options.default);
-    let value: T;
+    let value: T = options.default;
 
     // Handle initialisation from store or default
-    if (browser) json = window.localStorage.getItem(name) || "null";
-    json = json ?? JSON.stringify(options.default);
-    value = JSON.parse(json);
+    if (browser) {
+        const existing = window.localStorage.getItem(name);
+        if (existing !== null) {
+            json = existing;
+            try {
+                value = JSON.parse(json);
+            } catch (e) {
+                console.error(`Failed to parse localStorage value for ${name}:`, e);
+                // If we can't parse the value, fall back to the default
+                value = options.default;
+            }
+        }
+    }
 
     // Run prep function if supplied
     if (options.prep) value = options.prep(value);

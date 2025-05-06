@@ -292,7 +292,7 @@
 					<input
 						id="{statName}inp"
 						type="number"
-						class="input input-sm bg-base-200 w-16"
+						class="input input-sm bg-base-200 w-20"
 						min="0"
 						max="255"
 						bind:value={wildLevels[i]}

@@ -214,7 +214,7 @@
 <!-- Colour info dialog-->
 {#if displayedColor}
 	<!-- Background fadeout -->
-	<div transition:fade class="fixed w-full h-full bg-black/50 left-0 top-0" />
+	<div transition:fade class="fixed w-full h-full bg-black/50 left-0 top-0"></div>
 
 	<!-- Container -->
 	<section

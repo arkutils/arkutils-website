@@ -52,7 +52,7 @@
 				class="py-3 flex flex-col"
 				style="background-color:{color.gamma22Hex};color:{selectTextColor(color.gamma22)}"
 			>
-				<span class="min-h-16" />
+				<span class="min-h-16"></span>
 			</span>
 		</div>
 
@@ -70,7 +70,7 @@
 		</div>
 
 		<!-- Spacer -->
-		<div class="flex-1" />
+		<div class="flex-1"></div>
 
 		<!-- Format choice -->
 		<label class="self-end flex items-baseline gap-3">

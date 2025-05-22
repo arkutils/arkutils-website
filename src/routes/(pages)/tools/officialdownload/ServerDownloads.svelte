@@ -202,15 +202,15 @@
 							</span>
 							Server Name
 						</th>
-						<th />
-						<th />
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody class="">
 					{#each results as result}
 						<tr>
 							<td class="bg-base-200/30">{result.name}</td>
-							<td class="sm:w-16 bg-base-200/30" />
+							<td class="sm:w-16 bg-base-200/30"></td>
 							<td class="bg-base-200/50">
 								<a href={result.link} class="text-[24px]">
 									<Download />

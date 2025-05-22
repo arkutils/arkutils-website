@@ -121,7 +121,7 @@
 		{#each range(maxX) as x}
 			{@const classes = classesFor(x, mostCommon, top10, top1, top01)}
 
-			<div class="h-4" />
+			<div class="h-4"></div>
 
 			<div class="text-sm font-bold relative {classes} row1">
 				{#if x === mostCommon}
@@ -157,7 +157,7 @@
 					class="bg-base-300 h-px w-full bar shadow-md"
 					style:height="{Math.round((diagramHeight * $view[x]) / (maxY * 1.35))}px"
 					style:will-change="height"
-				/>
+				></div>
 			</div>
 
 			<div

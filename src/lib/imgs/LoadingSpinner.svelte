@@ -5,7 +5,7 @@
 </script>
 
 <div style={`transform:scale(${scale * 100}%)`}>
-	<div class="loader" />
+	<div class="loader"></div>
 </div>
 
 <style lang="postcss">

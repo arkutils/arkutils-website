@@ -59,8 +59,10 @@
 		),
 	];
 
-	$: (searchTerm, mapFilter, pvpveFilter, modeFilter, regionFilter, flagsFilters),
-		(results = filterResults());
+	$: {
+		searchTerm, mapFilter, pvpveFilter, modeFilter, regionFilter, flagsFilters; // dependencies
+		filterResults();
+	}
 
 	function resetFilters() {
 		mapFilter = ANY;
@@ -72,7 +74,7 @@
 
 	$: console.log('modeFilter', modeFilter);
 
-	function filterResults(): Server[] {
+	function filterResults() {
 		const words = searchTerm.toLowerCase().split(' ');
 
 		results = [];
@@ -90,8 +92,6 @@
 			if (!words.every((word) => server.name.toLowerCase().includes(word))) continue;
 			results.push(server);
 		}
-
-		return results;
 	}
 </script>
 

@@ -4,6 +4,7 @@
 	import { getModDataStore, isSpeciesUseful, type IndexedModData, type Species } from '$lib/obelisk/asb';
 	import { selectedModId, selectedSpecies } from '$lib/stores';
 
+	import Crafting from '$lib/imgs/stats/Crafting.svelte';
 	import Damage from '$lib/imgs/stats/Damage.svelte';
 	import Food from '$lib/imgs/stats/Food.svelte';
 	import Health from '$lib/imgs/stats/Health.svelte';
@@ -44,11 +45,11 @@
 		Damage,
 		Speed,
 		null,
-		null, // TODO: Need crafting icon?
+		Crafting,
 	];
 
 	// Display order, mirroring in-game
-	const statDisplayOrder = [0, 1, 7, 8, 3, 4, 9];
+	const statDisplayOrder = [0, 1, 7, 8, 3, 4, 9, 11];
 
 	const serverMults = [
 		// [IwM, IdM, TaM, TmM]
@@ -137,9 +138,16 @@
 		return matches;
 	}
 
-	function calcStat(stat: number, wildLevels: number, speciesData: Species): number | null {
+	function calcStat(
+		stat: number,
+		wildLevels: number,
+		speciesData: Species,
+		isPct: boolean
+	): number | null {
 		// Check the species has this stat
 		if (!speciesData.fullStatsRaw[stat]) return null;
+
+		const dbg = stat === 11;
 
 		// Species values
 		// @ts-ignore - TS fails to see that this is a number[]
@@ -148,6 +156,8 @@
 		const IBm = speciesData.statImprintMult
 			? speciesData.statImprintMult[stat]
 			: defaultImprintMults[stat];
+
+		if (dbg) console.log({ stat, B, Iw, Id, Ta, Tm, TBHM, IBm });
 
 		// Server values
 		const [IwM, IdM, TaM, TmM] = serverMults[stat];
@@ -167,8 +177,12 @@
 		// Start with the base
 		let V = B;
 
-		// Apply the wild levels, scaled by species and server multipliers
-		V = V * (1 + Lw * Iw * IwM);
+		// Wild stats are applied differently for percentage-based stats
+		if (isPct) {
+			V = V + Iw * Lw * IwM;
+		} else {
+			V = V * (1 + Lw * Iw * IwM);
+		}
 
 		// Apply the TamedBaseHealthMultiplier (only for health)
 		if (stat === 0) {
@@ -197,14 +211,18 @@
 
 	/** Calculate and format a stat value */
 	function statValue(stat: number, wildLevels: number, speciesData: Species): string {
-		let value = calcStat(stat, wildLevels, speciesData);
-		if (value === null) return '-';
-
 		const isPct = isPercentStat(stat);
+		let value = calcStat(stat, wildLevels, speciesData, isPct);
+		if (value === null) return '-';
 
 		// Percentage stats (movement speed and damage) are treated differently
 		if (isPct) {
 			value = value * 100;
+		}
+
+		// Special case for Helicoprion crafting skill - max is 90%
+		if (stat === 11 && speciesData.blueprintPath.includes('Helicoprion')) {
+			value = Math.min(90, value);
 		}
 
 		let output = value.toFixed(1);
@@ -231,7 +249,7 @@
 	}
 
 	function isPercentStat(stat: number): boolean {
-		return stat === 8 || stat === 9;
+		return stat === 8 || stat === 9 || stat === 11;
 	}
 </script>
 

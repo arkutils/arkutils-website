@@ -7,7 +7,7 @@
 	import { slide } from 'svelte/transition';
 
 	const PLAYER_LEVEL_MIN = 1;
-	const PLAYER_LEVEL_MAX = 195;
+	const PLAYER_LEVEL_MAX = 210;
 
 	const PLAYER_CLAMP_MIN = 50;
 	const PLAYER_CLAMP_MAX = PLAYER_LEVEL_MAX;

@@ -7,22 +7,27 @@
 	import LoadingSpinner from './imgs/LoadingSpinner.svelte';
 	import WarningTriangle from './imgs/WarningTriangle.svelte';
 
-	export let selectedModId: string | null = null;
-	export let selectedSpecies: string | null = '';
-	export let loading = true;
-	export let errored = false;
+	let {
+		selectedModId = $bindable(null),
+		selectedSpecies = $bindable(''),
+	}: {
+		selectedModId: string | null;
+		selectedSpecies: string | null;
+	} = $props();
 
-	let modSelectorLoading = true;
-	let modSelectorErrored = false;
-
-	$: loading = modSelectorLoading || !modData || !$modData;
-	$: errored = modSelectorErrored;
+	let modSelectorLoading = $state(true);
+	let modSelectorErrored = $state(false);
 
 	// Store containing the current mod data (loadable/async)
-	$: modData = selectedModId === null ? null : getModDataStore(selectedModId);
+	let modData = $derived(selectedModId === null ? null : getModDataStore(selectedModId));
+
+	let loading = $derived(modSelectorLoading || !modData || !$modData);
+	let errored = $derived(modSelectorErrored);
 
 	// Update species selection on mod change
-	$: if ($modData && selectedModId !== null) modChanged($modData);
+	$effect(() => {
+		if ($modData && selectedModId !== null) modChanged($modData);
+	});
 
 	function modChanged($modData: IndexedModData) {
 		if (!$modData) return;
